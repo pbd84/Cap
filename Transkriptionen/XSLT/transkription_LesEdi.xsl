@@ -1228,7 +1228,8 @@
 								
 								<xsl:variable name="vWortteil">
 									<xsl:call-template name="tFollowingWortteil">
-										<xsl:with-param name="pFollowingTextThis" select="./preceding::*[1]"/>
+										<!--<xsl:with-param name="pFollowingTextThis" select="./preceding::*[1]"/>-->
+										<xsl:with-param name="pFollowingTextThis" select="./preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='add']"/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
 								</xsl:variable>
@@ -1650,31 +1651,338 @@
 		<xsl:variable name="vHandXYZ" select="'XYZ'"/>	
 		
 		
+
+		
+		
+		
 		<xsl:choose>
-			<xsl:when test="not(tei:add/@hand)">
-				<!-- keine Hand -->
+			<xsl:when test="$vNoteFolgt='true'">
+				<!-- <note> folgt => Fußnote wird bereits gesetzt -->
 				
-				<!-- ??? -->
-				
-			</xsl:when>
-			<xsl:when test="string-length(tei:add/@hand)!=string-length(translate(tei:add/@hand,$vHandABC,''))">
-				<!-- entspricht "normaler" Hand -->
-				
-				<xsl:apply-templates select="tei:add"/>
+				<xsl:apply-templates select="./node()"/>
 				
 			</xsl:when>
-			<xsl:when test="string-length(tei:add/@hand)!=string-length(translate(tei:add/@hand,$vHandXYZ,''))">
-				<!-- entspricht "spezieller" Hand -->
+			<xsl:otherwise>
+				<!-- es folgt keine <note> = automatische Fußnote wird generiert -->
 				
-				<xsl:apply-templates select="tei:del"/>
-				
-			</xsl:when>			
-			
+				<xsl:choose>
+					<xsl:when test="not(@hand)">
+						<!-- keine Hand -->
+						
+						<!-- ??? -->
+						
+						
+						<xsl:choose>
+							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
+								<!-- befindet sich in Wort (kein Leerzeichen davor und kein Leerzeichen danach -->
+								
+								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
+								<xsl:text>{TEST-add-/-ff}</xsl:text>
+								
+								<xsl:apply-templates select="./node()"/>
+								<xsl:variable name="vWortEnde">
+									<xsl:call-template name="tFollowingWortteil">
+										<xsl:with-param name="pFollowingTextThis" select="."/>
+										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+								</xsl:variable>
+								<xsl:value-of select="$vWortEnde"/>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='false'">
+								<!-- befindet sich am Wortanfang (Leerzeichen davor) -->
+								
+								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
+								<xsl:text>{TEST-add-/-tf}</xsl:text>
+								<xsl:apply-templates select="./node()"/>
+								<xsl:variable name="vWortEnde">
+									<xsl:call-template name="tFollowingWortteil">
+										<xsl:with-param name="pFollowingTextThis" select="."/>
+										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+								</xsl:variable>
+								<xsl:value-of select="$vWortEnde"/>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
+								<!-- befindet sich am Wortende (Leerzeichen danach) -->
+								
+								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
+								<!-- ...könnte aber auch hier erzeugt werden! -->
+								<xsl:text>{TEST-add-/-ft}</xsl:text>
+								<xsl:apply-templates select="./node()"/>
+								<xsl:variable name="vWortEnde">
+									<xsl:call-template name="tFollowingWortteil">
+										<xsl:with-param name="pFollowingTextThis" select="."/>
+										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+								</xsl:variable>
+								<xsl:value-of select="$vWortEnde"/>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
+								<!-- steht alleine (Leerzeichen davor und Leerzeichen danach) -->
+								
+								<!-- Fußnote sollte hier erzeugt werden! -->
+								<xsl:text>{TEST-add-/-tt}</xsl:text>
+								<!--<xsl:apply-templates select="./node()"/>-->
+								
+								
+								
+								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
+									class="noteLink">
+									<xsl:attribute name="title">
+										<xsl:call-template name="tTooltip">
+											<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"
+											/>
+										</xsl:call-template>
+									</xsl:attribute>
+									<sup>
+										<xsl:value-of select="$vIndex"/>
+										<xsl:if test="$vIndex=''">
+											<xsl:text>{NoIndex}</xsl:text>
+										</xsl:if>
+									</sup>
+								</a>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text>{TEST-add-FEHLER}</xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
+						
+						
+					</xsl:when>
+					<xsl:when test="string-length(@hand)!=string-length(translate(@hand,$vHandABC,''))">
+						<!-- entspricht "normaler" Hand -->
+						
+						
+						<xsl:choose>
+							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
+								<!-- befindet sich in Wort (kein Leerzeichen davor und kein Leerzeichen danach -->
+								
+								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
+								<xsl:text>{TEST-add-A-ff}</xsl:text>
+								
+								<xsl:apply-templates select="./node()"/>
+								<xsl:variable name="vWortEnde">
+									<xsl:call-template name="tFollowingWortteil">
+										<xsl:with-param name="pFollowingTextThis" select="."/>
+										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+								</xsl:variable>
+								<xsl:value-of select="$vWortEnde"/>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='false'">
+								<!-- befindet sich am Wortanfang (Leerzeichen davor) -->
+								
+								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
+								<xsl:text>{TEST-add-A-tf}</xsl:text>
+								<xsl:apply-templates select="./node()"/>
+								<xsl:variable name="vWortEnde">
+									<xsl:call-template name="tFollowingWortteil">
+										<xsl:with-param name="pFollowingTextThis" select="."/>
+										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+								</xsl:variable>
+								<xsl:value-of select="$vWortEnde"/>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
+								<!-- befindet sich am Wortende (Leerzeichen danach) -->
+								
+								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
+								<!-- ...könnte aber auch hier erzeugt werden! -->
+								<xsl:text>{TEST-add-A-ft}</xsl:text>
+								<xsl:apply-templates select="./node()"/>
+								<xsl:variable name="vWortEnde">
+									<xsl:call-template name="tFollowingWortteil">
+										<xsl:with-param name="pFollowingTextThis" select="."/>
+										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+								</xsl:variable>
+								<xsl:value-of select="$vWortEnde"/>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
+								<!-- steht alleine (Leerzeichen davor und Leerzeichen danach) -->
+								
+								<!-- Fußnote sollte hier erzeugt werden! -->
+								<xsl:text>{TEST-add-A-tt}</xsl:text>
+								<!--<xsl:apply-templates select="./node()"/>-->
+								
+								
+								
+								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
+									class="noteLink">
+									<xsl:attribute name="title">
+										<xsl:call-template name="tTooltip">
+											<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"
+											/>
+										</xsl:call-template>
+									</xsl:attribute>
+									<sup>
+										<xsl:value-of select="$vIndex"/>
+										<xsl:if test="$vIndex=''">
+											<xsl:text>{NoIndex}</xsl:text>
+										</xsl:if>
+									</sup>
+								</a>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text>{TEST-add-FEHLER}</xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
+						
+						
+					</xsl:when>
+					<xsl:when test="string-length(@hand)!=string-length(translate(@hand,$vHandXYZ,''))">
+						<!-- entspricht "spezieller" Hand -->
+						
+						<xsl:choose>
+							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
+								<!-- befindet sich in Wort (kein Leerzeichen davor und kein Leerzeichen danach -->
+								
+								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
+								<xsl:text>{TEST-add-X-ff}</xsl:text>
+								
+								<!--<xsl:apply-templates select="./node()"/>-->
+								<xsl:variable name="vWortEnde">
+									<xsl:call-template name="tFollowingWortteil">
+										<xsl:with-param name="pFollowingTextThis" select="."/>
+										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+								</xsl:variable>
+								<xsl:value-of select="$vWortEnde"/>
+								
+								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
+									class="noteLink">
+									<xsl:attribute name="title">
+										<xsl:call-template name="tTooltip">
+											<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"
+											/>
+										</xsl:call-template>
+									</xsl:attribute>
+									<sup>
+										<xsl:value-of select="$vIndex"/>
+										<xsl:if test="$vIndex=''">
+											<xsl:text>{NoIndex}</xsl:text>
+										</xsl:if>
+									</sup>
+								</a>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='false'">
+								<!-- befindet sich am Wortanfang (Leerzeichen davor) -->
+								
+								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
+								<xsl:text>{TEST-add-X-tf}</xsl:text>
+								
+								<!--<xsl:apply-templates select="./node()"/>-->
+								<xsl:variable name="vWortEnde">
+									<xsl:call-template name="tFollowingWortteil">
+										<xsl:with-param name="pFollowingTextThis" select="."/>
+										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+								</xsl:variable>
+								<xsl:value-of select="$vWortEnde"/>
+								
+								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
+									class="noteLink">
+									<xsl:attribute name="title">
+										<xsl:call-template name="tTooltip">
+											<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"
+											/>
+										</xsl:call-template>
+									</xsl:attribute>
+									<sup>
+										<xsl:value-of select="$vIndex"/>
+										<xsl:if test="$vIndex=''">
+											<xsl:text>{NoIndex}</xsl:text>
+										</xsl:if>
+									</sup>
+								</a>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
+								<!-- befindet sich am Wortende (Leerzeichen danach) -->
+								
+								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
+								<!-- ...könnte aber auch hier erzeugt werden! -->
+								<xsl:text>{TEST-add-X-ft}</xsl:text>
+								
+								<!--<xsl:apply-templates select="./node()"/>-->
+								<xsl:variable name="vWortEnde">
+									<xsl:call-template name="tFollowingWortteil">
+										<xsl:with-param name="pFollowingTextThis" select="."/>
+										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+								</xsl:variable>
+								<xsl:value-of select="$vWortEnde"/>
+								
+								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
+									class="noteLink">
+									<xsl:attribute name="title">
+										<xsl:call-template name="tTooltip">
+											<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"
+											/>
+										</xsl:call-template>
+									</xsl:attribute>
+									<sup>
+										<xsl:value-of select="$vIndex"/>
+										<xsl:if test="$vIndex=''">
+											<xsl:text>{NoIndex}</xsl:text>
+										</xsl:if>
+									</sup>
+								</a>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
+								<!-- steht alleine (Leerzeichen davor und Leerzeichen danach) -->
+								
+								<!-- Fußnote sollte hier erzeugt werden! -->
+								<xsl:text>{TEST-add-X-tt}</xsl:text>
+								<!--<xsl:apply-templates select="./node()"/>-->
+								
+								
+								
+								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
+									class="noteLink">
+									<xsl:attribute name="title">
+										<xsl:call-template name="tTooltip">
+											<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"
+											/>
+										</xsl:call-template>
+									</xsl:attribute>
+									<sup>
+										<xsl:value-of select="$vIndex"/>
+										<xsl:if test="$vIndex=''">
+											<xsl:text>{NoIndex}</xsl:text>
+										</xsl:if>
+									</sup>
+								</a>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text>{TEST-add-FEHLER}</xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>{TEST-add-FEHLER}</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+
+			</xsl:otherwise>
 		</xsl:choose>
+		
+		
+		
+		
+		
 
 		<xsl:choose>
 			<xsl:when test="count(following-sibling::node()[not(normalize-space(.)='')])=0">
-				<!-- einziges Element auf dieser Ebene -->
+				<!-- einziges Element auf dieser Ebene/keine nachfolgenden Elemente => kein nachfolgender text()! -->
 
 
 
@@ -1706,12 +2014,31 @@
 
 						<!-- Fußnote sollte von text()[...] erzeugt werden! -->
 						<xsl:text>{TEST-add-ff}</xsl:text>
+						
+						<xsl:apply-templates select="./node()"/>
+						<xsl:variable name="vWortEnde">
+							<xsl:call-template name="tFollowingWortteil">
+								<xsl:with-param name="pFollowingTextThis" select="."/>
+								<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+							</xsl:call-template>
+						</xsl:variable>
+						<xsl:value-of select="$vWortEnde"/>
+						
 					</xsl:when>
 					<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='false'">
 						<!-- befindet sich am Wortanfang (Leerzeichen davor) -->
 
 						<!-- Fußnote sollte von text()[...] erzeugt werden! -->
 						<xsl:text>{TEST-add-tf}</xsl:text>
+						<xsl:apply-templates select="./node()"/>
+						<xsl:variable name="vWortEnde">
+							<xsl:call-template name="tFollowingWortteil">
+								<xsl:with-param name="pFollowingTextThis" select="."/>
+								<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+							</xsl:call-template>
+						</xsl:variable>
+						<xsl:value-of select="$vWortEnde"/>
+						
 					</xsl:when>
 					<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
 						<!-- befindet sich am Wortende (Leerzeichen danach) -->
@@ -1719,6 +2046,15 @@
 						<!-- Fußnote sollte von text()[...] erzeugt werden! -->
 						<!-- ...könnte aber auch hier erzeugt werden! -->
 						<xsl:text>{TEST-add-ft}</xsl:text>
+						<xsl:apply-templates select="./node()"/>
+						<xsl:variable name="vWortEnde">
+							<xsl:call-template name="tFollowingWortteil">
+								<xsl:with-param name="pFollowingTextThis" select="."/>
+								<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+							</xsl:call-template>
+						</xsl:variable>
+						<xsl:value-of select="$vWortEnde"/>
+						
 					</xsl:when>
 					<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
 						<!-- steht alleine (Leerzeichen davor und Leerzeichen danach) -->
@@ -2511,48 +2847,137 @@
 						<xsl:with-param name="pNode" select="$pNode"/>
 					</xsl:call-template>
 				</xsl:variable>
+				
+				
+				<xsl:variable name="vLeerzeichenDavor">
+					<!-- Leerzeichen vor Element? -->
+					<xsl:call-template name="tLeerzeichenDavor">
+						<xsl:with-param name="pNode" select="$pNode"/>
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:variable name="vLeerzeichenDanach">
+					<!-- Leerzeichen nach Element? -->
+					<xsl:call-template name="tLeerzeichenDanach">
+						<xsl:with-param name="pNode" select="$pNode"/>
+					</xsl:call-template>
+				</xsl:variable>
+				
+				<!-- Variablen/Mengen für Hand A-W bzw. Hand X-Z -->
+				<xsl:variable name="vHandABC" select="'ABCDEFGHIJKLMNOPQRSTUVW'"/>
+				<xsl:variable name="vHandXYZ" select="'XYZ'"/>	
+				
+				
 
-				<i>
-					<xsl:value-of select="$pNode"/>
-				</i>
-				<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
-					<xsl:text> mit Einfügungszeichen</xsl:text>
-				</xsl:if>
+
+				
 				<xsl:choose>
-					<xsl:when test="$vLeerzeichenDavorOderDanach='true'">
-						<!-- wenn vor und nach <mod> kein Leerzeichen => <add> umschließt ganzes Wort -->
-					</xsl:when>
-					<xsl:otherwise>
-						<!-- <add> innerhalb eines Wortes -->
-						<xsl:text> </xsl:text>
+					<xsl:when test="not($pNode/@hand)">
+						<!--  -->
+						
+						
+						<i>
+							<xsl:value-of select="$pNode"/>
+						</i>
+						<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+							<xsl:text> mit Einfügungszeichen</xsl:text>
+						</xsl:if>
 						<xsl:choose>
-							<xsl:when test="$pNode/@place='above'">
-								<xsl:text>über der Zeile</xsl:text>
+							<xsl:when test="$vLeerzeichenDavorOderDanach='true'">
+								<!-- wenn vor und nach <mod> kein Leerzeichen => <add> umschließt ganzes Wort -->
 							</xsl:when>
-							<xsl:when test="$pNode/@place='margin'">
-								<xsl:text>am Rand</xsl:text>
-							</xsl:when>
-							<xsl:when test="$pNode/@place='inline'">
-								<xsl:text>in der Zeile</xsl:text>
-							</xsl:when>
-							<xsl:when test="$pNode/@place='inspace'">
-								<xsl:text>in der Zeile in frei gelassenem Raum</xsl:text>
-							</xsl:when>
+							<xsl:otherwise>
+								<!-- <add> innerhalb eines Wortes -->
+								<xsl:text> </xsl:text>
+								<xsl:choose>
+									<xsl:when test="$pNode/@place='above'">
+										<xsl:text>über der Zeile</xsl:text>
+									</xsl:when>
+									<xsl:when test="$pNode/@place='margin'">
+										<xsl:text>am Rand</xsl:text>
+									</xsl:when>
+									<xsl:when test="$pNode/@place='inline'">
+										<xsl:text>in der Zeile</xsl:text>
+									</xsl:when>
+									<xsl:when test="$pNode/@place='inspace'">
+										<xsl:text>in der Zeile in frei gelassenem Raum</xsl:text>
+									</xsl:when>
+								</xsl:choose>
+							</xsl:otherwise>
 						</xsl:choose>
-					</xsl:otherwise>
+						<xsl:if test="$pNode/@hand">
+							<xsl:text> von Hand </xsl:text>
+							<xsl:value-of select="$pNode/@hand"/>
+						</xsl:if>
+						
+						<xsl:text> ergänzt</xsl:text>
+						<xsl:text> </xsl:text>
+						
+						<xsl:if test="current()[@rend='default']">
+							<xsl:text>- korr. in Texttinte</xsl:text>
+						</xsl:if>
+						
+					</xsl:when>
+					<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandABC,''))">
+						<!-- entspricht "normaler" Hand -->
+						
+						<xsl:text>von Hand </xsl:text>
+						<xsl:value-of select="$pNode/@hand"/>
+						<xsl:text> ergänzt</xsl:text>
+						
+						<xsl:if test="current()[@rend='default']">
+							<xsl:text>- korr. in Texttinte</xsl:text>
+						</xsl:if>
+					</xsl:when>
+					<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandXYZ,''))">
+						<!-- entspricht "spezieller" Hand -->
+						
+						<xsl:choose>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
+								<!-- ganzes Wort -->
+								
+								<!--  „folgt von Hand X ergänztes [Wort in der <add>]“  -->
+								
+								<xsl:text>folgt von Hand </xsl:text>
+								<xsl:value-of select="$pNode/@hand"/>
+								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+									<xsl:text> mit Einfügungszeichen</xsl:text>
+								</xsl:if>
+								<xsl:text> ergänztes </xsl:text>
+								<i>
+									<xsl:value-of select="$pNode"/>
+								</i>
+								
+								<xsl:if test="current()[@rend='default']">
+									<xsl:text>- korr. in Texttinte</xsl:text>
+								</xsl:if>
+								
+							</xsl:when>
+							<xsl:otherwise>
+								<!-- nur Wortteil -->
+								
+								<!-- „von Hand X korr. zu [Wort mit Inhalt der <add>]“ -->
+								
+								<xsl:text>von Hand </xsl:text>
+								<xsl:value-of select="$pNode/@hand"/>
+								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+									<xsl:text> mit Einfügungszeichen</xsl:text>
+								</xsl:if>
+								<xsl:text> korr. zu </xsl:text>
+								<i>
+									<xsl:call-template name="tGanzesWort">
+										<xsl:with-param name="pNode" select="$pNode"/>
+										<xsl:with-param name="pWortMitte" select="$pNode"/>
+									</xsl:call-template>
+								</i>
+								
+								<xsl:if test="current()[@rend='default']">
+									<xsl:text>- korr. in Texttinte</xsl:text>
+								</xsl:if>
+								
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
 				</xsl:choose>
-				<xsl:if test="$pNode/@hand">
-					<xsl:text> von Hand </xsl:text>
-					<xsl:value-of select="$pNode/@hand"/>
-				</xsl:if>
-
-				<xsl:text> ergänzt</xsl:text>
-				<xsl:text> </xsl:text>
-
-				<xsl:if test="current()[@rend='default']">
-					<xsl:text>- korr. in Texttinte</xsl:text>
-				</xsl:if>
-
 			</xsl:when>
 			<xsl:when test="local-name($pNode)='del'">
 				<!--<xsl:text>{del}</xsl:text> <!-\- TESTWEISE -\->-->
