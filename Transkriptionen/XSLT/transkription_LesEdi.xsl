@@ -511,6 +511,12 @@
                         
                         }
                         
+                    span.debug {
+                    		font-size: 70%;
+                    		color: green;
+                    		vertical-align: top
+                    	}
+                        
                         
                 </style>
 			</HEAD>
@@ -1014,7 +1020,29 @@
 
 	</xsl:template>
 
-
+	<xsl:template match="//text()[following-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add']]">
+		<!-- Text VOR subst/mod/add -->
+		
+		
+		<xsl:choose>
+			<xsl:when test="following-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst']">
+				<!-- <subst> -->
+				<xsl:value-of select="."/>
+				<span class="debug"><xsl:text>{subst}</xsl:text></span>
+			</xsl:when>
+			<xsl:when test="following-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='mod']">
+				<!-- <mod> -->
+				<xsl:value-of select="."/>
+				<span class="debug"><xsl:text>{mod}</xsl:text></span>
+			</xsl:when>
+			<xsl:when test="following-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='add']">
+				<!-- <add> -->
+				<xsl:value-of select="."/>
+				<span class="debug"><xsl:text>{add}</xsl:text></span>
+			</xsl:when>
+		</xsl:choose>
+		
+	</xsl:template>
 
 	<!--11.12.2014TESTWEISE<xsl:template  match="//text()[preceding-sibling::*[1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add' or local-name(.)='del']]">-->
 	<!--<xsl:template  match="//text()[preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add' or local-name(.)='del']]"> 16.04.2015 -->
@@ -1615,7 +1643,7 @@
 								<!-- befindet sich in Wort (kein Leerzeichen davor und kein Leerzeichen danach -->
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
-								<xsl:text>{TEST-add-/-ff}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-/-ff}</xsl:text></span>
 								
 								<xsl:apply-templates select="./node()"/>
 								<xsl:variable name="vWortEnde">
@@ -1631,7 +1659,7 @@
 								<!-- befindet sich am Wortanfang (Leerzeichen davor) -->
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
-								<xsl:text>{TEST-add-/-tf}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-/-tf}</xsl:text></span>
 								<xsl:apply-templates select="./node()"/>
 								<xsl:variable name="vWortEnde">
 									<xsl:call-template name="tFollowingWortteil">
@@ -1647,7 +1675,7 @@
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
 								<!-- ...könnte aber auch hier erzeugt werden! -->
-								<xsl:text>{TEST-add-/-ft}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-/-ft}</xsl:text></span>
 								<xsl:apply-templates select="./node()"/>
 								<xsl:variable name="vWortEnde">
 									<xsl:call-template name="tFollowingWortteil">
@@ -1662,7 +1690,7 @@
 								<!-- steht alleine (Leerzeichen davor und Leerzeichen danach) -->
 								
 								<!-- Fußnote sollte hier erzeugt werden! -->
-								<xsl:text>{TEST-add-/-tt}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-/-tt}</xsl:text></span>
 								<!--<xsl:apply-templates select="./node()"/>-->
 								
 								
@@ -1684,7 +1712,7 @@
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:text>{TEST-add-FEHLER}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-FEHLER}</xsl:text></span>
 							</xsl:otherwise>
 						</xsl:choose>
 						
@@ -1699,7 +1727,7 @@
 								<!-- befindet sich in Wort (kein Leerzeichen davor und kein Leerzeichen danach -->
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
-								<xsl:text>{TEST-add-A-ff}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-A-ff}</xsl:text></span>
 								
 								<xsl:apply-templates select="./node()"/>
 								<xsl:variable name="vWortEnde">
@@ -1715,7 +1743,7 @@
 								<!-- befindet sich am Wortanfang (Leerzeichen davor) -->
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
-								<xsl:text>{TEST-add-A-tf}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-A-tf}</xsl:text></span>
 								<xsl:apply-templates select="./node()"/>
 								<xsl:variable name="vWortEnde">
 									<xsl:call-template name="tFollowingWortteil">
@@ -1731,7 +1759,7 @@
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
 								<!-- ...könnte aber auch hier erzeugt werden! -->
-								<xsl:text>{TEST-add-A-ft}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-A-ft}</xsl:text></span>
 								<xsl:apply-templates select="./node()"/>
 								<xsl:variable name="vWortEnde">
 									<xsl:call-template name="tFollowingWortteil">
@@ -1746,7 +1774,7 @@
 								<!-- steht alleine (Leerzeichen davor und Leerzeichen danach) -->
 								
 								<!-- Fußnote sollte hier erzeugt werden! -->
-								<xsl:text>{TEST-add-A-tt}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-A-tt}</xsl:text></span>
 								<!--<xsl:apply-templates select="./node()"/>-->
 								
 								
@@ -1768,7 +1796,7 @@
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:text>{TEST-add-FEHLER}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-FEHLER}</xsl:text></span>
 							</xsl:otherwise>
 						</xsl:choose>
 						
@@ -1782,7 +1810,7 @@
 								<!-- befindet sich in Wort (kein Leerzeichen davor und kein Leerzeichen danach -->
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
-								<xsl:text>{TEST-add-X-ff}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-X-ff}</xsl:text></span>
 								
 								<!--<xsl:apply-templates select="./node()"/>-->
 								<xsl:variable name="vWortEnde">
@@ -1814,7 +1842,7 @@
 								<!-- befindet sich am Wortanfang (Leerzeichen davor) -->
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
-								<xsl:text>{TEST-add-X-tf}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-X-tf}</xsl:text></span>
 								
 								<!--<xsl:apply-templates select="./node()"/>-->
 								<xsl:variable name="vWortEnde">
@@ -1847,7 +1875,7 @@
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
 								<!-- ...könnte aber auch hier erzeugt werden! -->
-								<xsl:text>{TEST-add-X-ft}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-X-ft}</xsl:text></span>
 								
 								<!--<xsl:apply-templates select="./node()"/>-->
 								<xsl:variable name="vWortEnde">
@@ -1879,7 +1907,7 @@
 								<!-- steht alleine (Leerzeichen davor und Leerzeichen danach) -->
 								
 								<!-- Fußnote sollte hier erzeugt werden! -->
-								<xsl:text>{TEST-add-X-tt}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-X-tt}</xsl:text></span>
 								<!--<xsl:apply-templates select="./node()"/>-->
 								
 								
@@ -1901,12 +1929,12 @@
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:text>{TEST-add-FEHLER}</xsl:text>
+								<span class="debug"><xsl:text>{TEST-add-FEHLER}</xsl:text></span>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:text>{TEST-add-FEHLER}</xsl:text>
+						<span class="debug"><xsl:text>{TEST-add-FEHLER}</xsl:text></span>
 					</xsl:otherwise>
 				</xsl:choose>
 
