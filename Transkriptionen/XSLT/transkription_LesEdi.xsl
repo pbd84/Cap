@@ -1037,8 +1037,31 @@
 			</xsl:when>
 			<xsl:when test="following-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='add']">
 				<!-- <add> -->
+				<span class="debug"><xsl:text>{TEST}</xsl:text></span>
 				<xsl:value-of select="."/>
 				<span class="debug"><xsl:text>{add}</xsl:text></span>
+				
+				
+				<xsl:variable name="vWortteil">
+					<xsl:call-template name="tPrecedingWortteil">
+						<!--<xsl:with-param name="pFollowingTextThis" select="./preceding::*[1]"/>-->
+						<xsl:with-param name="pPrecedingTextThis" select="./following-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='add']"/>
+						<xsl:with-param name="pPrecedingTextBeforeNode" select="''"/>
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:variable name="vStringVorWortteil">
+					<!-- Substring vWortteil aus gesamtem vorhergehenden Text entfernen -->
+					<!--<xsl:value-of select="substring(.,1+string-length($vWortteil))"/>-->
+					
+					<xsl:value-of select="substring(.,1,string-length(.)-string-length($vWortteil))"/>
+				</xsl:variable>
+				
+				<!-- restlichen String ohne Wortteil ausgeben -->
+				<xsl:value-of select="$vStringVorWortteil"/>
+				
+				<span class="debug"><xsl:text>{</xsl:text></span>
+				<xsl:value-of select="$vWortteil"/>
+				<span class="debug"><xsl:text>}</xsl:text></span>
 			</xsl:when>
 		</xsl:choose>
 		
