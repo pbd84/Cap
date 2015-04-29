@@ -2401,7 +2401,7 @@
 			<xsl:text> [</xsl:text>
 			<!--<xsl:value-of select="./tei:abbr/text()"/>-->
 			<xsl:apply-templates select="./tei:abbr/node()"/>
-			<xsl:text>]</xsl:text>
+			<xsl:text>.]</xsl:text>
 		</span>
 	</xsl:template>
 
