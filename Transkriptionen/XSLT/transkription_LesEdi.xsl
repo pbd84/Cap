@@ -2394,6 +2394,8 @@
 
 	</xsl:template>
 
+<!-- tortoisegit...? yes, no? helloooo??? -->
+
 	<xsl:template match="//tei:choice">
 		<span title="{./tei:abbr/text()}">
 			<!--<xsl:value-of select="./tei:expan/text()"/>-->
