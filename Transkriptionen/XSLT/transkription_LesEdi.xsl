@@ -2183,56 +2183,6 @@
 			<xsl:otherwise> </xsl:otherwise>
 		</xsl:choose>-->
 	</xsl:template>
-	
-	<xsl:template name="add_alleine_ABC_ganzesWort">
-		<!-- <add> ohne <subst>, Hand ABC, ganzes Wort -->
-		
-		<xsl:text>{add_alleine_ABC_ganzesWort}</xsl:text>
-	</xsl:template>
-	
-	<xsl:template name="add_alleine_XYZ_ganzesWort">
-		<!-- <add> ohne <subst>, Hand XYZ, ganzes Wort -->
-		
-		<xsl:text>{add_alleine_XYZ_ganzesWort}</xsl:text>
-	</xsl:template>
-	
-	<xsl:template name="add_alleine_ABC_einzel">
-		<!-- <add> ohne <subst>, Hand ABC, einzelne(r) Buchstabe(n) -->
-		
-		<xsl:text>{add_alleine_ABC_einzel}</xsl:text>
-	</xsl:template>
-	
-	<xsl:template name="add_alleine_XYZ_einzel">
-		<!-- <add> ohne <subst>, Hand XYZ, einzelne(r) Buchstabe(n) -->
-		
-		<xsl:text>{add_alleine_XYZ_einzel}</xsl:text>
-	</xsl:template>
-	
-	<xsl:template name="add_subst_ABC_ganzesWort">
-		<!-- <add> ohne <subst>, Hand ABC, ganzes Wort -->
-		
-		<xsl:text>{add_subst_ABC_ganzesWort}</xsl:text>
-	</xsl:template>
-	
-	<xsl:template name="add_subst_XYZ_ganzesWort">
-		<!-- <add> ohne <subst>, Hand XYZ, ganzes Wort -->
-		
-		<xsl:text>{add_subst_XYZ_ganzesWort}</xsl:text>
-	</xsl:template>
-	
-	<xsl:template name="add_subst_ABC_einzel">
-		<!-- <add> ohne <subst>, Hand ABC, einzelne(r) Buchstabe(n) -->
-		
-		<xsl:text>{add_subst_ABC_einzel}</xsl:text>
-	</xsl:template>
-	
-	<xsl:template name="add_subst_XYZ_einzel">
-		<!-- <add> ohne <subst>, Hand XYZ, einzelne(r) Buchstabe(n) -->
-		
-		<xsl:text>{add_subst_XYZ_einzel}</xsl:text>
-	</xsl:template>
-
-	
 
 	<!-- </add> -->
 
@@ -2531,10 +2481,8 @@
 
 	<xsl:template match="//tei:choice">
 		<span title="{./tei:abbr/text()}">
-			<!--<xsl:value-of select="./tei:expan/text()"/>-->
 			<xsl:apply-templates select="./tei:expan/node()"/>
 			<xsl:text> [</xsl:text>
-			<!--<xsl:value-of select="./tei:abbr/text()"/>-->
 			<xsl:apply-templates select="./tei:abbr/node()"/>
 			<xsl:text>.]</xsl:text>
 		</span>
