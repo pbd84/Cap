@@ -1020,6 +1020,14 @@
 
 	</xsl:template>
 
+
+	<xsl:template match="//text()[following-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add']][preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add']]">
+		<!-- BAUSTELLE! -->
+		<span class="debug"><xsl:text>{Ich bin ein text() nach UND vor subst/mod/add!}</xsl:text></span>
+		
+	</xsl:template>
+
+
 	<xsl:template match="//text()[following-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add']]">
 		<!-- Text VOR subst/mod/add -->
 		
@@ -1107,11 +1115,13 @@
 						
 						
 						<xsl:variable name="vWortteil">
-							<xsl:call-template name="tFollowingWortteil">
-								<!--<xsl:with-param name="pFollowingTextThis" select="./preceding::*[1]"/>-->
+<!--							<xsl:call-template name="tFollowingWortteil">
+								<!-\-<xsl:with-param name="pFollowingTextThis" select="./preceding::*[1]"/>-\->
 								<xsl:with-param name="pFollowingTextThis" select="./preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst']"/>
 								<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
-							</xsl:call-template>
+							</xsl:call-template>-->
+							
+							<xsl:value-of select="substring-before(current(),' ')"/>
 						</xsl:variable>
 						<xsl:variable name="vStringNachWortteil">
 							<!-- Substring vWortteil aus gesamtem nachfolgenden Text entfernen -->
@@ -1203,11 +1213,13 @@
 						
 						
 						<xsl:variable name="vWortteil">
-							<xsl:call-template name="tFollowingWortteil">
-								<!--<xsl:with-param name="pFollowingTextThis" select="./preceding::*[1]"/>-->
+<!--							<xsl:call-template name="tFollowingWortteil">
+								<!-\-<xsl:with-param name="pFollowingTextThis" select="./preceding::*[1]"/>-\->
 								<xsl:with-param name="pFollowingTextThis" select="./preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='mod']"/>
 								<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
-							</xsl:call-template>
+							</xsl:call-template>-->
+							
+							<xsl:value-of select="substring-before(current(),' ')"/>
 						</xsl:variable>
 						<xsl:variable name="vStringNachWortteil">
 							<!-- Substring vWortteil aus gesamtem nachfoglenden Text entfernen -->
@@ -1298,12 +1310,16 @@
 					<xsl:when test="preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='add']">
 						<!-- <add> -->
 						
+						<span class="debug"><xsl:text>{add_folT:}</xsl:text></span>
+						
 						<xsl:variable name="vWortteil">
-							<xsl:call-template name="tFollowingWortteil">
-								<!--<xsl:with-param name="pFollowingTextThis" select="./preceding::*[1]"/>-->
+<!--							<xsl:call-template name="tFollowingWortteil">
+								<!-\-<xsl:with-param name="pFollowingTextThis" select="./preceding::*[1]"/>-\->
 								<xsl:with-param name="pFollowingTextThis" select="./preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='add']"/>
 								<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
-							</xsl:call-template>
+							</xsl:call-template>-->
+							
+							<xsl:value-of select="substring-before(current(),' ')"/>
 						</xsl:variable>
 						<xsl:variable name="vStringNachWortteil">
 							<!-- Substring vWortteil aus gesamtem nachfoglenden Text entfernen -->
@@ -1472,6 +1488,9 @@
 				
 				<!--<xsl:apply-templates select="tei:add"/>-->
 				
+				
+				<span class="debug"><xsl:text>{noHand}</xsl:text></span>
+				
 				<xsl:variable name="vWortEnde">
 					<xsl:call-template name="tFollowingWortteil">
 						<xsl:with-param name="pFollowingTextThis" select="tei:add"/>
@@ -1480,6 +1499,8 @@
 				</xsl:variable>
 				<xsl:value-of select="$vWortEnde"/>
 				
+				
+				<span class="debug"><xsl:text>{noHand}</xsl:text></span>
 				
 				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
 					<xsl:attribute name="title">
@@ -1501,6 +1522,8 @@
 				
 				<!--<xsl:apply-templates select="tei:add"/>-->
 				
+				<span class="debug"><xsl:text>{abcHand}</xsl:text></span>
+				
 				<xsl:variable name="vWortEnde">
 					<xsl:call-template name="tFollowingWortteil">
 						<xsl:with-param name="pFollowingTextThis" select="tei:add"/>
@@ -1509,6 +1532,7 @@
 				</xsl:variable>
 				<xsl:value-of select="$vWortEnde"/>
 				
+				<span class="debug"><xsl:text>{abcHand}</xsl:text></span>
 				
 				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
 					<xsl:attribute name="title">
@@ -1530,6 +1554,9 @@
 				
 				<!--<xsl:apply-templates select="tei:del"/>-->
 				
+				
+				<span class="debug"><xsl:text>{xyzHand}</xsl:text></span>
+				
 				<xsl:variable name="vWortEnde">
 					<xsl:call-template name="tFollowingWortteil">
 						<xsl:with-param name="pFollowingTextThis" select="tei:del"/>
@@ -1537,6 +1564,9 @@
 					</xsl:call-template>
 				</xsl:variable>
 				<xsl:value-of select="$vWortEnde"/>
+				
+				<span class="debug"><xsl:text>{xyzHand}</xsl:text></span>
+				
 				
 				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
 					<xsl:attribute name="title">
@@ -1560,12 +1590,12 @@
 		<span class="debug"><xsl:text>{/subst}</xsl:text></span>
 		
 		
-
+<!--
 		<xsl:choose>
 			<xsl:when test="count(following-sibling::node())=0">
-				<!-- einziges Element auf dieser Ebene -->
+				<!-\- einziges Element auf dieser Ebene -\->
 
-				<!--<xsl:text>{funo1}</xsl:text>-->
+				<!-\-<xsl:text>{funo1}</xsl:text>-\->
 				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
 					<xsl:attribute name="title">
 						<xsl:call-template name="tTooltip">
@@ -1579,25 +1609,25 @@
 						</xsl:if>
 					</sup>
 				</a>
-				<!--<xsl:text>{/funo1}</xsl:text>-->
+				<!-\-<xsl:text>{/funo1}</xsl:text>-\->
 			</xsl:when>
 			<xsl:when
 				test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ') and (following-sibling::node()/text()[1]!=' ')">
-				<!-- wenn direkt ein Textelement nachfolgt -->
-				<!-- ?!? -->
+				<!-\- wenn direkt ein Textelement nachfolgt -\->
+				<!-\- ?!? -\->
 			</xsl:when>
 			<xsl:otherwise>
-				<!-- wenn kein Textelement nachfolgt -->
+				<!-\- wenn kein Textelement nachfolgt -\->
 
 				<xsl:choose>
 					<xsl:when test="$vNoteFolgt='true'">
-						<!-- mit <note> -->
+						<!-\- mit <note> -\->
 					</xsl:when>
 					<xsl:otherwise>
-						<!-- ohne <note> -->
+						<!-\- ohne <note> -\->
 
 						<xsl:variable name="vLeerzeichenFolgt">
-							<!--<xsl:call-template name="tLeerzeichenFolgt">-->
+							<!-\-<xsl:call-template name="tLeerzeichenFolgt">-\->
 							<xsl:call-template name="tLeerzeichenDanach">
 								<xsl:with-param name="pNode" select="."/>
 							</xsl:call-template>
@@ -1605,23 +1635,23 @@
 
 						<xsl:choose>
 							<xsl:when test="$vLeerzeichenFolgt='false'">
-								<!-- Wortende folgt im nächsten text() -->
-								<!--<xsl:text>{unv.}</xsl:text>-->
+								<!-\- Wortende folgt im nächsten text() -\->
+								<!-\-<xsl:text>{unv.}</xsl:text>-\->
 							</xsl:when>
 							<xsl:otherwise>
-								<!-- Wort vollständig -->
+								<!-\- Wort vollständig -\->
 
-<!--								<!-\- Bezugsknoten -\->
+<!-\-								<!-\\- Bezugsknoten -\\->
 								<xsl:variable name="vBezug" select="."/>
 
-								<!-\- Text für Tooltip erstellen -\->
+								<!-\\- Text für Tooltip erstellen -\\->
 								<xsl:variable name="vFunoText">
 									<xsl:call-template name="tFunoText_alphabetisch">
 										<xsl:with-param name="pNode" select="$vBezug"/>
 									</xsl:call-template>
 								</xsl:variable>
 								
-								<!-\- Text für Tooltip erstellen -\->
+								<!-\\- Text für Tooltip erstellen -\\->
 								<xsl:variable name="vFunoText">
 									<xsl:call-template name="tFunoText_alphabetisch">
 										<xsl:with-param name="pNode" select="$vBezug"/>
@@ -1635,9 +1665,9 @@
 									</xsl:call-template>
 								</xsl:variable>
 								
-								-->
+								-\->
 
-								<!--<xsl:text>{funo}</xsl:text>-->
+								<!-\-<xsl:text>{funo}</xsl:text>-\->
 								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
 									class="noteLink">
 									<xsl:attribute name="title">
@@ -1653,7 +1683,7 @@
 										</xsl:if>
 									</sup>
 								</a>
-								<!--<xsl:text>{/funo}</xsl:text>-->
+								<!-\-<xsl:text>{/funo}</xsl:text>-\->
 
 							</xsl:otherwise>
 						</xsl:choose>
@@ -1661,7 +1691,7 @@
 				</xsl:choose>
 
 			</xsl:otherwise>
-		</xsl:choose>
+		</xsl:choose>-->
 	</xsl:template>
 
 	<xsl:template match="//tei:add[parent::tei:subst]">
@@ -1771,7 +1801,7 @@
 								<!-- befindet sich in Wort (kein Leerzeichen davor und kein Leerzeichen danach -->
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
-								<span class="debug"><xsl:text>{TEST-add-/-ff}</xsl:text></span>
+								<span class="debug"><xsl:text>{TEST-add-/-ff:}</xsl:text></span>
 								
 								<xsl:apply-templates select="./node()"/>
 								<xsl:variable name="vWortEnde">
@@ -1787,7 +1817,7 @@
 								<!-- befindet sich am Wortanfang (Leerzeichen davor) -->
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
-								<span class="debug"><xsl:text>{TEST-add-/-tf}</xsl:text></span>
+								<span class="debug"><xsl:text>{TEST-add-/-tf:}</xsl:text></span>
 								<xsl:apply-templates select="./node()"/>
 								<xsl:variable name="vWortEnde">
 									<xsl:call-template name="tFollowingWortteil">
@@ -1803,7 +1833,7 @@
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
 								<!-- ...könnte aber auch hier erzeugt werden! -->
-								<span class="debug"><xsl:text>{TEST-add-/-ft}</xsl:text></span>
+								<span class="debug"><xsl:text>{TEST-add-/-ft:}</xsl:text></span>
 								<xsl:apply-templates select="./node()"/>
 								<xsl:variable name="vWortEnde">
 									<xsl:call-template name="tFollowingWortteil">
@@ -1818,7 +1848,7 @@
 								<!-- steht alleine (Leerzeichen davor und Leerzeichen danach) -->
 								
 								<!-- Fußnote sollte hier erzeugt werden! -->
-								<span class="debug"><xsl:text>{TEST-add-/-tt}</xsl:text></span>
+								<span class="debug"><xsl:text>{TEST-add-/-tt:}</xsl:text></span>
 								<!--<xsl:apply-templates select="./node()"/>-->
 								
 								
@@ -1855,7 +1885,7 @@
 								<!-- befindet sich in Wort (kein Leerzeichen davor und kein Leerzeichen danach -->
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
-								<span class="debug"><xsl:text>{TEST-add-A-ff}</xsl:text></span>
+								<span class="debug"><xsl:text>{TEST-add-A-ff:}</xsl:text></span>
 								
 								<xsl:apply-templates select="./node()"/>
 								<xsl:variable name="vWortEnde">
@@ -1871,7 +1901,7 @@
 								<!-- befindet sich am Wortanfang (Leerzeichen davor) -->
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
-								<span class="debug"><xsl:text>{TEST-add-A-tf}</xsl:text></span>
+								<span class="debug"><xsl:text>{TEST-add-A-tf:}</xsl:text></span>
 								<xsl:apply-templates select="./node()"/>
 								<xsl:variable name="vWortEnde">
 									<xsl:call-template name="tFollowingWortteil">
@@ -1887,7 +1917,7 @@
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
 								<!-- ...könnte aber auch hier erzeugt werden! -->
-								<span class="debug"><xsl:text>{TEST-add-A-ft}</xsl:text></span>
+								<span class="debug"><xsl:text>{TEST-add-A-ft:}</xsl:text></span>
 								<xsl:apply-templates select="./node()"/>
 								<xsl:variable name="vWortEnde">
 									<xsl:call-template name="tFollowingWortteil">
@@ -1902,7 +1932,7 @@
 								<!-- steht alleine (Leerzeichen davor und Leerzeichen danach) -->
 								
 								<!-- Fußnote sollte hier erzeugt werden! -->
-								<span class="debug"><xsl:text>{TEST-add-A-tt}</xsl:text></span>
+								<span class="debug"><xsl:text>{TEST-add-A-tt:}</xsl:text></span>
 								<!--<xsl:apply-templates select="./node()"/>-->
 								
 								
@@ -1938,7 +1968,7 @@
 								<!-- befindet sich in Wort (kein Leerzeichen davor und kein Leerzeichen danach -->
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
-								<span class="debug"><xsl:text>{TEST-add-X-ff}</xsl:text></span>
+								<span class="debug"><xsl:text>{TEST-add-X-ff:}</xsl:text></span>
 								
 								<!--<xsl:apply-templates select="./node()"/>-->
 								<xsl:variable name="vWortEnde">
@@ -1970,7 +2000,7 @@
 								<!-- befindet sich am Wortanfang (Leerzeichen davor) -->
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
-								<span class="debug"><xsl:text>{TEST-add-X-tf}</xsl:text></span>
+								<span class="debug"><xsl:text>{TEST-add-X-tf:}</xsl:text></span>
 								
 								<!--<xsl:apply-templates select="./node()"/>-->
 								<xsl:variable name="vWortEnde">
@@ -2003,7 +2033,7 @@
 								
 								<!-- Fußnote sollte von text()[...] erzeugt werden! -->
 								<!-- ...könnte aber auch hier erzeugt werden! -->
-								<span class="debug"><xsl:text>{TEST-add-X-ft}</xsl:text></span>
+								<span class="debug"><xsl:text>{TEST-add-X-ft:}</xsl:text></span>
 								
 								<!--<xsl:apply-templates select="./node()"/>-->
 								<xsl:variable name="vWortEnde">
@@ -2035,7 +2065,7 @@
 								<!-- steht alleine (Leerzeichen davor und Leerzeichen danach) -->
 								
 								<!-- Fußnote sollte hier erzeugt werden! -->
-								<span class="debug"><xsl:text>{TEST-add-X-tt}</xsl:text></span>
+								<span class="debug"><xsl:text>{TEST-add-X-tt:}</xsl:text></span>
 								<!--<xsl:apply-templates select="./node()"/>-->
 								
 								
@@ -3578,11 +3608,16 @@
 	</xsl:template>
 
 	<xsl:template name="tFollowingWortteil">
+		<!--  -->
+		
+		
 		<xsl:param name="pFollowingTextThis"/>
 		<xsl:param name="pFollowingTextBeforeNode"/>
 
 		<xsl:choose>
 			<xsl:when test="contains($pFollowingTextThis,' ')">
+				<!-- Element beinhaltet Leerzeichen => davor den vorhergehenden text() ausgeben + text() des Elements bis Leerzeichen ausgeben -->
+				
 				<xsl:variable name="vSubstringBefore">
 					<!--<xsl:value-of select="substring-before($pFollowingTextThis,' ')"/>-->
 					<!--<xsl:value-of select="substring-before(concat($pFollowingTextThis,' '),' ')"/>-->
@@ -3606,6 +3641,9 @@
 				
 			</xsl:when>
 			<xsl:otherwise>
+				<!-- Element beinhaltet kein Leerzeichen => text() des Elements zu vorhergehendem text() hinzufügen + zu nächstem Element springen (Template rekursiv ausführen) -->
+				
+				
 <!--				<xsl:text>{o=</xsl:text>
 				<xsl:value-of select="$pFollowingTextThis"/>
 				<xsl:text>|</xsl:text>
