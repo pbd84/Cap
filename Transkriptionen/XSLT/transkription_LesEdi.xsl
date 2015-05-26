@@ -3667,25 +3667,86 @@
 				<xsl:text>{vT=</xsl:text>
 				<xsl:value-of select="$vTest"/>
 				<xsl:text>}</xsl:text>-->
-				<xsl:call-template name="tFollowingWortteil">
+				
+				<!-- 
+					Problem: Innerhalb von <subst> wird auch der Inhalt von <add> bzw. <del> (je nachdem, was folgt) als following::text() erkannt. 
+						=> Somit werden gegebenenfalls beide Elemente ausgegeben.
+					Lösung: ??? Abfrage auf parent=subst und del/add?!
+				-->
+				
+				<xsl:choose>
+					<xsl:when test="(local-name($pFollowingTextThis)='del' or local-name($pFollowingTextThis)='add') and (local-name($pFollowingTextThis/parent::*)='subst')">
+						<!--<span class="debug"><xsl:text>{IN SUBST}</xsl:text></span>-->
+						<!-- innerhalb von <subst> + Element ist <del> oder <add> -->
+						
+						
+						
+						<xsl:call-template name="tFollowingWortteil">
+							<xsl:with-param name="pFollowingTextThis"
+								select="$pFollowingTextThis/parent::tei:subst/following::text()[1]"/>
+							<!--<xsl:with-param name="pFollowingTextBeforeNode" select="exslt:node-set($vTest)"/>-->
+							<xsl:with-param name="pFollowingTextBeforeNode">
+								<!--<span class="debug"><xsl:text>{$pFollowingTextBeforeNode}</xsl:text></span>-->
+								<xsl:value-of select="$pFollowingTextBeforeNode"/>
+								<!--<span class="debug"><xsl:text>{/$pFollowingTextBeforeNode}</xsl:text></span>-->
+								<xsl:choose>
+									<xsl:when test="count($pFollowingTextThis/node())>0">
+										<!--<xsl:text>{x}</xsl:text>-->
+										<xsl:apply-templates select="$pFollowingTextThis/node()"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<!--<xsl:text>{xx}</xsl:text>-->
+										<xsl:value-of select="$pFollowingTextThis"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:with-param>
+						</xsl:call-template>
+						
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:call-template name="tFollowingWortteil">
+							<xsl:with-param name="pFollowingTextThis"
+								select="$pFollowingTextThis/following::text()[1]"/>
+							<!--<xsl:with-param name="pFollowingTextBeforeNode" select="exslt:node-set($vTest)"/>-->
+							<xsl:with-param name="pFollowingTextBeforeNode">
+								<!--<span class="debug"><xsl:text>{$pFollowingTextBeforeNode}</xsl:text></span>-->
+								<xsl:value-of select="$pFollowingTextBeforeNode"/>
+								<!--<span class="debug"><xsl:text>{/$pFollowingTextBeforeNode}</xsl:text></span>-->
+								<xsl:choose>
+									<xsl:when test="count($pFollowingTextThis/node())>0">
+										<!--<xsl:text>{x}</xsl:text>-->
+										<xsl:apply-templates select="$pFollowingTextThis/node()"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<!--<xsl:text>{xx}</xsl:text>-->
+										<xsl:value-of select="$pFollowingTextThis"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:with-param>
+						</xsl:call-template>
+					</xsl:otherwise>
+				</xsl:choose>
+				
+<!--				<xsl:call-template name="tFollowingWortteil">
 					<xsl:with-param name="pFollowingTextThis"
 						select="$pFollowingTextThis/following::text()[1]"/>
-					<!--<xsl:with-param name="pFollowingTextBeforeNode" select="exslt:node-set($vTest)"/>-->
+					<!-\-<xsl:with-param name="pFollowingTextBeforeNode" select="exslt:node-set($vTest)"/>-\->
 					<xsl:with-param name="pFollowingTextBeforeNode">
-						<!--<xsl:text>???</xsl:text>-->
+						<span class="debug"><xsl:text>{$pFollowingTextBeforeNode}</xsl:text></span>
 						<xsl:value-of select="$pFollowingTextBeforeNode"/>
+						<span class="debug"><xsl:text>{/$pFollowingTextBeforeNode}</xsl:text></span>
 						<xsl:choose>
 							<xsl:when test="count($pFollowingTextThis/node())>0">
-								<!--<xsl:text>{x}</xsl:text>-->
+								<!-\-<xsl:text>{x}</xsl:text>-\->
 								<xsl:apply-templates select="$pFollowingTextThis/node()"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<!--<xsl:text>{xx}</xsl:text>-->
+								<!-\-<xsl:text>{xx}</xsl:text>-\->
 								<xsl:value-of select="$pFollowingTextThis"/>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:with-param>
-				</xsl:call-template>
+				</xsl:call-template>-->
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
