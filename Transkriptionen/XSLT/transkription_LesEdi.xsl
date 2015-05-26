@@ -2241,7 +2241,7 @@
 
 	<!--<xsl:template  match="//tei:mod[not(following-sibling::*[1][local-name(.)='note'])]">-->
 	<xsl:template match="//tei:mod">
-		<!--<xsl:text>{mod}</xsl:text> <!-\- TESTWEISE -\->-->
+		<!--<span class="debug"><xsl:text>{mod}</xsl:text></span> <!-\- TESTWEISE -\->-->
 
 		<xsl:variable name="vNoteFolgt">
 			<xsl:call-template name="tNoteFolgt">
@@ -2279,9 +2279,23 @@
 		</xsl:variable>
 		<xsl:value-of select="$vWortEnde"/>
 
-
-
-		<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
+		<xsl:if test="$vNoteFolgt='false'">
+			<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
+				<xsl:attribute name="title">
+					<xsl:call-template name="tTooltip">
+						<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
+					</xsl:call-template>
+				</xsl:attribute>
+				<sup>
+					<xsl:value-of select="$vIndex"/>
+					<xsl:if test="$vIndex=''">
+						<xsl:text>{NoIndex}</xsl:text>
+					</xsl:if>
+				</sup>
+			</a>
+		</xsl:if>
+		
+<!--		<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
 			<xsl:attribute name="title">
 				<xsl:call-template name="tTooltip">
 					<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
@@ -2293,14 +2307,14 @@
 					<xsl:text>{NoIndex}</xsl:text>
 				</xsl:if>
 			</sup>
-		</a>
+		</a>-->
 
 
 		<!--<span class="debug"><xsl:text>{/mod}</xsl:text></span>-->
-
+<!--
 		<xsl:choose>
 			<xsl:when test="count(following-sibling::node())=0">
-				<!-- einziges Element auf dieser Ebene -->
+				<!-\- einziges Element auf dieser Ebene -\->
 
 
 
@@ -2320,43 +2334,43 @@
 			</xsl:when>
 			<xsl:when
 				test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ')">
-				<!--<xsl:when test="following-sibling::node()[not(local-name(.)='metamark') and not(local-name(.)='lb')][1]=following-sibling::text()[1]">-->
-				<!-- wenn direkt ein Textelement nachfolgt -->
-				<!-- ?!? -->
+				<!-\-<xsl:when test="following-sibling::node()[not(local-name(.)='metamark') and not(local-name(.)='lb')][1]=following-sibling::text()[1]">-\->
+				<!-\- wenn direkt ein Textelement nachfolgt -\->
+				<!-\- ?!? -\->
 			</xsl:when>
 			<xsl:otherwise>
-				<!-- wenn kein Textelement nachfolgt -->
+				<!-\- wenn kein Textelement nachfolgt -\->
 
 				<xsl:choose>
 					<xsl:when test="$vNoteFolgt='true'">
-						<!-- mit <note> -->
-						<!--<xsl:text>{mitNote}</xsl:text> <!-\- TESTWEISE -\->-->
+						<!-\- mit <note> -\->
+						<!-\-<xsl:text>{mitNote}</xsl:text> <!-\\- TESTWEISE -\\->-\->
 					</xsl:when>
 					<xsl:otherwise>
-						<!-- ohne <note> -->
+						<!-\- ohne <note> -\->
 
 						<xsl:variable name="vLeerzeichenFolgt">
-							<!--<xsl:call-template name="tLeerzeichenFolgt">-->
+							<!-\-<xsl:call-template name="tLeerzeichenFolgt">-\->
 							<xsl:call-template name="tLeerzeichenDanach">
 								<xsl:with-param name="pNode" select="."/>
 							</xsl:call-template>
 						</xsl:variable>
 
 
-						<!--<xsl:text>{</xsl:text><xsl:value-of select="$vLeerzeichenFolgt"/><xsl:text>}</xsl:text> <!-\- TESTWEISE -\->-->
+						<!-\-<xsl:text>{</xsl:text><xsl:value-of select="$vLeerzeichenFolgt"/><xsl:text>}</xsl:text> <!-\\- TESTWEISE -\\->-\->
 
 						<xsl:choose>
 							<xsl:when test="$vLeerzeichenFolgt='false'">
-								<!-- Wortende folgt im nächsten text() -->
-								<!--<xsl:text>{unv.}</xsl:text>-->
+								<!-\- Wortende folgt im nächsten text() -\->
+								<!-\-<xsl:text>{unv.}</xsl:text>-\->
 							</xsl:when>
 							<xsl:otherwise>
-								<!-- Wort vollständig -->
-<!--
-								<!-\- Bezugsknoten -\->
+								<!-\- Wort vollständig -\->
+<!-\-
+								<!-\\- Bezugsknoten -\\->
 								<xsl:variable name="vBezug" select="."/>
 
-								<!-\- Text für Tooltip erstellen -\->
+								<!-\\- Text für Tooltip erstellen -\\->
 								<xsl:variable name="vFunoText">
 									<xsl:call-template name="tFunoText_alphabetisch">
 										<xsl:with-param name="pNode" select="$vBezug"/>
@@ -2368,7 +2382,7 @@
 										<xsl:with-param name="pSeq" select="$funoAlphabetisch"/>
 										<xsl:with-param name="pNode" select="$vBezug"/>
 									</xsl:call-template>
-								</xsl:variable>-->
+								</xsl:variable>-\->
 
 								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
 									class="noteLink">
@@ -2392,6 +2406,9 @@
 
 			</xsl:otherwise>
 		</xsl:choose>
+		-->
+		
+		<!--<span class="debug"><xsl:text>{/mod}</xsl:text></span> <!-\- TESTWEISE -\->-->
 	</xsl:template>
 
 	<!-- </mod> -->
@@ -3695,6 +3712,8 @@
 					Lösung: ??? Abfrage auf parent=subst und del/add?!
 				-->
 				
+				
+				
 				<xsl:choose>
 					<xsl:when test="(local-name($pFollowingTextThis)='del' or local-name($pFollowingTextThis)='add') and (local-name($pFollowingTextThis/parent::*)='subst')">
 						<!--<span class="debug"><xsl:text>{IN SUBST}</xsl:text></span>-->
@@ -3708,6 +3727,8 @@
 							<!--<xsl:with-param name="pFollowingTextBeforeNode" select="exslt:node-set($vTest)"/>-->
 							<xsl:with-param name="pFollowingTextBeforeNode">
 								<!--<span class="debug"><xsl:text>{$pFollowingTextBeforeNode}</xsl:text></span>-->
+								
+								<!--<xsl:text>{</xsl:text>-->
 								<xsl:value-of select="$pFollowingTextBeforeNode"/>
 								<!--<span class="debug"><xsl:text>{/$pFollowingTextBeforeNode}</xsl:text></span>-->
 								<xsl:choose>
@@ -3720,6 +3741,8 @@
 										<xsl:value-of select="$pFollowingTextThis"/>
 									</xsl:otherwise>
 								</xsl:choose>
+								
+								<!--<xsl:text>}</xsl:text>-->
 							</xsl:with-param>
 						</xsl:call-template>
 						
@@ -3733,7 +3756,10 @@
 								<!--<span class="debug"><xsl:text>{$pFollowingTextBeforeNode}</xsl:text></span>-->
 								<xsl:value-of select="$pFollowingTextBeforeNode"/>
 								<!--<span class="debug"><xsl:text>{/$pFollowingTextBeforeNode}</xsl:text></span>-->
-								<xsl:choose>
+								<xsl:if test="count($pFollowingTextThis/ancestor::tei:note)=0">
+									<!-- ignoriert <note> => oftmals ohne Leerzeichen in direktem Anschluss an Wort -->
+								
+									<xsl:choose>
 									<xsl:when test="count($pFollowingTextThis/node())>0">
 										<!--<xsl:text>{x}</xsl:text>-->
 										<xsl:apply-templates select="$pFollowingTextThis/node()"/>
@@ -3743,6 +3769,7 @@
 										<xsl:value-of select="$pFollowingTextThis"/>
 									</xsl:otherwise>
 								</xsl:choose>
+								</xsl:if>
 							</xsl:with-param>
 						</xsl:call-template>
 					</xsl:otherwise>
