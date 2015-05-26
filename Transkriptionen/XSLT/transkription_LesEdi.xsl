@@ -1502,7 +1502,7 @@
 				
 				<span class="debug"><xsl:text>{noHand}</xsl:text></span>
 				
-				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
+<!--				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
 					<xsl:attribute name="title">
 						<xsl:call-template name="tTooltip">
 							<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
@@ -1514,7 +1514,7 @@
 							<xsl:text>{NoIndex}</xsl:text>
 						</xsl:if>
 					</sup>
-				</a>
+				</a>-->
 				
 			</xsl:when>
 			<xsl:when test="string-length(tei:add/@hand)!=string-length(translate(tei:add/@hand,$vHandABC,''))">
@@ -1534,7 +1534,7 @@
 				
 				<span class="debug"><xsl:text>{abcHand}</xsl:text></span>
 				
-				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
+<!--				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
 					<xsl:attribute name="title">
 						<xsl:call-template name="tTooltip">
 							<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
@@ -1546,7 +1546,7 @@
 							<xsl:text>{NoIndex}</xsl:text>
 						</xsl:if>
 					</sup>
-				</a>
+				</a>-->
 				
 			</xsl:when>
 			<xsl:when test="string-length(tei:add/@hand)!=string-length(translate(tei:add/@hand,$vHandXYZ,''))">
@@ -1568,6 +1568,30 @@
 				<span class="debug"><xsl:text>{xyzHand}</xsl:text></span>
 				
 				
+<!--				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
+					<xsl:attribute name="title">
+						<xsl:call-template name="tTooltip">
+							<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
+						</xsl:call-template>
+					</xsl:attribute>
+					<sup>
+						<xsl:value-of select="$vIndex"/>
+						<xsl:if test="$vIndex=''">
+							<xsl:text>{NoIndex}</xsl:text>
+						</xsl:if>
+					</sup>
+				</a>-->
+				
+			</xsl:when>			
+			
+		</xsl:choose>
+		
+		
+		<xsl:choose>
+			<xsl:when test="$vNoteFolgt='true'">
+				<!-- nachfolgende <note> setzt Fußnotenverweis -->
+			</xsl:when>
+			<xsl:otherwise>
 				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
 					<xsl:attribute name="title">
 						<xsl:call-template name="tTooltip">
@@ -1581,11 +1605,8 @@
 						</xsl:if>
 					</sup>
 				</a>
-				
-			</xsl:when>			
-			
+			</xsl:otherwise>
 		</xsl:choose>
-		
 		
 		<span class="debug"><xsl:text>{/subst}</xsl:text></span>
 		
