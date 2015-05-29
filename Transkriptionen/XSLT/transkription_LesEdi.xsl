@@ -1018,16 +1018,25 @@
 	</xsl:template>
 
 
-	<xsl:template match="//text()[following-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add']][preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add']]">
+<!--	<xsl:template match="//text()[following-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add']][preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add']]">
+		<!-\- BAUSTELLE! -\->
+		<span class="debug"><xsl:text>{Ich bin ein text() nach UND vor subst/mod/add!}</xsl:text></span> <!-\- TESTWEISE -\->
+		
+	</xsl:template>-->
+	
+	
+	<xsl:template priority="2" match="//text()[(following-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add']) and (preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add'])]">
+		<!-- priority wichtig. damit Template gegenüber preceding/following berücksichtigt wird -->
+		
 		<!-- BAUSTELLE! -->
-		<span class="debug"><xsl:text>{Ich bin ein text() nach UND vor subst/mod/add!}</xsl:text></span>
+		<span class="debug"><xsl:text>{Ich bin ein text() nach UND vor subst/mod/add!}</xsl:text></span> <!-- TESTWEISE -->
 		
 	</xsl:template>
 
 
-	<xsl:template match="//text()[following-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add']]">
+	<xsl:template priority="1" match="//text()[following-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add']]">
 		<!-- Text VOR subst/mod/add -->
-		
+		<span class="debug"><xsl:text>{preT}</xsl:text></span> <!-- TESTWEISE -->
 		
 		<xsl:choose>
 			<xsl:when test="following-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst']">
@@ -1045,7 +1054,6 @@
 				<!--<span class="debug"><xsl:text>{TEST_preT}</xsl:text></span>-->
 				<xsl:value-of select="."/>
 				<!--<span class="debug"><xsl:text>{add_preT}</xsl:text></span>-->
-				
 				
 				<xsl:variable name="vWortteil">
 					<xsl:call-template name="tPrecedingWortteil">
@@ -1070,19 +1078,18 @@
 			</xsl:when>
 		</xsl:choose>
 		
+		<span class="debug"><xsl:text>{/preT}</xsl:text></span> <!-- TESTWEISE -->
 	</xsl:template>
 
 	<!--11.12.2014TESTWEISE<xsl:template  match="//text()[preceding-sibling::*[1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add' or local-name(.)='del']]">-->
 	<!--<xsl:template  match="//text()[preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add' or local-name(.)='del']]"> 16.04.2015 -->
-	<xsl:template
+	<xsl:template priority="1"
 		match="//text()[preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add']]">
 		<!--<xsl:template  match="//text()[preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add' or local-name(.)='del']][not(local-name(parent::*/parent::*)='choice')]">-->
 		<!-- Text NACH subst/mod/add -->
 		<!-- behandelt gegebenenfalls auch nachfolgende Wortzusammenfügungen -->
 
-		<!--<xsl:text>{StrNachSubstAddMod}</xsl:text> <!-\- TESTWEISE -\->-->
-
-		<!--<xsl:text>{TextNachEle}</xsl:text>-->
+		<span class="debug"><xsl:text>{folT}</xsl:text></span> <!-- TESTWEISE -->
 
 		<xsl:variable name="vMitNote">
 			<xsl:call-template name="tNoteFolgt">
@@ -1092,7 +1099,6 @@
 				/>
 			</xsl:call-template>
 		</xsl:variable>
-		
 		
 		<xsl:choose>
 			<xsl:when test="$vMitNote='true'">
@@ -1123,7 +1129,6 @@
 					</xsl:when>
 					<xsl:when test="preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='mod']">
 						<!-- <mod> -->
-						
 						
 						<xsl:variable name="vWortteil">
 							<xsl:value-of select="substring-before(current(),' ')"/>
@@ -1157,7 +1162,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 
-		<!--<xsl:text>{/StrNachSubstAddMod}</xsl:text> <!-\- TESTWEISE -\->-->
+		<span class="debug"><xsl:text>{/folT}</xsl:text></span> <!-- TESTWEISE -->
 	</xsl:template>
 
 	<!-- <subst> -->
@@ -1170,7 +1175,6 @@
 				<xsl:with-param name="pNode" select="."/>
 			</xsl:call-template>
 		</xsl:variable>
-		
 		
 		<!-- Bezugsknoten -->
 		<xsl:variable name="vBezug" select="."/>
@@ -1281,8 +1285,9 @@
 	</xsl:template>
 
 	<xsl:template match="//tei:add[parent::tei:subst]">
+		<span class="debug"><xsl:text>{add-subst}</xsl:text></span> <!-- TESTWEISE -->
 		<xsl:apply-templates/>
-		
+		<span class="debug"><xsl:text>{/add-subst}</xsl:text></span> <!-- TESTWEISE -->
 	</xsl:template>
 
 	<xsl:template match="//tei:del[parent::tei:subst]">
@@ -1295,7 +1300,7 @@
 
 	<xsl:template
 		match="//tei:add[not(parent::*[local-name(.)='subst'] and not(parent::*[local-name(.)='num']))]">
-		<!--<xsl:text>{add-oP}</xsl:text> <!-\- TESTWEISE -\->-->
+		<span class="debug"><xsl:text>{add-oP}</xsl:text></span> <!-- TESTWEISE -->
 
 		<xsl:variable name="vNoteFolgt">
 			<!-- ermittelt, ob eine <note> angehängt ist -->
@@ -1317,7 +1322,6 @@
 			</xsl:call-template>
 		</xsl:variable>
 
-
 		<!-- Bezugsknoten -->
 		<xsl:variable name="vBezug" select="."/>
 
@@ -1336,21 +1340,17 @@
 			</xsl:call-template>
 		</xsl:variable>
 
-
 		<!-- Variablen/Mengen für Hand A-W bzw. Hand X-Z -->
 		<xsl:variable name="vHandABC" select="'ABCDEFGHIJKLMNOPQRSTUVW'"/>
-		<xsl:variable name="vHandXYZ" select="'XYZ'"/>	
-		
-		
-
-		
-		
+		<xsl:variable name="vHandXYZ" select="'XYZ'"/>
 		
 		<xsl:choose>
 			<xsl:when test="$vNoteFolgt='true'">
 				<!-- <note> folgt => Fußnote wird bereits gesetzt -->
 				
 				<xsl:apply-templates select="./node()"/>
+				
+				<span class="debug"><xsl:text>{!funoFolgt!}</xsl:text></span> <!-- TESTWEISE -->
 				
 			</xsl:when>
 			<xsl:otherwise>
@@ -1662,6 +1662,8 @@
 
 			</xsl:otherwise>
 		</xsl:choose>
+		
+		<span class="debug"><xsl:text>{/add-oP}</xsl:text></span> <!-- TESTWEISE -->
 	</xsl:template>
 
 	<!-- </add> -->
