@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de" xml:id="test123">
+   <teiHeader>
+      <fileDesc>
+         <titleStmt>
+            <title type="main" xml:lang="ger">TESTdaten </title>
+            <title type="sub" xml:lang="ger">xyz</title>
+            <title type="sub" xml:lang="eng">xzy</title>
+            <respStmt>
+               <persName key="x">
+                  <forename>x</forename>
+                  <surname>x</surname>
+               </persName>
+               <resp xml:lang="ger">Projektleitung</resp>
+               <resp xml:lang="eng">Project lead</resp>
+            </respStmt>
+            <funder>x</funder>
+         </titleStmt>
+         <publicationStmt>
+            <publisher>
+               <persName>x</persName>
+            </publisher>
+         </publicationStmt>
+         <sourceDesc>
+            <msDesc>
+               <msIdentifier>
+                  <settlement>x</settlement>
+                  <repository>x</repository>
+                  <idno>x</idno>
+                  <msName/>
+                  <altIdentifier type="former">
+                     <settlement/>
+                     <repository/>
+                     <idno/>
+                     <note type="date">
+                        <date/>
+                     </note>
+                  </altIdentifier>
+                  <altIdentifier type="siglum">
+                     <idno>M1</idno>
+                     <note/>
+                  </altIdentifier>
+               </msIdentifier>
+               <head>
+                  <title type="main">TESTdaten_head</title>
+               </head>
+               <msContents>
+                  <summary>
+                     <p>xyz</p>
+                  </summary>
+               </msContents>
+               <physDesc>
+                  <objectDesc form="codex">
+                     <supportDesc>
+                        <support>
+                           <material>x</material>
+                        </support>
+                     </supportDesc>
+                     <layoutDesc>
+                        <layout columns="1"/>
+                     </layoutDesc>
+                  </objectDesc>
+                  <handDesc>
+                     <handNote/>
+                  </handDesc>
+                  <scriptDesc>
+                     <scriptNote>x</scriptNote>
+                  </scriptDesc>
+                  <decoDesc>
+                     <p>x</p>
+                  </decoDesc>
+                  <bindingDesc>
+                     <binding>
+                        <p>x</p>
+                     </binding>
+                  </bindingDesc>
+               </physDesc>
+               <history>
+                  <origin>
+                     <p></p>
+                  </origin>
+                  <provenance>
+                     <p></p>
+                  </provenance>
+                  <acquisition/>
+               </history>
+               <additional>
+                  <surrogates/>
+                  <listBibl>
+                     <listBibl type="lit">
+                        <bibl>x</bibl>
+                     </listBibl>
+                     <listBibl type="cat">
+                        <bibl>x</bibl>
+                     </listBibl>
+                     <listBibl type="abb">
+                        <bibl>x</bibl>
+                     </listBibl>
+                  </listBibl>
+               </additional>
+            </msDesc>
+         </sourceDesc>
+      </fileDesc>
+      <encodingDesc>
+         <p></p>
+         <projectDesc>
+            <p></p>
+         </projectDesc>
+         <editorialDecl>
+            <p></p>
+         </editorialDecl>
+      </encodingDesc>
+      <revisionDesc>
+         <change who="x" when="2015-04-01">x</change>
+      </revisionDesc>
+   </teiHeader>
+   <text>
+      <front>
+         <div type="scribe" xml:id="divScribe">
+            <p></p>
+         </div>
+         <div type="letters" xml:id="divLett">
+            <p></p>
+         </div>
+         <div type="abbreviations" xml:id="divAbbr">
+            <p></p>
+         </div>
+         <div type="punctuation" xml:id="divPunct"/>
+         <div type="structure" xml:id="divStruct">
+         </div>
+         <div type="other" xml:id="divOther">
+            <p></p>
+         </div>
+      </front>
+      <body>
+
+         <cb n="23r"/>
+         <lb n="19"/>
+         
+         <ab type="text" xml:id="xyz-1337r-1" corresp="1337">
+            
+            <add hand="X">testHandX</add>
+            
+            Text1 
+            
+            <add>test</add>
+            
+            Text2 
+            
+            <add hand="X">testHandX</add>
+            
+            Text3
+            
+            <add hand="A">testHandA</add>
+            
+            Text4
+            
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-01" corresp="1337">
+            Bla<add>333</add>bla blablablabla<add>1</add>blablabla<add>22</add>blablababla bla.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-02" corresp="1337">
+            Bla<add hand="X">333</add>bla blablablabla<add hand="X">1</add>blablabla<add hand="X">22</add>blablababla bla.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-03" corresp="1337">
+            Bla<add hand="A">333</add>bla blablablabla<add hand="A">1</add>blablabla<add hand="A">22</add>blablababla bla.
+         </ab>
+         
+         <milestone unit="capitulare" n="BK.1337"/>
+         
+         <ab type="text" xml:id="xyz-1337r-110" corresp="1337">
+            Bla333bla blablabla bla1bla bla bla22bla blababla bla.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-11" corresp="1337">
+            Bla<add>333</add>bla blablabla bla<add>1</add>bla bla bla<add>22</add>bla blababla bla.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-12" corresp="1337">
+            Bla<add hand="X">333</add>bla blablabla bla<add hand="X">1</add>bla bla bla<add hand="X">22</add>bla blababla bla.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-13" corresp="1337">
+            Bla<add hand="A">333</add>bla blablabla bla<add hand="A">1</add>bla bla bla<add hand="A">22</add>bla blababla bla.
+         </ab>
+         
+         <milestone unit="capitulare" n="BK.1337"/>
+         
+         
+         <ab type="text" xml:id="xyz-1337r-210" corresp="1337">
+            Bla333bla blablabla bla 1bla bla bla22 bla blababla bla 4444 bla.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-21" corresp="1337">
+            Bla<add>333</add>bla blablabla bla <add>1</add>bla bla bla<add>22</add> bla blababla bla <add>4444</add> bla.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-22" corresp="1337">
+            Bla<add hand="X">333</add>bla blablabla bla <add hand="X">1</add>bla bla bla<add hand="X">22</add> bla blababla bla <add hand="X">4444</add> bla.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-23" corresp="1337">
+            Bla<add hand="A">333</add>bla blablabla bla <add hand="A">1</add>bla bla bla<add hand="A">22</add> bla blababla bla <add hand="A">4444</add> bla.
+         </ab>
+
+
+
+
+      </body>
+   </text>
+</TEI>
