@@ -252,6 +252,27 @@
          </ab>
 
 
+         <milestone unit="capitulare" n="BK.1337"/>
+         
+         
+         <ab type="text" xml:id="xyz-1337r-40" corresp="1337">
+            Eins zw2ei drei 4vier fünf sechs6 sieben acht 9 zehn elf zw12ölf dreizehn 14vierzehn fünfzehn15 sechzehn 17 achtzehn neunzehn zwanzig.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-41" corresp="1337">
+            Eins zw<add>2</add>ei drei <add>4</add>vier fünf sechs<add>6</add> sieben acht <add>9</add> zehn elf zw<add>12</add>ölf dreizehn <add>14</add>vierzehn fünfzehn<add>15</add> sechzehn <add>17</add> achtzehn neunzehn zwanzig.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-42" corresp="1337">
+            Eins zw<add hand="X">2</add>ei drei <add hand="X">4</add>vier fünf sechs<add hand="X">6</add> sieben acht <add hand="X">9</add> zehn elf zw<add hand="X">12</add>ölf dreizehn <add hand="X">14</add>vierzehn fünfzehn<add hand="X">15</add> sechzehn <add hand="X">17</add> achtzehn neunzehn zwanzig.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-43" corresp="1337">
+            Eins zw<add hand="A">2</add>ei drei <add hand="A">4</add>vier fünf sechs<add hand="A">6</add> sieben acht <add hand="A">9</add> zehn elf zw<add hand="A">12</add>ölf dreizehn <add hand="A">14</add>vierzehn fünfzehn<add hand="A">15</add> sechzehn <add hand="A">17</add> achtzehn neunzehn zwanzig.
+         </ab>
+         
+
+
       </body>
    </text>
 </TEI>

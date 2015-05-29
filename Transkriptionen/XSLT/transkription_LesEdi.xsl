@@ -1737,7 +1737,13 @@
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
 								</xsl:variable>
-								<xsl:value-of select="$vWortEnde"/>
+								<!--<xsl:value-of select="$vWortEnde"/>-->
+								<!--<xsl:value-of select="substring($vWortEnde,string-length(current()/node())+1)"/> <!-\- tFollowingWortteil beinhaltet auch den aktuellen/übergebenen Knoten => wieder abschneiden! -\->-->
+								
+								<xsl:variable name="vCurrentNode">
+									<xsl:apply-templates select="current()/node()"/>
+								</xsl:variable>
+								<xsl:value-of select="substring($vWortEnde,string-length($vCurrentNode)+1)"/> <!-- tFollowingWortteil beinhaltet auch den aktuellen/übergebenen Knoten => wieder abschneiden! -->
 								
 								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
 									class="noteLink">
@@ -1771,7 +1777,14 @@
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
 								</xsl:variable>
-								<xsl:value-of select="$vWortEnde"/>
+								<!--<xsl:value-of select="$vWortEnde"/>-->
+								<!--<xsl:value-of select="substring($vWortEnde,string-length(current()/node())+1)"/> <!-\- tFollowingWortteil beinhaltet auch den aktuellen/übergebenen Knoten => wieder abschneiden! -\->-->
+								
+								<xsl:variable name="vCurrentNode">
+									<xsl:apply-templates select="current()/node()"/>
+								</xsl:variable>
+								<xsl:value-of select="substring($vWortEnde,string-length($vCurrentNode)+1)"/> <!-- tFollowingWortteil beinhaltet auch den aktuellen/übergebenen Knoten => wieder abschneiden! -->
+								
 								
 								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
 									class="noteLink">
@@ -1806,7 +1819,8 @@
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
 								</xsl:variable>
-								<xsl:value-of select="$vWortEnde"/>
+								<!--<xsl:value-of select="$vWortEnde"/>-->
+								<!--<xsl:value-of select="substring($vWortEnde,string-length(current()/node())+1)"/> <!-\- tFollowingWortteil beinhaltet auch den aktuellen/übergebenen Knoten => wieder abschneiden! -\->-->
 								
 								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
 									class="noteLink">
