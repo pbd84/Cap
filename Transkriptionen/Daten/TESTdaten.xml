@@ -137,6 +137,26 @@
          <cb n="23r"/>
          <lb n="19"/>
          
+         <ab type="text" xml:id="xyz-1337r-0" corresp="1337">
+            
+            testHandX
+            
+            Text1 
+            
+            test
+            
+            Text2 
+            
+            testHandX
+            
+            Text3
+            
+            testHandA
+            
+            Text4
+            
+         </ab>
+         
          <ab type="text" xml:id="xyz-1337r-1" corresp="1337">
             
             <add hand="X">testHandX</add>
@@ -157,6 +177,12 @@
             
          </ab>
          
+         <milestone unit="capitulare" n="BK.1337"/>         
+         
+         <ab type="text" xml:id="xyz-1337r-00" corresp="1337">
+            Bla333bla blablablabla1blablabla22blablababla bla.
+         </ab>
+         
          <ab type="text" xml:id="xyz-1337r-01" corresp="1337">
             Bla<add>333</add>bla blablablabla<add>1</add>blablabla<add>22</add>blablababla bla.
          </ab>
@@ -171,7 +197,7 @@
          
          <milestone unit="capitulare" n="BK.1337"/>
          
-         <ab type="text" xml:id="xyz-1337r-110" corresp="1337">
+         <ab type="text" xml:id="xyz-1337r-10" corresp="1337">
             Bla333bla blablabla bla1bla bla bla22bla blababla bla.
          </ab>
          
@@ -190,7 +216,7 @@
          <milestone unit="capitulare" n="BK.1337"/>
          
          
-         <ab type="text" xml:id="xyz-1337r-210" corresp="1337">
+         <ab type="text" xml:id="xyz-1337r-20" corresp="1337">
             Bla333bla blablabla bla 1bla bla bla22 bla blababla bla 4444 bla.
          </ab>
          
@@ -206,7 +232,24 @@
             Bla<add hand="A">333</add>bla blablabla bla <add hand="A">1</add>bla bla bla<add hand="A">22</add> bla blababla bla <add hand="A">4444</add> bla.
          </ab>
 
-
+         <milestone unit="capitulare" n="BK.1337"/>
+         
+         
+         <ab type="text" xml:id="xyz-1337r-30" corresp="1337">
+            Blabla bla333bla blablabla bla 1bla bla bla22 bla blababla bla 4444 bla.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-31" corresp="1337">
+            Blabla bla<add>333</add>bla blablabla bla <add>1</add>bla bla bla<add>22</add> bla blababla bla <add>4444</add> bla.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-32" corresp="1337">
+            Blabla bla<add hand="X">333</add>bla blablabla bla <add hand="X">1</add>bla bla bla<add hand="X">22</add> bla blababla bla <add hand="X">4444</add> bla.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-33" corresp="1337">
+            Blabla bla<add hand="A">333</add>bla blablabla bla <add hand="A">1</add>bla bla bla<add hand="A">22</add> bla blababla bla <add hand="A">4444</add> bla.
+         </ab>
 
 
       </body>
