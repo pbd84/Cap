@@ -1323,7 +1323,7 @@
 				<!--<span class="debug"><xsl:text>{noHand}</xsl:text></span>-->
 				
 				<xsl:variable name="vWortEnde">
-					<xsl:call-template name="tFollowingWortteil">
+					<xsl:call-template name="tAddRestOfWord">
 						<xsl:with-param name="pFollowingTextThis" select="tei:add"/>
 						<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 					</xsl:call-template>
@@ -1340,7 +1340,7 @@
 				<!--<span class="debug"><xsl:text>{abcHand}</xsl:text></span>-->
 				
 				<xsl:variable name="vWortEnde">
-					<xsl:call-template name="tFollowingWortteil">
+					<xsl:call-template name="tAddRestOfWord">
 						<xsl:with-param name="pFollowingTextThis" select="tei:add"/>
 						<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 					</xsl:call-template>
@@ -1359,7 +1359,7 @@
 				<!--<span class="debug"><xsl:text>{xyzHand}</xsl:text></span>-->
 				
 				<xsl:variable name="vWortEnde">
-					<xsl:call-template name="tFollowingWortteil">
+					<xsl:call-template name="tAddRestOfWord">
 						<xsl:with-param name="pFollowingTextThis" select="tei:del"/>
 						<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 					</xsl:call-template>
@@ -1489,7 +1489,7 @@
 								
 								<!--<xsl:apply-templates select="./node()"/>-->
 								<xsl:variable name="vWortEnde">
-									<xsl:call-template name="tFollowingWortteil">
+									<xsl:call-template name="tAddRestOfWord">
 										<xsl:with-param name="pFollowingTextThis" select="."/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
@@ -1511,7 +1511,7 @@
 								<!--<xsl:apply-templates select="./node()"/>-->
 								
 								<xsl:variable name="vWortEnde">
-									<xsl:call-template name="tFollowingWortteil">
+									<xsl:call-template name="tAddRestOfWord">
 										<xsl:with-param name="pFollowingTextThis" select="."/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
@@ -1610,7 +1610,7 @@
 								
 								<!-- ACHTUNG: vWortEnde beinhaltet auch ./node() (="Start-Node") -->
 								<xsl:variable name="vWortEnde">
-									<xsl:call-template name="tFollowingWortteil">
+									<xsl:call-template name="tAddRestOfWord">
 										<xsl:with-param name="pFollowingTextThis" select="."/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
@@ -1632,7 +1632,7 @@
 								
 								<!-- ACHTUNG: vWortEnde beinhaltet auch ./node() (="Start-Node") -->
 								<xsl:variable name="vWortEnde">
-									<xsl:call-template name="tFollowingWortteil">
+									<xsl:call-template name="tAddRestOfWord">
 										<xsl:with-param name="pFollowingTextThis" select="."/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
@@ -1732,7 +1732,7 @@
 								
 								<!--<xsl:apply-templates select="./node()"/>-->
 								<xsl:variable name="vWortEnde">
-									<xsl:call-template name="tFollowingWortteil">
+									<xsl:call-template name="tAddRestOfWord">
 										<xsl:with-param name="pFollowingTextThis" select="."/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
@@ -1772,7 +1772,7 @@
 								
 								<!--<xsl:apply-templates select="./node()"/>-->
 								<xsl:variable name="vWortEnde">
-									<xsl:call-template name="tFollowingWortteil">
+									<xsl:call-template name="tAddRestOfWord">
 										<xsl:with-param name="pFollowingTextThis" select="."/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
@@ -1814,7 +1814,7 @@
 								
 								<!--<xsl:apply-templates select="./node()"/>-->
 								<xsl:variable name="vWortEnde">
-									<xsl:call-template name="tFollowingWortteil">
+									<xsl:call-template name="tAddRestOfWord">
 										<xsl:with-param name="pFollowingTextThis" select="."/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
@@ -1913,7 +1913,7 @@
 		</xsl:variable>
 		
 		<xsl:variable name="vWortEnde">
-			<xsl:call-template name="tFollowingWortteil">
+			<xsl:call-template name="tAddRestOfWord">
 				<xsl:with-param name="pFollowingTextThis" select="."/>
 				<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 			</xsl:call-template>
@@ -3108,7 +3108,7 @@
 		</xsl:variable>
 
 		<xsl:variable name="vFollowingWortteil">
-			<xsl:call-template name="tFollowingWortteil">
+			<xsl:call-template name="tAddRestOfWord">
 				<xsl:with-param name="pFollowingTextThis" select="$pNode/following::text()[1]"/>
 				<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 			</xsl:call-template>
@@ -3174,10 +3174,111 @@
 	<xsl:template name="tFollowingWortteil">
 		<!--  -->
 		
-		
+		<xsl:param name="pFirst"/>
 		<xsl:param name="pFollowingTextThis"/>
 		<xsl:param name="pFollowingTextBeforeNode"/>
 
+		<xsl:choose>
+			<xsl:when test="contains($pFollowingTextThis,' ')">
+				<!-- Element beinhaltet Leerzeichen => davor den vorhergehenden text() ausgeben + text() des Elements bis Leerzeichen ausgeben -->
+				
+				<xsl:variable name="vSubstringBefore">
+					<xsl:value-of
+						select="normalize-space(substring-before($pFollowingTextThis,' '))"/>
+				</xsl:variable>
+				
+				<xsl:value-of select="$pFollowingTextBeforeNode"/>
+				<xsl:value-of select="$vSubstringBefore"/>
+				
+			</xsl:when>
+			<xsl:otherwise>
+				<!-- Element beinhaltet kein Leerzeichen => text() des Elements zu vorhergehendem text() hinzufügen + zu nächstem Element springen (Template rekursiv ausführen) -->
+				
+				<xsl:choose>
+					<xsl:when test="(local-name($pFollowingTextThis)='del' or local-name($pFollowingTextThis)='add') and (local-name($pFollowingTextThis/parent::*)='subst')">
+						<!--<span class="debug"><xsl:text>{IN SUBST}</xsl:text></span>-->
+						<!-- innerhalb von <subst> + Element ist <del> oder <add> -->
+						
+						
+						
+						<xsl:call-template name="tFollowingWortteil">
+							<xsl:with-param name="pFirst" select="false()"/>
+							<xsl:with-param name="pFollowingTextThis"
+								select="$pFollowingTextThis/parent::tei:subst/following::text()[1]"/>
+							<!--<xsl:with-param name="pFollowingTextBeforeNode" select="exslt:node-set($vTest)"/>-->
+							<xsl:with-param name="pFollowingTextBeforeNode">
+								<!--<span class="debug"><xsl:text>{$pFollowingTextBeforeNode}</xsl:text></span>-->
+								
+								<!--<xsl:text>{</xsl:text>-->
+								<xsl:value-of select="$pFollowingTextBeforeNode"/>
+								<!--<span class="debug"><xsl:text>{/$pFollowingTextBeforeNode}</xsl:text></span>-->
+								
+								
+								<xsl:if test="$pFirst!='true'">
+								
+									<xsl:choose>
+										<xsl:when test="count($pFollowingTextThis/node())>0">
+											<!--<xsl:text>{x}</xsl:text>-->
+											<xsl:apply-templates select="$pFollowingTextThis/node()"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<!--<xsl:text>{xx}</xsl:text>-->
+											<xsl:value-of select="$pFollowingTextThis"/>
+										</xsl:otherwise>
+									</xsl:choose>
+									
+								</xsl:if>
+								
+								<!--<xsl:text>}</xsl:text>-->
+							</xsl:with-param>
+						</xsl:call-template>
+						
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:call-template name="tFollowingWortteil">
+							<xsl:with-param name="pFirst" select="false()"/>
+							<xsl:with-param name="pFollowingTextThis"
+								select="$pFollowingTextThis/following::text()[1]"/>
+							<xsl:with-param name="pFollowingTextBeforeNode">
+								<!--<span class="debug"><xsl:text>{$pFollowingTextBeforeNode}</xsl:text></span>-->
+								<xsl:value-of select="$pFollowingTextBeforeNode"/>
+								<!--<span class="debug"><xsl:text>{/$pFollowingTextBeforeNode}</xsl:text></span>-->
+								<xsl:if test="$pFirst!='true'">
+									
+									
+								
+									<xsl:if test="count($pFollowingTextThis/ancestor::tei:note)=0">
+										<!-- ignoriert <note> => oftmals ohne Leerzeichen in direktem Anschluss an Wort -->
+									
+										<xsl:choose>
+										<xsl:when test="count($pFollowingTextThis/node())>0">
+											<!--<xsl:text>{x}</xsl:text>-->
+											<xsl:apply-templates select="$pFollowingTextThis/node()"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<!--<xsl:text>{xx}</xsl:text>-->
+											<xsl:value-of select="$pFollowingTextThis"/>
+										</xsl:otherwise>
+									</xsl:choose>
+									</xsl:if>
+									
+								</xsl:if>
+							</xsl:with-param>
+						</xsl:call-template>
+					</xsl:otherwise>
+				</xsl:choose>
+				
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template name="tAddRestOfWord">
+		<!--  -->
+		
+		
+		<xsl:param name="pFollowingTextThis"/>
+		<xsl:param name="pFollowingTextBeforeNode"/>
+		
 		<xsl:choose>
 			<xsl:when test="contains($pFollowingTextThis,' ')">
 				<!-- Element beinhaltet Leerzeichen => davor den vorhergehenden text() ausgeben + text() des Elements bis Leerzeichen ausgeben -->
@@ -3238,17 +3339,17 @@
 								<!--<span class="debug"><xsl:text>{/$pFollowingTextBeforeNode}</xsl:text></span>-->
 								<xsl:if test="count($pFollowingTextThis/ancestor::tei:note)=0">
 									<!-- ignoriert <note> => oftmals ohne Leerzeichen in direktem Anschluss an Wort -->
-								
+									
 									<xsl:choose>
-									<xsl:when test="count($pFollowingTextThis/node())>0">
-										<!--<xsl:text>{x}</xsl:text>-->
-										<xsl:apply-templates select="$pFollowingTextThis/node()"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<!--<xsl:text>{xx}</xsl:text>-->
-										<xsl:value-of select="$pFollowingTextThis"/>
-									</xsl:otherwise>
-								</xsl:choose>
+										<xsl:when test="count($pFollowingTextThis/node())>0">
+											<!--<xsl:text>{x}</xsl:text>-->
+											<xsl:apply-templates select="$pFollowingTextThis/node()"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<!--<xsl:text>{xx}</xsl:text>-->
+											<xsl:value-of select="$pFollowingTextThis"/>
+										</xsl:otherwise>
+									</xsl:choose>
 								</xsl:if>
 							</xsl:with-param>
 						</xsl:call-template>

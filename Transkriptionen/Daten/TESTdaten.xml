@@ -271,8 +271,26 @@
             Eins zw<add hand="A">2</add>ei drei <add hand="A">4</add>vier fünf sechs<add hand="A">6</add> sieben acht <add hand="A">9</add> zehn elf zw<add hand="A">12</add>ölf dreizehn <add hand="A">14</add>vierzehn fünfzehn<add hand="A">15</add> sechzehn <add hand="A">17</add> achtzehn neunzehn zwanzig.
          </ab>
          
-
-
+         <milestone unit="capitulare" n="BK.1337"/>
+         
+         <ab type="text" xml:id="xyz-1337r-100" corresp="1337">
+            Ein Satz ist eine aus einem Wort oder mehreren Wörtern bestehende in sich geschlossene sprachliche Einheit, mit der ein Sprechakt vollzogen wird.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-101" corresp="1337">
+            Ein S<add>a</add>tz ist eine aus <add>einem</add> Wort oder mehreren W<add>ört</add>ern bestehende in sich ge<add>sch</add>lossene sprachliche <add>Einheit</add>, mit <add>der</add><lb/> ein Sprechakt vollzogen wird.
+         </ab>
+         
+         
+         <milestone unit="capitulare" n="BK.1337"/>
+         
+         <ab type="text" xml:id="xyz-1337r-200" corresp="1337">
+            Ein Satz ist eine aus einem Wort oder mehreren Wörtern bestehende in sich geschlossene sprachliche Einheit, mit der ein Sprechakt vollzogen wird.
+         </ab>
+         
+         <ab type="text" xml:id="xyz-1337r-201" corresp="1337">
+            Ein Satz ist eine aus einem Wort oder mehreren Wörtern bestehende in sich geschlossene sprachliche Einheit, mit der ein Sprechakt vollzogen wird.
+         </ab>
       </body>
    </text>
 </TEI>
