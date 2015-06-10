@@ -1152,29 +1152,106 @@
 	<xsl:template match="//tei:subst">
 		<!--<xsl:text>{subst}</xsl:text> <!-\- TESTWEISE -\->-->
 		
+		
+		
+		
+		
+		
 		<xsl:variable name="vNoteFolgt">
 			<xsl:call-template name="tNoteFolgt">
 				<xsl:with-param name="pNode" select="."/>
 			</xsl:call-template>
 		</xsl:variable>
 		
-<!--		<xsl:text>{TEST|Nachf.:</xsl:text>
-		<xsl:value-of select="local-name(./following-sibling::*[not(local-name(.)='metamark' or local-name(.)='lb')][1])"/>
-		<xsl:text>|TEST}</xsl:text>-->
+		<!-- Bezugsknoten -->
+		<xsl:variable name="vBezug" select="."/>
 		
-		<!--<xsl:text>{xsl:value-of select="tei:add"(subst)}</xsl:text>-->
-		<!--<xsl:value-of select="tei:add"/> 19.03.2015-->
+		<!-- Text für Tooltip erstellen -->
+		<xsl:variable name="vFunoText">
+			<xsl:call-template name="tFunoText_alphabetisch">
+				<xsl:with-param name="pNode" select="$vBezug"/>
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<!-- Position ermitteln -->
+		<xsl:variable name="vIndex">
+			<xsl:call-template name="indexOf_a">
+				<xsl:with-param name="pSeq" select="$funoAlphabetisch"/>
+				<xsl:with-param name="pNode" select="$vBezug"/>
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<!-- Variablen/Mengen für Hand A-W bzw. Hand X-Z -->
+		<xsl:variable name="vHandABC" select="'ABCDEFGHIJKLMNOPQRSTUVW'"/>
+		<xsl:variable name="vHandXYZ" select="'XYZ'"/>
+		
+		<!--<span class="debug"><xsl:text>{subst}</xsl:text></span>-->
+		
+		<xsl:choose>
+			<xsl:when test="not(tei:add/@hand)">
+				<!-- keine Hand -->
+				<xsl:apply-templates select="tei:add"/>
+			</xsl:when>
+			<xsl:when test="string-length(tei:add/@hand)!=string-length(translate(tei:add/@hand,$vHandABC,''))">
+				<!-- entspricht "normaler" Hand -->
+				<xsl:apply-templates select="tei:add"/>
+			</xsl:when>
+			<xsl:when test="string-length(tei:add/@hand)!=string-length(translate(tei:add/@hand,$vHandXYZ,''))">
+				<!-- entspricht "spezieller" Hand -->
+				<xsl:apply-templates select="tei:del"/>
+			</xsl:when>			
+		</xsl:choose>
+		
+		<xsl:choose>
+			<xsl:when test="$vNoteFolgt='true'">
+				<!-- nachfolgende <note> setzt Fußnotenverweis -->
+			</xsl:when>
+			<xsl:otherwise>
+				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
+					<xsl:attribute name="title">
+						<xsl:call-template name="tTooltip">
+							<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
+						</xsl:call-template>
+					</xsl:attribute>
+					<sup>
+						<xsl:value-of select="$vIndex"/>
+						<xsl:if test="$vIndex=''">
+							<xsl:text>{NoIndex}</xsl:text>
+						</xsl:if>
+					</sup>
+				</a>
+			</xsl:otherwise>
+		</xsl:choose>
+		
+		
+		
+		
+		
+		
+		<!--
+		<xsl:variable name="vNoteFolgt">
+			<xsl:call-template name="tNoteFolgt">
+				<xsl:with-param name="pNode" select="."/>
+			</xsl:call-template>
+		</xsl:variable>
+		
+<!-\-		<xsl:text>{TEST|Nachf.:</xsl:text>
+		<xsl:value-of select="local-name(./following-sibling::*[not(local-name(.)='metamark' or local-name(.)='lb')][1])"/>
+		<xsl:text>|TEST}</xsl:text>-\->
+		
+		<!-\-<xsl:text>{xsl:value-of select="tei:add"(subst)}</xsl:text>-\->
+		<!-\-<xsl:value-of select="tei:add"/> 19.03.2015-\->
 		<xsl:apply-templates select="tei:add"/>
-		<!--<xsl:text>{/xsl:value-of select="tei:add"(subst)}</xsl:text>-->
+		<!-\-<xsl:text>{/xsl:value-of select="tei:add"(subst)}</xsl:text>-\->
 		
 		<xsl:choose>
 			<xsl:when test="count(following-sibling::node())=0">
-				<!-- einziges Element auf dieser Ebene -->
+				<!-\- einziges Element auf dieser Ebene -\->
 				
-				<!-- Bezugsknoten -->
+				<!-\- Bezugsknoten -\->
 				<xsl:variable name="vBezug" select="."/>
 				
-				<!-- Text für Tooltip erstellen -->
+				<!-\- Text für Tooltip erstellen -\->
 				<xsl:variable name="vFunoText">
 					<xsl:call-template name="tFunoText_alphabetisch">
 						<xsl:with-param name="pNode" select="$vBezug"/>
@@ -1188,7 +1265,7 @@
 					</xsl:call-template>
 				</xsl:variable>
 				
-				<!--<xsl:text>{funo1}</xsl:text>-->
+				<!-\-<xsl:text>{funo1}</xsl:text>-\->
 				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
 					<xsl:attribute name="title">
 						<xsl:call-template name="tTooltip">
@@ -1197,28 +1274,28 @@
 					</xsl:attribute>
 					<sup><xsl:value-of select="$vIndex"/><xsl:if test="$vIndex=''"><xsl:text>{NoIndex}</xsl:text></xsl:if></sup>
 				</a>
-				<!--<xsl:text>{/funo1}</xsl:text>-->
+				<!-\-<xsl:text>{/funo1}</xsl:text>-\->
 			</xsl:when>
-			<!--<xsl:when test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ')">-->
+			<!-\-<xsl:when test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ')">-\->
 			<xsl:when test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ') and (following-sibling::node()/text()[1]!=' ')">
-				<!--<xsl:when test="following-sibling::node()[not(local-name(.)='metamark') and not(local-name(.)='lb')][1]=following-sibling::text()[1]">-->
-				<!-- wenn direkt ein Textelement nachfolgt -->
+				<!-\-<xsl:when test="following-sibling::node()[not(local-name(.)='metamark') and not(local-name(.)='lb')][1]=following-sibling::text()[1]">-\->
+				<!-\- wenn direkt ein Textelement nachfolgt -\->
 				
-				<!-- ?!? -->
+				<!-\- ?!? -\->
 			</xsl:when>
 			<xsl:otherwise>
-				<!-- wenn kein Textelement nachfolgt -->
+				<!-\- wenn kein Textelement nachfolgt -\->
 				
 				<xsl:choose>
 					<xsl:when test="$vNoteFolgt='true'">
-						<!-- mit <note> -->
+						<!-\- mit <note> -\->
 						
 					</xsl:when>
 					<xsl:otherwise>
-						<!-- ohne <note> -->
+						<!-\- ohne <note> -\->
 						
 						<xsl:variable name="vLeerzeichenFolgt">
-							<!--<xsl:call-template name="tLeerzeichenFolgt">-->
+							<!-\-<xsl:call-template name="tLeerzeichenFolgt">-\->
 							<xsl:call-template name="tLeerzeichenDanach">
 								<xsl:with-param name="pNode" select="."/>
 							</xsl:call-template>
@@ -1226,18 +1303,18 @@
 						
 						<xsl:choose>
 							<xsl:when test="$vLeerzeichenFolgt='false'">
-								<!-- Wortende folgt im nächsten text() -->
+								<!-\- Wortende folgt im nächsten text() -\->
 								
 								
-								<!--<xsl:text>{unv.}</xsl:text>-->
+								<!-\-<xsl:text>{unv.}</xsl:text>-\->
 							</xsl:when>
 							<xsl:otherwise>
-								<!-- Wort vollständig -->
+								<!-\- Wort vollständig -\->
 								
-								<!-- Bezugsknoten -->
+								<!-\- Bezugsknoten -\->
 								<xsl:variable name="vBezug" select="."/>
 								
-								<!-- Text für Tooltip erstellen -->
+								<!-\- Text für Tooltip erstellen -\->
 								<xsl:variable name="vFunoText">
 									<xsl:call-template name="tFunoText_alphabetisch">
 										<xsl:with-param name="pNode" select="$vBezug"/>
@@ -1251,7 +1328,7 @@
 									</xsl:call-template>
 								</xsl:variable>
 								
-								<!--<xsl:text>{funo}</xsl:text>-->
+								<!-\-<xsl:text>{funo}</xsl:text>-\->
 								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
 									<xsl:attribute name="title">
 										<xsl:call-template name="tTooltip">
@@ -1260,7 +1337,7 @@
 									</xsl:attribute>
 									<sup><xsl:value-of select="$vIndex"/><xsl:if test="$vIndex=''"><xsl:text>{NoIndex}</xsl:text></xsl:if></sup>
 								</a>
-								<!--<xsl:text>{/funo}</xsl:text>-->
+								<!-\-<xsl:text>{/funo}</xsl:text>-\->
 								
 							</xsl:otherwise>
 						</xsl:choose>
@@ -1268,7 +1345,7 @@
 				</xsl:choose>
 				
 			</xsl:otherwise>
-		</xsl:choose>
+		</xsl:choose>-->
 		
 <!--		<xsl:choose>
 			<xsl:when test="following-sibling::node()[1]=following-sibling::text()[1]">
@@ -1343,23 +1420,289 @@
 	<xsl:template match="//tei:add[not(parent::*[local-name(.)='subst'] and not(parent::*[local-name(.)='num']))]">
 		<!--<xsl:text>{add-oP}</xsl:text> <!-\- TESTWEISE -\->-->
 		
+		
+		
+		<xsl:variable name="vNoteFolgt">
+			<!-- ermittelt, ob eine <note> angehängt ist -->
+			<xsl:call-template name="tNoteFolgt">
+				<xsl:with-param name="pNode" select="."/>
+			</xsl:call-template>
+		</xsl:variable>
+
+		<xsl:variable name="vLeerzeichenDavor">
+			<!-- Leerzeichen vor Element? -->
+			<xsl:call-template name="tLeerzeichenDavor">
+				<xsl:with-param name="pNode" select="current()"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="vLeerzeichenDanach">
+			<!-- Leerzeichen nach Element? -->
+			<xsl:call-template name="tLeerzeichenDanach">
+				<xsl:with-param name="pNode" select="current()"/>
+			</xsl:call-template>
+		</xsl:variable>
+
+		<!-- Bezugsknoten -->
+		<xsl:variable name="vBezug" select="."/>
+
+		<!-- Text für Tooltip erstellen -->
+		<xsl:variable name="vFunoText">
+			<xsl:call-template name="tFunoText_alphabetisch">
+				<xsl:with-param name="pNode" select="$vBezug"/>
+			</xsl:call-template>
+		</xsl:variable>
+
+		<!-- Position ermitteln -->
+		<xsl:variable name="vIndex">
+			<xsl:call-template name="indexOf_a">
+				<xsl:with-param name="pSeq" select="$funoAlphabetisch"/>
+				<xsl:with-param name="pNode" select="$vBezug"/>
+			</xsl:call-template>
+		</xsl:variable>
+
+		<!-- Variablen/Mengen für Hand A-W bzw. Hand X-Z -->
+		<xsl:variable name="vHandABC" select="'ABCDEFGHIJKLMNOPQRSTUVW'"/>
+		<xsl:variable name="vHandXYZ" select="'XYZ'"/>
+		
+		<xsl:choose>
+			<xsl:when test="$vNoteFolgt='true'">
+				<!-- <note> folgt => Fußnote wird bereits gesetzt -->
+				
+				<xsl:apply-templates select="./node()"/>
+				
+				<span class="debug"><xsl:text>{!funoFolgt!}</xsl:text></span> <!-- TESTWEISE -->
+				
+			</xsl:when>
+			<xsl:otherwise>
+				<!-- es folgt keine <note> = automatische Fußnote wird generiert -->
+				
+				<xsl:choose>
+					<xsl:when test="not(@hand)">
+						<!-- keine Hand -->
+						
+						<xsl:choose>
+							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
+								<!-- befindet sich in Wort (kein Leerzeichen davor und kein Leerzeichen danach -->
+								
+								<xsl:apply-templates select="./node()"/>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='false'">
+								<!-- befindet sich am Wortanfang (Leerzeichen davor) -->
+								
+								<xsl:apply-templates select="./node()"/>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
+								<!-- befindet sich am Wortende (Leerzeichen danach) -->
+								
+								<span class="debug"><xsl:text>{LZ_ft}</xsl:text></span> <!-- TESTWEISE -->
+								
+								<xsl:apply-templates select="./node()"/>
+
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
+								<!-- steht alleine (Leerzeichen davor und Leerzeichen danach) -->
+								
+								<xsl:apply-templates select="./node()"/>
+								
+							</xsl:when>
+							<xsl:otherwise>
+								<span class="debug"><xsl:text>{TEST-add-FEHLER}</xsl:text></span>
+							</xsl:otherwise>
+						</xsl:choose>
+						
+						<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
+							class="noteLink">
+							<xsl:attribute name="title">
+								<xsl:call-template name="tTooltip">
+									<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"
+									/>
+								</xsl:call-template>
+							</xsl:attribute>
+							<sup>
+								<xsl:value-of select="$vIndex"/>
+								<xsl:if test="$vIndex=''">
+									<xsl:text>{NoIndex}</xsl:text>
+								</xsl:if>
+							</sup>
+						</a>
+						
+					</xsl:when>
+					<xsl:when test="string-length(@hand)!=string-length(translate(@hand,$vHandABC,''))">
+						<!-- entspricht "normaler" Hand -->
+
+						<xsl:choose>
+							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
+								<!-- befindet sich in Wort (kein Leerzeichen davor und kein Leerzeichen danach -->
+								
+								<xsl:apply-templates select="./node()"/>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='false'">
+								<!-- befindet sich am Wortanfang (Leerzeichen davor) -->
+								
+								<xsl:apply-templates select="./node()"/>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
+								<!-- befindet sich am Wortende (Leerzeichen danach) -->
+
+								<xsl:apply-templates select="./node()"/>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
+								<!-- steht alleine (Leerzeichen davor und Leerzeichen danach) -->
+								
+								<xsl:apply-templates select="./node()"/>
+								
+							</xsl:when>
+							<xsl:otherwise>
+								<span class="debug"><xsl:text>{TEST-add-FEHLER}</xsl:text></span>
+							</xsl:otherwise>
+						</xsl:choose>
+						
+						<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
+							class="noteLink">
+							<xsl:attribute name="title">
+								<xsl:call-template name="tTooltip">
+									<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"
+									/>
+								</xsl:call-template>
+							</xsl:attribute>
+							<sup>
+								<xsl:value-of select="$vIndex"/>
+								<xsl:if test="$vIndex=''">
+									<xsl:text>{NoIndex}</xsl:text>
+								</xsl:if>
+							</sup>
+						</a>
+
+					</xsl:when>
+					<xsl:when test="string-length(@hand)!=string-length(translate(@hand,$vHandXYZ,''))">
+						<!-- entspricht "spezieller" Hand -->
+
+						<xsl:choose>
+							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
+								<!-- befindet sich in Wort (kein Leerzeichen davor und kein Leerzeichen danach -->
+
+								<xsl:apply-templates select="./node()"/>
+								
+								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
+									class="noteLink">
+									<xsl:attribute name="title">
+										<xsl:call-template name="tTooltip">
+											<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"
+											/>
+										</xsl:call-template>
+									</xsl:attribute>
+									<sup>
+										<xsl:value-of select="$vIndex"/>
+										<xsl:if test="$vIndex=''">
+											<xsl:text>{NoIndex}</xsl:text>
+										</xsl:if>
+									</sup>
+								</a>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='false'">
+								<!-- befindet sich am Wortanfang (Leerzeichen davor) -->
+								
+								<xsl:apply-templates select="./node()"/>
+								
+								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
+									class="noteLink">
+									<xsl:attribute name="title">
+										<xsl:call-template name="tTooltip">
+											<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"
+											/>
+										</xsl:call-template>
+									</xsl:attribute>
+									<sup>
+										<xsl:value-of select="$vIndex"/>
+										<xsl:if test="$vIndex=''">
+											<xsl:text>{NoIndex}</xsl:text>
+										</xsl:if>
+									</sup>
+								</a>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
+								<!-- befindet sich am Wortende (Leerzeichen danach) -->
+
+								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
+									class="noteLink">
+									<xsl:attribute name="title">
+										<xsl:call-template name="tTooltip">
+											<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"
+											/>
+										</xsl:call-template>
+									</xsl:attribute>
+									<sup>
+										<xsl:value-of select="$vIndex"/>
+										<xsl:if test="$vIndex=''">
+											<xsl:text>{NoIndex}</xsl:text>
+										</xsl:if>
+									</sup>
+								</a>
+								
+							</xsl:when>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
+								<!-- steht alleine (Leerzeichen davor und Leerzeichen danach) -->
+
+								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
+									class="noteLink">
+									<xsl:attribute name="title">
+										<xsl:call-template name="tTooltip">
+											<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"
+											/>
+										</xsl:call-template>
+									</xsl:attribute>
+									<sup>
+										<xsl:value-of select="$vIndex"/>
+										<xsl:if test="$vIndex=''">
+											<xsl:text>{NoIndex}</xsl:text>
+										</xsl:if>
+									</sup>
+								</a>
+							</xsl:when>
+							<xsl:otherwise>
+								<span class="debug"><xsl:text>{TEST-add-FEHLER}</xsl:text></span>
+							</xsl:otherwise>
+						</xsl:choose>
+
+					</xsl:when>
+					<xsl:otherwise>
+						<span class="debug"><xsl:text>{TEST-add-FEHLER}</xsl:text></span>
+					</xsl:otherwise>
+				</xsl:choose>
+
+			</xsl:otherwise>
+		</xsl:choose>
+		
+
+		
+		
+		
+		
+	<!--	
 		<xsl:variable name="vNoteFolgt">
 			<xsl:call-template name="tNoteFolgt">
 				<xsl:with-param name="pNode" select="."/>
 			</xsl:call-template>
 		</xsl:variable>
 		
-		<!--<xsl:value-of select="."/>-->
-		<xsl:apply-templates select="./node()"/> <!-- hinzugefügt: 18.12.2014 -->
+		<!-\-<xsl:value-of select="."/>-\->
+		<xsl:apply-templates select="./node()"/> <!-\- hinzugefügt: 18.12.2014 -\->
 		
 		<xsl:choose>
 			<xsl:when test="count(following-sibling::node())=0">
-				<!-- einziges Element auf dieser Ebene -->
+				<!-\- einziges Element auf dieser Ebene -\->
 				
-				<!-- Bezugsknoten -->
+				<!-\- Bezugsknoten -\->
 				<xsl:variable name="vBezug" select="."/>
 				
-				<!-- Text für Tooltip erstellen -->
+				<!-\- Text für Tooltip erstellen -\->
 				<xsl:variable name="vFunoText">
 					<xsl:call-template name="tFunoText_alphabetisch">
 						<xsl:with-param name="pNode" select="$vBezug"/>
@@ -1382,27 +1725,27 @@
 					<sup><xsl:value-of select="$vIndex"/><xsl:if test="$vIndex=''"><xsl:text>{NoIndex}</xsl:text></xsl:if></sup>
 				</a>
 			</xsl:when>
-			<!--<xsl:when test="following-sibling::node()[1]=following-sibling::text()[1]">-->
-			<!--<xsl:when test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ')">-->
+			<!-\-<xsl:when test="following-sibling::node()[1]=following-sibling::text()[1]">-\->
+			<!-\-<xsl:when test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ')">-\->
 			<xsl:when test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ') and (following-sibling::node()[1]/text()!=' ')">
-			<!--<xsl:when test="following-sibling::node()[not(local-name(.)='metamark') and not(local-name(.)='lb')][1]=following-sibling::text()[1]">-->
-				<!-- wenn direkt ein Textelement nachfolgt -->
+			<!-\-<xsl:when test="following-sibling::node()[not(local-name(.)='metamark') and not(local-name(.)='lb')][1]=following-sibling::text()[1]">-\->
+				<!-\- wenn direkt ein Textelement nachfolgt -\->
 				
-				<!-- ?!? -->
+				<!-\- ?!? -\->
 			</xsl:when>
 			<xsl:otherwise>
-				<!-- wenn kein Textelement nachfolgt -->
+				<!-\- wenn kein Textelement nachfolgt -\->
 				
 				<xsl:choose>
 					<xsl:when test="$vNoteFolgt='true'">
-						<!-- mit <note> -->
+						<!-\- mit <note> -\->
 						
 					</xsl:when>
 					<xsl:otherwise>
-						<!-- ohne <note> -->
+						<!-\- ohne <note> -\->
 						
 						<xsl:variable name="vLeerzeichenFolgt">
-							<!--<xsl:call-template name="tLeerzeichenFolgt">-->
+							<!-\-<xsl:call-template name="tLeerzeichenFolgt">-\->
 							<xsl:call-template name="tLeerzeichenDanach">
 								<xsl:with-param name="pNode" select="."/>
 							</xsl:call-template>
@@ -1410,18 +1753,18 @@
 						
 						<xsl:choose>
 							<xsl:when test="$vLeerzeichenFolgt='false'">
-								<!-- Wortende folgt in nächstem nachfolgenden Text -->
+								<!-\- Wortende folgt in nächstem nachfolgenden Text -\->
 								
 								
-								<!--<xsl:text>{unv.}</xsl:text>-->
+								<!-\-<xsl:text>{unv.}</xsl:text>-\->
 							</xsl:when>
 							<xsl:otherwise>
-								<!-- Wort vollständig -->
+								<!-\- Wort vollständig -\->
 								
-								<!-- Bezugsknoten -->
+								<!-\- Bezugsknoten -\->
 								<xsl:variable name="vBezug" select="."/>
 								
-								<!-- Text für Tooltip erstellen -->
+								<!-\- Text für Tooltip erstellen -\->
 								<xsl:variable name="vFunoText">
 									<xsl:call-template name="tFunoText_alphabetisch">
 										<xsl:with-param name="pNode" select="$vBezug"/>
@@ -1450,7 +1793,7 @@
 				
 			</xsl:otherwise>
 		</xsl:choose>
-	
+	-->
 		<!--<xsl:text>{/add-oP}</xsl:text> <!-\- TESTWEISE -\->-->
 	</xsl:template>
 	
@@ -1461,6 +1804,56 @@
 	<!--<xsl:template match="//tei:mod[not(following-sibling::*[1][local-name(.)='note'])]">-->
 	<xsl:template match="//tei:mod">
 		<!--<xsl:text>{mod}</xsl:text> <!-\- TESTWEISE -\->-->
+	
+		<xsl:variable name="vNoteFolgt">
+			<xsl:call-template name="tNoteFolgt">
+				<xsl:with-param name="pNode" select="."/>
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<!-- Bezugsknoten -->
+		<xsl:variable name="vBezug" select="."/>
+		
+		<!-- Text für Tooltip erstellen -->
+		<xsl:variable name="vFunoText">
+			<xsl:call-template name="tFunoText_alphabetisch">
+				<xsl:with-param name="pNode" select="$vBezug"/>
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<xsl:variable name="vIndex">
+			<xsl:call-template name="indexOf_a">
+				<xsl:with-param name="pSeq" select="$funoAlphabetisch"/>
+				<xsl:with-param name="pNode" select="$vBezug"/>
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<xsl:apply-templates select="node()"/>
+		
+		<xsl:if test="$vNoteFolgt='false'">
+			<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
+				<xsl:attribute name="title">
+					<xsl:call-template name="tTooltip">
+						<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
+					</xsl:call-template>
+				</xsl:attribute>
+				<sup>
+					<xsl:value-of select="$vIndex"/>
+					<xsl:if test="$vIndex=''">
+						<xsl:text>{NoIndex}</xsl:text>
+					</xsl:if>
+				</sup>
+			</a>
+		</xsl:if>
+		
+		
+		
+		<!--
+		
+		
+		
+		
+		
 		
 		<xsl:variable name="vNoteFolgt">
 			<xsl:call-template name="tNoteFolgt">
@@ -1474,12 +1867,12 @@
 		
 		<xsl:choose>
 			<xsl:when test="count(following-sibling::node())=0">
-				<!-- einziges Element auf dieser Ebene -->
+				<!-\- einziges Element auf dieser Ebene -\->
 				
-				<!-- Bezugsknoten -->
+				<!-\- Bezugsknoten -\->
 				<xsl:variable name="vBezug" select="."/>
 				
-				<!-- Text für Tooltip erstellen -->
+				<!-\- Text für Tooltip erstellen -\->
 				<xsl:variable name="vFunoText">
 					<xsl:call-template name="tFunoText_alphabetisch">
 						<xsl:with-param name="pNode" select="$vBezug"/>
@@ -1503,46 +1896,46 @@
 				</a>
 			</xsl:when>
 			<xsl:when test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ')">
-				<!--<xsl:when test="following-sibling::node()[not(local-name(.)='metamark') and not(local-name(.)='lb')][1]=following-sibling::text()[1]">-->
-				<!-- wenn direkt ein Textelement nachfolgt -->
+				<!-\-<xsl:when test="following-sibling::node()[not(local-name(.)='metamark') and not(local-name(.)='lb')][1]=following-sibling::text()[1]">-\->
+				<!-\- wenn direkt ein Textelement nachfolgt -\->
 				
-				<!-- ?!? -->
+				<!-\- ?!? -\->
 			</xsl:when>
 			<xsl:otherwise>
-				<!-- wenn kein Textelement nachfolgt -->
+				<!-\- wenn kein Textelement nachfolgt -\->
 				
 				<xsl:choose>
 					<xsl:when test="$vNoteFolgt='true'">
-						<!-- mit <note> -->
-						<!--<xsl:text>{mitNote}</xsl:text> <!-\- TESTWEISE -\->-->  
+						<!-\- mit <note> -\->
+						<!-\-<xsl:text>{mitNote}</xsl:text> <!-\\- TESTWEISE -\\->-\->  
 					</xsl:when>
 					<xsl:otherwise>
-						<!-- ohne <note> -->
+						<!-\- ohne <note> -\->
 						
 						<xsl:variable name="vLeerzeichenFolgt">
-							<!--<xsl:call-template name="tLeerzeichenFolgt">-->
+							<!-\-<xsl:call-template name="tLeerzeichenFolgt">-\->
 							<xsl:call-template name="tLeerzeichenDanach">
 								<xsl:with-param name="pNode" select="."/>
 							</xsl:call-template>
 						</xsl:variable>
 						
 						
-						<!--<xsl:text>{</xsl:text><xsl:value-of select="$vLeerzeichenFolgt"/><xsl:text>}</xsl:text> <!-\- TESTWEISE -\->-->
+						<!-\-<xsl:text>{</xsl:text><xsl:value-of select="$vLeerzeichenFolgt"/><xsl:text>}</xsl:text> <!-\\- TESTWEISE -\\->-\->
 						
 						<xsl:choose>
 							<xsl:when test="$vLeerzeichenFolgt='false'">
-								<!-- Wortende folgt im nächsten text() -->
+								<!-\- Wortende folgt im nächsten text() -\->
 								
 								
-								<!--<xsl:text>{unv.}</xsl:text>-->
+								<!-\-<xsl:text>{unv.}</xsl:text>-\->
 							</xsl:when>
 							<xsl:otherwise>
-								<!-- Wort vollständig -->
+								<!-\- Wort vollständig -\->
 								
-								<!-- Bezugsknoten -->
+								<!-\- Bezugsknoten -\->
 								<xsl:variable name="vBezug" select="."/>
 								
-								<!-- Text für Tooltip erstellen -->
+								<!-\- Text für Tooltip erstellen -\->
 								<xsl:variable name="vFunoText">
 									<xsl:call-template name="tFunoText_alphabetisch">
 										<xsl:with-param name="pNode" select="$vBezug"/>
@@ -1570,7 +1963,7 @@
 				</xsl:choose>
 				
 			</xsl:otherwise>
-		</xsl:choose>
+		</xsl:choose>-->
 		
 		<!--<xsl:text>{/mod}</xsl:text> <!-\- TESTWEISE -\->-->
 	
@@ -1728,6 +2121,8 @@
 
 	<xsl:template match="//tei:del[not(parent::*[local-name(.)='subst'])]">
 		
+		
+		
 		<xsl:variable name="vNoteFolgt">
 			<xsl:call-template name="tNoteFolgt">
 				<xsl:with-param name="pNode" select="."/>
@@ -1738,31 +2133,6 @@
 			<xsl:when test="count(./node())=0">
 				<!-- Sonderfall bei <del>:  leeres Element -->
 				<!-- Bezugsknoten -->
-<!--				<xsl:variable name="vBezug" select="."/>
-				
-				<!-\- Text für Tooltip erstellen -\->
-				<xsl:variable name="vFunoText">
-					<xsl:call-template name="tFunoText_alphabetisch">
-						<xsl:with-param name="pNode" select="$vBezug"/>
-					</xsl:call-template>
-				</xsl:variable>
-				
-				<xsl:variable name="vIndex">
-					<xsl:call-template name="indexOf_a">
-						<xsl:with-param name="pSeq" select="$funoAlphabetisch"/>
-						<xsl:with-param name="pNode" select="$vBezug"/>
-					</xsl:call-template>
-				</xsl:variable>
-				
-				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
-					<xsl:attribute name="title">
-						<xsl:call-template name="tTooltip">
-							<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
-						</xsl:call-template>
-					</xsl:attribute>
-					<sup><xsl:value-of select="$vIndex"/><xsl:if test="$vIndex=''"><xsl:text>{NoIndex}</xsl:text></xsl:if></sup>
-				</a>-->
-				
 				
 				<xsl:call-template name="tPrintXtimes">
 					<xsl:with-param name="pPrintWhat" select="'+'"/>
@@ -1795,23 +2165,22 @@
 							<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
 						</xsl:call-template>
 					</xsl:attribute>
-					<sup><xsl:value-of select="$vIndex"/><xsl:if test="$vIndex=''"><xsl:text>{NoIndex}</xsl:text></xsl:if></sup>
+					<sup>
+						<xsl:value-of select="$vIndex"/>
+						<xsl:if test="$vIndex=''">
+							<xsl:text>{NoIndex}</xsl:text>
+						</xsl:if>
+					</sup>
 				</a>
 			</xsl:when>
-			<!--<xsl:when test="following-sibling::node()[1]=following-sibling::text()[1]">-->
-			<xsl:when test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ')">
-				<!--<xsl:when test="following-sibling::node()[not(local-name(.)='metamark') and not(local-name(.)='lb')][1]=following-sibling::text()[1]">-->
-				<!-- wenn direkt ein Textelement nachfolgt -->
-				
-				<!-- ?!? -->
-			</xsl:when>
+			<xsl:when
+				test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ')"> </xsl:when>
 			<xsl:otherwise>
 				<!-- wenn kein Textelement nachfolgt -->
 				
 				<xsl:choose>
 					<xsl:when test="$vNoteFolgt='true'">
 						<!-- mit <note> -->
-						
 					</xsl:when>
 					<xsl:otherwise>
 						<!-- ohne <note> -->
@@ -1826,8 +2195,6 @@
 						<xsl:choose>
 							<xsl:when test="$vLeerzeichenFolgt='false'">
 								<!-- Wortende folgt in nächstem nachfolgenden Text -->
-								
-								
 								<!--<xsl:text>{unv.}</xsl:text>-->
 							</xsl:when>
 							<xsl:otherwise>
@@ -1836,6 +2203,153 @@
 								<xsl:variable name="vBezug" select="."/>
 								
 								<!-- Text für Tooltip erstellen -->
+								<xsl:variable name="vFunoText">
+									<xsl:call-template name="tFunoText_alphabetisch">
+										<xsl:with-param name="pNode" select="$vBezug"/>
+									</xsl:call-template>
+								</xsl:variable>
+								
+								<xsl:variable name="vIndex">
+									<xsl:call-template name="indexOf_a">
+										<xsl:with-param name="pSeq" select="$funoAlphabetisch"/>
+										<xsl:with-param name="pNode" select="$vBezug"/>
+									</xsl:call-template>
+								</xsl:variable>
+								
+								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
+									class="noteLink">
+									<xsl:attribute name="title">
+										<xsl:call-template name="tTooltip">
+											<xsl:with-param name="pNode"
+												select="exslt:node-set($vFunoText)"/>
+										</xsl:call-template>
+									</xsl:attribute>
+									<sup>
+										<xsl:value-of select="$vIndex"/>
+										<xsl:if test="$vIndex=''">
+											<xsl:text>{NoIndex}</xsl:text>
+										</xsl:if>
+									</sup>
+								</a>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:otherwise>
+				</xsl:choose>
+				
+			</xsl:otherwise>
+		</xsl:choose>
+		
+		
+		
+		<!--
+		<xsl:variable name="vNoteFolgt">
+			<xsl:call-template name="tNoteFolgt">
+				<xsl:with-param name="pNode" select="."/>
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<xsl:choose>
+			<xsl:when test="count(./node())=0">
+				<!-\- Sonderfall bei <del>:  leeres Element -\->
+				<!-\- Bezugsknoten -\->
+<!-\-				<xsl:variable name="vBezug" select="."/>
+				
+				<!-\\- Text für Tooltip erstellen -\\->
+				<xsl:variable name="vFunoText">
+					<xsl:call-template name="tFunoText_alphabetisch">
+						<xsl:with-param name="pNode" select="$vBezug"/>
+					</xsl:call-template>
+				</xsl:variable>
+				
+				<xsl:variable name="vIndex">
+					<xsl:call-template name="indexOf_a">
+						<xsl:with-param name="pSeq" select="$funoAlphabetisch"/>
+						<xsl:with-param name="pNode" select="$vBezug"/>
+					</xsl:call-template>
+				</xsl:variable>
+				
+				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
+					<xsl:attribute name="title">
+						<xsl:call-template name="tTooltip">
+							<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
+						</xsl:call-template>
+					</xsl:attribute>
+					<sup><xsl:value-of select="$vIndex"/><xsl:if test="$vIndex=''"><xsl:text>{NoIndex}</xsl:text></xsl:if></sup>
+				</a>-\->
+				
+				
+				<xsl:call-template name="tPrintXtimes">
+					<xsl:with-param name="pPrintWhat" select="'+'"/>
+					<xsl:with-param name="pPrintHowManyTimes" select="current()/@quantity"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:when test="count(following-sibling::node())=0">
+				<!-\- einziges Element auf dieser Ebene -\->
+				
+				<!-\- Bezugsknoten -\->
+				<xsl:variable name="vBezug" select="."/>
+				
+				<!-\- Text für Tooltip erstellen -\->
+				<xsl:variable name="vFunoText">
+					<xsl:call-template name="tFunoText_alphabetisch">
+						<xsl:with-param name="pNode" select="$vBezug"/>
+					</xsl:call-template>
+				</xsl:variable>
+				
+				<xsl:variable name="vIndex">
+					<xsl:call-template name="indexOf_a">
+						<xsl:with-param name="pSeq" select="$funoAlphabetisch"/>
+						<xsl:with-param name="pNode" select="$vBezug"/>
+					</xsl:call-template>
+				</xsl:variable>
+				
+				<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
+					<xsl:attribute name="title">
+						<xsl:call-template name="tTooltip">
+							<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
+						</xsl:call-template>
+					</xsl:attribute>
+					<sup><xsl:value-of select="$vIndex"/><xsl:if test="$vIndex=''"><xsl:text>{NoIndex}</xsl:text></xsl:if></sup>
+				</a>
+			</xsl:when>
+			<!-\-<xsl:when test="following-sibling::node()[1]=following-sibling::text()[1]">-\->
+			<xsl:when test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ')">
+				<!-\-<xsl:when test="following-sibling::node()[not(local-name(.)='metamark') and not(local-name(.)='lb')][1]=following-sibling::text()[1]">-\->
+				<!-\- wenn direkt ein Textelement nachfolgt -\->
+				
+				<!-\- ?!? -\->
+			</xsl:when>
+			<xsl:otherwise>
+				<!-\- wenn kein Textelement nachfolgt -\->
+				
+				<xsl:choose>
+					<xsl:when test="$vNoteFolgt='true'">
+						<!-\- mit <note> -\->
+						
+					</xsl:when>
+					<xsl:otherwise>
+						<!-\- ohne <note> -\->
+						
+						<xsl:variable name="vLeerzeichenFolgt">
+							<!-\-<xsl:call-template name="tLeerzeichenFolgt">-\->
+							<xsl:call-template name="tLeerzeichenDanach">
+								<xsl:with-param name="pNode" select="."/>
+							</xsl:call-template>
+						</xsl:variable>
+						
+						<xsl:choose>
+							<xsl:when test="$vLeerzeichenFolgt='false'">
+								<!-\- Wortende folgt in nächstem nachfolgenden Text -\->
+								
+								
+								<!-\-<xsl:text>{unv.}</xsl:text>-\->
+							</xsl:when>
+							<xsl:otherwise>
+								<!-\- Wort vollständig -\->
+								<!-\- Bezugsknoten -\->
+								<xsl:variable name="vBezug" select="."/>
+								
+								<!-\- Text für Tooltip erstellen -\->
 								<xsl:variable name="vFunoText">
 									<xsl:call-template name="tFunoText_alphabetisch">
 										<xsl:with-param name="pNode" select="$vBezug"/>
@@ -1863,7 +2377,7 @@
 				</xsl:choose>
 				
 			</xsl:otherwise>
-		</xsl:choose>
+		</xsl:choose>-->
 		
 		<!--
 		<xsl:choose>
