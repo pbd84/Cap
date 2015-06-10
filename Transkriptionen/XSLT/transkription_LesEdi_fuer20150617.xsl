@@ -497,13 +497,23 @@
 				<hr/>
 				
 				<!-- TITLE -->
-				<div class="meta"><p><xsl:apply-templates select="//tei:teiHeader"/></p>
+				<div class="meta">
+					<p>
+						<xsl:apply-templates select="//tei:teiHeader"/>
+					</p>
 				</div>
 
 				<br/>
 				<!-- ??? für Abstand zwischen Header und Body -->
 				<br/>
 				<!-- ??? für Abstand zwischen Header und Body -->
+				
+				
+				<!-- TEXT -->
+				<span class="encodingDesc">
+					<xsl:apply-templates select="//tei:text/tei:front/tei:div[count(./node())>0]"/>
+				</span>
+				
 				<!-- BODY -->
 				<div class="text">
 					<xsl:apply-templates select="//tei:body"/>
@@ -558,10 +568,17 @@
     #############################################################################################
       -->
 
-	<xsl:template match="//tei:title">
+	<xsl:template match="//tei:title[@type='main']">
+		<p>
 		<span class="titel">
 			<xsl:value-of select="."/>
 		</span>
+		</p>
+		<br/>
+	</xsl:template>
+	
+	<xsl:template match="//tei:title[not(@type='main')]">
+		
 	</xsl:template>
 
 	<xsl:template match="//tei:publisher">
@@ -572,7 +589,8 @@
 		<br/>
 		
 		<span class="encodingDesc">
-			<xsl:apply-templates select="node()"/>
+			<!--<xsl:apply-templates select="node()"/>-->
+			<xsl:apply-templates select="tei:p"/>
 		</span>
 	</xsl:template>
 
@@ -625,6 +643,18 @@
 		<xsl:value-of select="./tei:name"/>
 	</xsl:template>
 	<!-- /zusätzliche Formatierung -->
+
+
+	<xsl:template match="tei:div[count(./node())>0]">
+		<p>
+			<i>
+				<xsl:apply-templates select="node()"/>
+			</i>
+		</p>
+		
+		<!--<br/>-->
+	</xsl:template>
+
 
 	<!-- 
     #############################################################################################
@@ -994,65 +1024,69 @@
 
 	</xsl:template>
 	
-	<!--11.12.2014TESTWEISE<xsl:template match="//text()[preceding-sibling::*[1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add' or local-name(.)='del']]">-->
-	<!--<xsl:template match="//text()[preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add' or local-name(.)='del']]"> 16.04.2015 -->
+	<!--
+	
+	10.06.2015 => alle Veränderungen an text() deaktivieren => kein Textverlust!
+	
+	<!-\-11.12.2014TESTWEISE<xsl:template match="//text()[preceding-sibling::*[1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add' or local-name(.)='del']]">-\->
+	<!-\-<xsl:template match="//text()[preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add' or local-name(.)='del']]"> 16.04.2015 -\->
 		<xsl:template match="//text()[preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add']]">
-		<!--<xsl:template match="//text()[preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add' or local-name(.)='del']][not(local-name(parent::*/parent::*)='choice')]">-->
-		<!-- Text NACH subst/mod/add -->
-		<!-- behandelt gegebenenfalls auch nachfolgende Wortzusammenfügungen -->
+		<!-\-<xsl:template match="//text()[preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1][local-name(.)='subst' or local-name(.)='mod' or local-name(.)='add' or local-name(.)='del']][not(local-name(parent::*/parent::*)='choice')]">-\->
+		<!-\- Text NACH subst/mod/add -\->
+		<!-\- behandelt gegebenenfalls auch nachfolgende Wortzusammenfügungen -\->
 		
-		<!--<xsl:text>{StrNachSubstAddMod}</xsl:text> <!-\- TESTWEISE -\->-->
+		<!-\-<xsl:text>{StrNachSubstAddMod}</xsl:text> <!-\\- TESTWEISE -\\->-\->
 		
-		<!--<xsl:text>{TextNachEle}</xsl:text>-->
+		<!-\-<xsl:text>{TextNachEle}</xsl:text>-\->
 		
 		<xsl:variable name="vMitNote">
 			<xsl:call-template name="tNoteFolgt">
-				<!--<xsl:with-param name="pNode" select="./preceding-sibling::*[1]"/>-->
+				<!-\-<xsl:with-param name="pNode" select="./preceding-sibling::*[1]"/>-\->
 				<xsl:with-param name="pNode" select="./preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1]"/>
 			</xsl:call-template>
 		</xsl:variable>
 		
 		<xsl:choose>
 			<xsl:when test="$vMitNote='true'">
-				<!-- mit <note> -->
+				<!-\- mit <note> -\->
 				
-				<!-- => Verweis auf Fußnote erfolgt durch <note> -->
-				<!-- => Unterstellung: <note> steht an der richtigen Stelle -->
-				<!--<xsl:apply-templates/>-->
+				<!-\- => Verweis auf Fußnote erfolgt durch <note> -\->
+				<!-\- => Unterstellung: <note> steht an der richtigen Stelle -\->
+				<!-\-<xsl:apply-templates/>-\->
 				
 				<xsl:value-of select="."/>
 			</xsl:when>
 			<xsl:otherwise>
-				<!-- ohne <note> -->
+				<!-\- ohne <note> -\->
 				
 				<xsl:choose>
 					<xsl:when test="substring(.,1,1)=' '">
-						<!-- wenn erstes Zeichen ein Leerzeichen -->
-						<!-- text() beinhaltet kein Wortende am Anfang! -->
-						<!--<xsl:text>{Leerz.}</xsl:text>-->
+						<!-\- wenn erstes Zeichen ein Leerzeichen -\->
+						<!-\- text() beinhaltet kein Wortende am Anfang! -\->
+						<!-\-<xsl:text>{Leerz.}</xsl:text>-\->
 						
 						<xsl:value-of select="."/>
 					</xsl:when>
 					<xsl:otherwise>
-						<!-- text() enthält Wortende am Anfang! -->
-						<!--<xsl:text>{Wortende}</xsl:text>-->
+						<!-\- text() enthält Wortende am Anfang! -\->
+						<!-\-<xsl:text>{Wortende}</xsl:text>-\->
 						
-						<!-- => Verweis nach Wort setzen -->
+						<!-\- => Verweis nach Wort setzen -\->
 						
-<!--						<xsl:variable name="vText">
+<!-\-						<xsl:variable name="vText">
 							<xsl:choose>
 								<xsl:when test="string-length(translate(.,' ',''))!=string-length(.)">
-									<!-\- Leerzeichen in "erstem"/diesem text() -\->
+									<!-\\- Leerzeichen in "erstem"/diesem text() -\\->
 									<xsl:value-of select="."/>
 								</xsl:when>
 								<xsl:otherwise>
-									<!-\- Leerzeichen folgt irgendwann -\->
+									<!-\\- Leerzeichen folgt irgendwann -\\->
 									<xsl:value-of select="concat(.,./following-sibling::text())"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
 
-						<xsl:variable name="vWortteil" select="substring-before($vText,' ')" /> 19.03.2015-->
+						<xsl:variable name="vWortteil" select="substring-before($vText,' ')" /> 19.03.2015-\->
 						<xsl:variable name="vWortteil">
 							<xsl:call-template name="tFollowingWortteil">
 								<xsl:with-param name="pFollowingTextThis" select="./preceding::*[1]"/>
@@ -1060,21 +1094,21 @@
 							</xsl:call-template>
 						</xsl:variable>
 						<xsl:variable name="vStringNachWortteil">
-							<!-- Substring vWortteil aus gesamtem nachfoglenden Text entfernen -->
+							<!-\- Substring vWortteil aus gesamtem nachfoglenden Text entfernen -\->
 							<xsl:value-of select="substring(.,1+string-length($vWortteil))"/>
 						</xsl:variable>
 						
-						<!--<xsl:text>{$vWortteil}</xsl:text> <!-\- TESTWEISE -\->-->
+						<!-\-<xsl:text>{$vWortteil}</xsl:text> <!-\\- TESTWEISE -\\->-\->
 						<xsl:value-of select="$vWortteil"/>
-						<!--<xsl:text>{/$vWortteil}</xsl:text> <!-\- TESTWEISE -\->-->
+						<!-\-<xsl:text>{/$vWortteil}</xsl:text> <!-\\- TESTWEISE -\\->-\->
 						
-						<!--<xsl:text>{VerweisFuno}</xsl:text> <!-\- TESTWEISE -\->-->
+						<!-\-<xsl:text>{VerweisFuno}</xsl:text> <!-\\- TESTWEISE -\\->-\->
 						
-						<!-- "Bezugsknoten" -->
-						<!--<xsl:variable name="vPrecSib1" select="preceding-sibling::*[1]"/>-->
+						<!-\- "Bezugsknoten" -\->
+						<!-\-<xsl:variable name="vPrecSib1" select="preceding-sibling::*[1]"/>-\->
 						<xsl:variable name="vPrecSib1" select="./preceding-sibling::node()[not(local-name(.)='metamark' or local-name(.)='lb')][1]"/>
 						
-						<!-- Text für Tooltip erstellen -->
+						<!-\- Text für Tooltip erstellen -\->
 						<xsl:variable name="vFunoText">
 							<xsl:call-template name="tFunoText_alphabetisch">
 								<xsl:with-param name="pNode" select="$vPrecSib1"/>
@@ -1088,21 +1122,21 @@
 							</xsl:call-template>
 						</xsl:variable>
 						
-						<!--<a href="#{generate-id()}" id="{generate-id()}-L" class="noteLink">-->
+						<!-\-<a href="#{generate-id()}" id="{generate-id()}-L" class="noteLink">-\->
 						<a href="#{generate-id($vPrecSib1)}" id="{generate-id($vPrecSib1)}-L" class="noteLink">
 							<xsl:attribute name="title">
 								<xsl:call-template name="tTooltip">
-									<!--<xsl:with-param name="pNode" select="./preceding-sibling::*[1]"/>-->
+									<!-\-<xsl:with-param name="pNode" select="./preceding-sibling::*[1]"/>-\->
 									<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
 								</xsl:call-template>
 							</xsl:attribute>
 							<sup><xsl:value-of select="$vIndex"/><xsl:if test="$vIndex=''"><xsl:text>{NoIndex}</xsl:text></xsl:if></sup>
 						</a>
-						<!--<xsl:text>{/VerweisFuno}</xsl:text> <!-\- TESTWEISE -\->-->
+						<!-\-<xsl:text>{/VerweisFuno}</xsl:text> <!-\\- TESTWEISE -\\->-\->
 						
-						<!--<xsl:text>{$vStringNachWortteil}</xsl:text> <!-\- TESTWEISE -\->-->
+						<!-\-<xsl:text>{$vStringNachWortteil}</xsl:text> <!-\\- TESTWEISE -\\->-\->
 						<xsl:value-of select="$vStringNachWortteil"/>
-						<!--<xsl:text>{/$vStringNachWortteil}</xsl:text> <!-\- TESTWEISE -\->-->
+						<!-\-<xsl:text>{/$vStringNachWortteil}</xsl:text> <!-\\- TESTWEISE -\\->-\->
 					</xsl:otherwise>
 				</xsl:choose>
 
@@ -1110,8 +1144,8 @@
 			</xsl:otherwise>
 		</xsl:choose>
 		
-		<!--<xsl:text>{/StrNachSubstAddMod}</xsl:text> <!-\- TESTWEISE -\->-->
-	</xsl:template>
+		<!-\-<xsl:text>{/StrNachSubstAddMod}</xsl:text> <!-\\- TESTWEISE -\\->-\->
+	</xsl:template>-->
 
 	<!-- <subst> -->
 	
@@ -2616,7 +2650,7 @@
 								<xsl:text>von Hand </xsl:text>
 								<xsl:value-of select="@hand"/>
 								<xsl:text> korr. zu</xsl:text>
-								<i><xsl:apply-templates select="$vWortUmKnoten"/></i>
+								<i><xsl:value-of select="$vWortUmKnoten"/></i>
 								
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
