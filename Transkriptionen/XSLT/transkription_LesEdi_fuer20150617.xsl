@@ -1320,7 +1320,17 @@
 								
 							</xsl:when>
 							<xsl:otherwise>
-								<span class="debug"><xsl:text>{TEST-add-FEHLER}</xsl:text></span>
+								<span class="debug">
+									<xsl:text>{TEST-add-FEHLER-hand0-lz:</xsl:text>
+									<xsl:text>$vLeerzeichenDavor=</xsl:text><xsl:value-of select="$vLeerzeichenDavor"/>
+									<xsl:text>|</xsl:text>
+									<xsl:text>$vLeerzeichenDanach=</xsl:text><xsl:value-of select="$vLeerzeichenDanach"/>
+									<xsl:text>###</xsl:text>
+									<xsl:value-of select="preceding-sibling::text()[1]"/>
+									<xsl:text>|</xsl:text>
+									<xsl:value-of select="following-sibling::text()[1]"/>
+									<xsl:text>}</xsl:text>
+								</span>
 							</xsl:otherwise>
 						</xsl:choose>
 						
@@ -1370,7 +1380,7 @@
 								
 							</xsl:when>
 							<xsl:otherwise>
-								<span class="debug"><xsl:text>{TEST-add-FEHLER}</xsl:text></span>
+								<span class="debug"><xsl:text>{TEST-add-FEHLER-handABC-lz}</xsl:text></span>
 							</xsl:otherwise>
 						</xsl:choose>
 						
@@ -1479,13 +1489,13 @@
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<span class="debug"><xsl:text>{TEST-add-FEHLER}</xsl:text></span>
+								<span class="debug"><xsl:text>{TEST-add-FEHLER-handXYZ-lz}</xsl:text></span>
 							</xsl:otherwise>
 						</xsl:choose>
 
 					</xsl:when>
 					<xsl:otherwise>
-						<span class="debug"><xsl:text>{TEST-add-FEHLER}</xsl:text></span>
+						<span class="debug"><xsl:text>{TEST-add-FEHLER-hand?}</xsl:text></span>
 					</xsl:otherwise>
 				</xsl:choose>
 
@@ -3495,8 +3505,15 @@
 				</xsl:choose>
 			</xsl:when>
 			
-			<xsl:when test="contains($vPrecText1,' ')='false'">
+			<xsl:otherwise>
 				<!-- text() enthält gar kein Leerzeichen => muss in einem früheren text() folgen -->
+				<xsl:call-template name="tLeerzeichenDavor">
+					<xsl:with-param name="pNode" select="$pNode/preceding-sibling::text()[1]"/>
+				</xsl:call-template>
+			</xsl:otherwise>
+			
+<!--			<xsl:when test="contains($vPrecText1,' ')='false'">
+				<!-\- text() enthält gar kein Leerzeichen => muss in einem früheren text() folgen -\->
 				<xsl:call-template name="tLeerzeichenDavor">
 					<xsl:with-param name="pNode" select="$pNode/preceding-sibling::text()[1]"/>
 				</xsl:call-template>
@@ -3504,7 +3521,7 @@
 			
 			<xsl:otherwise>
 				<xsl:text>***FEHLER IN tLeerzeichenDavor***</xsl:text>
-			</xsl:otherwise>
+			</xsl:otherwise>-->
 		</xsl:choose>
 		
 		
