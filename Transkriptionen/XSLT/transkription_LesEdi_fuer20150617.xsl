@@ -1282,7 +1282,7 @@
 				
 				<xsl:apply-templates select="./node()"/>
 				
-				<span class="debug"><xsl:text>{!funoFolgt!}</xsl:text></span> <!-- TESTWEISE -->
+				<!--<span class="debug"><xsl:text>{!funoFolgt!}</xsl:text></span> <!-\- TESTWEISE -\->-->
 				
 			</xsl:when>
 			<xsl:otherwise>
