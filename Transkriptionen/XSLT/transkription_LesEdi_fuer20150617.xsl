@@ -3469,8 +3469,15 @@
 				</xsl:choose>
 			</xsl:when>
 			
-			<xsl:when test="contains($vFollText1,' ')='false'">
+			<xsl:otherwise>
 				<!-- text() enthält gar kein Leerzeichen => muss in einem späteren text() folgen -->
+				<xsl:call-template name="tLeerzeichenDanach">
+					<xsl:with-param name="pNode" select="$pNode/following-sibling::text()[1]"/>
+				</xsl:call-template>
+			</xsl:otherwise>
+			
+<!--			<xsl:when test="contains($vFollText1,' ')='false'">
+				<!-\- text() enthält gar kein Leerzeichen => muss in einem späteren text() folgen -\->
 				<xsl:call-template name="tLeerzeichenDanach">
 					<xsl:with-param name="pNode" select="$pNode/following-sibling::text()[1]"/>
 				</xsl:call-template>
@@ -3478,7 +3485,7 @@
 			
 			<xsl:otherwise>
 				<xsl:text>***FEHLER IN tLeerzeichenDanach***</xsl:text>
-			</xsl:otherwise>
+			</xsl:otherwise>-->
 		</xsl:choose>
 		
 
