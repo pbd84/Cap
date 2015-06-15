@@ -663,7 +663,7 @@
     -->
 
 	<xsl:template match="//tei:body/tei:ab[@type='text']">
-		<xsl:if test="@corresp">
+		<xsl:if test="count(@corresp)>0">
 			<div class="corresp">
 				<xsl:text>[</xsl:text><xsl:value-of select="./@corresp"/><xsl:text>]</xsl:text>
 			</div>
@@ -676,7 +676,7 @@
 	</xsl:template>
 	<xsl:template match="//tei:body/tei:ab[@type='meta-text']">
 		<br/>
-		<xsl:if test="@corresp">
+		<xsl:if test="count(@corresp)>0">
 			<div class="corresp">
 				<xsl:text>[</xsl:text><xsl:value-of select="./@corresp"/><xsl:text>]</xsl:text>
 			</div>
@@ -786,7 +786,18 @@
 	<xsl:template match="//tei:seg[@type='initial']">
 		<xsl:element name="div">
 			<xsl:attribute name="class">initial</xsl:attribute>
-			<xsl:attribute name="title"><xsl:text>Initiale, Typ </xsl:text><xsl:value-of select="substring-after(@type, '-')"/></xsl:attribute>
+			
+			
+			<xsl:attribute name="title">
+				<xsl:text>Initiale</xsl:text>
+				<xsl:if test="contains(@type,'-')">
+					<xsl:text>, Typ </xsl:text>
+					<xsl:value-of select="substring-after(@type, '-')"/>
+				</xsl:if>
+			</xsl:attribute>	
+			
+			
+			
 <!--			<xsl:element name="span">
 				<xsl:attribute name="class">initialTYP</xsl:attribute>
 				
@@ -3552,6 +3563,10 @@
 		<xsl:variable name="vFollText1FirstLetter" select="substring($vFollText1,1,1)"/>
 		
 		<xsl:choose>
+			<xsl:when test="count($vFollText1/node())=0">
+				<!-- gar kein node() enthalten (z.B. wenn der zuvor geprüfte Knoten gar keine siblings mehr hat -->
+				<xsl:value-of select="false()"/>
+			</xsl:when>
 			<xsl:when test="contains($vFollText1,' ')='true'">
 				<xsl:choose>
 					<xsl:when test="$vFollText1FirstLetter=' '">
@@ -3595,6 +3610,10 @@
 		<xsl:variable name="vPrecText1LastLetter" select="substring($vPrecText1,string-length($vPrecText1),1)"/>
 		
 		<xsl:choose>
+			<xsl:when test="count($vPrecText1/node())=0">
+				<!-- gar kein node() enthalten (z.B. wenn der zuvor geprüfte Knoten gar keine siblings mehr hat -->
+				<xsl:value-of select="false()"/>
+			</xsl:when>
 			<xsl:when test="contains($vPrecText1,' ')='true'">
 				<xsl:choose>
 					<xsl:when test="$vPrecText1LastLetter=' '">
