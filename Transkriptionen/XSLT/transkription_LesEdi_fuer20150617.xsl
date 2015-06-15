@@ -2519,7 +2519,7 @@
 									<xsl:text> mit Einfügungszeichen</xsl:text>
 								</xsl:if>
 								<xsl:text> korr. zu</xsl:text>
-								<i><xsl:apply-templates select="$vWortUmKnoten"/></i>
+								<i><xsl:value-of select="$vWortUmKnoten"/></i>
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text>- korr. in Texttinte</xsl:text>
 								</xsl:if>
@@ -2534,7 +2534,7 @@
 									<xsl:text> mit Einfügungszeichen</xsl:text>
 								</xsl:if>
 								<xsl:text> korr. zu</xsl:text>
-								<i><xsl:apply-templates select="$vWortUmKnoten"/></i>
+								<i><xsl:value-of select="$vWortUmKnoten"/></i>
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text>- korr. in Texttinte</xsl:text>
 								</xsl:if>
