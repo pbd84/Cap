@@ -1308,8 +1308,6 @@
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
 								<!-- befindet sich am Wortende (Leerzeichen danach) -->
 								
-								<span class="debug"><xsl:text>{LZ_ft}</xsl:text></span> <!-- TESTWEISE -->
-								
 								<xsl:apply-templates select="./node()"/>
 
 							</xsl:when>
@@ -2299,6 +2297,8 @@
 					</xsl:call-template>
 				</xsl:variable>
 				
+				
+				
 				<!-- Variablen/Mengen für Hand A-W bzw. Hand X-Z -->
 				<xsl:variable name="vHandABC" select="'ABCDEFGHIJKLMNOPQRSTUVW'"/>
 				<xsl:variable name="vHandXYZ" select="'XYZ'"/>
@@ -2320,21 +2320,48 @@
 								<!-- am Wortanfang -->
 								
 								<xsl:text>korr. aus </xsl:text>
-								<i><xsl:value-of select="$vWortUmKnoten"/></i>
+								<i>
+									<xsl:call-template name="tPrecedingWortteil">
+										<xsl:with-param name="pPrecedingTextThis" select="$pNode"/>
+										<xsl:with-param name="pPrecedingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+									<xsl:call-template name="tFollowingWortteil">
+										<xsl:with-param name="pFollowingTextThis" select="$pNode"/>
+										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+								</i>
 								
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
 								<!-- am Wortende -->
 								
 								<xsl:text>korr. aus </xsl:text>
-								<i><xsl:value-of select="$vWortUmKnoten"/></i>
+								<i>
+									<xsl:call-template name="tPrecedingWortteil">
+										<xsl:with-param name="pPrecedingTextThis" select="$pNode"/>
+										<xsl:with-param name="pPrecedingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+									<xsl:call-template name="tFollowingWortteil">
+										<xsl:with-param name="pFollowingTextThis" select="$pNode"/>
+										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+								</i>
 								
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
 								<!-- im Wort -->
 								
 								<xsl:text>korr. aus </xsl:text>
-								<i><xsl:value-of select="$vWortUmKnoten"/></i>
+								<i>
+									<xsl:call-template name="tPrecedingWortteil">
+										<xsl:with-param name="pPrecedingTextThis" select="$pNode"/>
+										<xsl:with-param name="pPrecedingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+									<xsl:call-template name="tFollowingWortteil">
+										<xsl:with-param name="pFollowingTextThis" select="$pNode"/>
+										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+									</xsl:call-template>
+								</i>
 								
 							</xsl:when>
 						</xsl:choose>
@@ -2429,8 +2456,8 @@
 								
 								<xsl:text>korr. von Hand </xsl:text>
 								<xsl:value-of select="$pNode/@hand"/>
-								<xsl:text> aus </xsl:text>
-								<i><xsl:value-of select="$vWortUmKnoten"/></i>
+								<xsl:text> korr. zu</xsl:text>
+								<i><xsl:apply-templates select="$vWortUmKnoten"/></i>
 								
 							</xsl:when>
 						</xsl:choose>
