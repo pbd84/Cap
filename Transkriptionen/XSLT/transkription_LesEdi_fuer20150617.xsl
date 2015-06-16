@@ -3662,8 +3662,11 @@
 		
 		<xsl:variable name="vFollText1FirstLetter" select="substring($vFollText1,1,1)"/>
 		
+<!--		<xsl:variable name="vCountNodesFollText1" select="count($vFollText1/node())"/>
+		<xsl:variable name="vStringLengthFollText1" select="string-length($vFollText1)"/>-->
+		
 		<xsl:choose>
-			<xsl:when test="count($vFollText1/node())=0">
+			<xsl:when test="count($vFollText1/node())=0 and string-length($vFollText1) &lt;= 1">
 				<!-- gar kein node() enthalten (z.B. wenn der zuvor geprüfte Knoten gar keine siblings mehr hat -->
 				<xsl:value-of select="false()"/>
 			</xsl:when>
@@ -3708,9 +3711,13 @@
 		<xsl:variable name="vPrecText1" select="$pNode/preceding-sibling::text()[1]"/>
 		
 		<xsl:variable name="vPrecText1LastLetter" select="substring($vPrecText1,string-length($vPrecText1),1)"/>
+	
+
+<!--		<xsl:variable name="vCountNodesPrecText1" select="count($vPrecText1/node())"/>
+		<xsl:variable name="vStringLengthPrecText1" select="string-length($vPrecText1)"/>-->
 		
 		<xsl:choose>
-			<xsl:when test="count($vPrecText1/node())=0">
+			<xsl:when test="count($vPrecText1/node())=0 and string-length($vPrecText1) &lt;= 1">
 				<!-- gar kein node() enthalten (z.B. wenn der zuvor geprüfte Knoten gar keine siblings mehr hat -->
 				<xsl:value-of select="false()"/>
 			</xsl:when>
