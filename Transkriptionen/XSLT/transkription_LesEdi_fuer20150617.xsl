@@ -1661,8 +1661,6 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<!-- ohne <note> -->
-						
-
 
 						<!-- Wort vollständig -->
 						<!-- Bezugsknoten -->
