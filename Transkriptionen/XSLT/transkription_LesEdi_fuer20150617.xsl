@@ -1417,7 +1417,7 @@
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
 								<!-- befindet sich in Wort (kein Leerzeichen davor und kein Leerzeichen danach -->
 
-								<xsl:apply-templates select="./node()"/>
+								<!--<xsl:apply-templates select="./node()"/>-->
 								
 								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
 									class="noteLink">
@@ -1439,7 +1439,7 @@
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='false'">
 								<!-- befindet sich am Wortanfang (Leerzeichen davor) -->
 								
-								<xsl:apply-templates select="./node()"/>
+								<!--<xsl:apply-templates select="./node()"/>-->
 								
 								<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
 									class="noteLink">
@@ -1646,8 +1646,12 @@
 					</sup>
 				</a>
 			</xsl:when>
-			<xsl:when
-				test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ')"> </xsl:when>
+<!--			<xsl:when
+				test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ')">
+				
+				
+				
+			</xsl:when>-->
 			<xsl:otherwise>
 				<!-- wenn kein Textelement nachfolgt -->
 				
@@ -1658,24 +1662,64 @@
 					<xsl:otherwise>
 						<!-- ohne <note> -->
 						
-						<xsl:variable name="vLeerzeichenFolgt">
-							<!--<xsl:call-template name="tLeerzeichenFolgt">-->
+
+
+						<!-- Wort vollständig -->
+						<!-- Bezugsknoten -->
+						<xsl:variable name="vBezug" select="."/>
+						
+						<!-- Text für Tooltip erstellen -->
+						<xsl:variable name="vFunoText">
+							<xsl:call-template name="tFunoText_alphabetisch">
+								<xsl:with-param name="pNode" select="$vBezug"/>
+							</xsl:call-template>
+						</xsl:variable>
+						
+						<xsl:variable name="vIndex">
+							<xsl:call-template name="indexOf_a">
+								<xsl:with-param name="pSeq" select="$funoAlphabetisch"/>
+								<xsl:with-param name="pNode" select="$vBezug"/>
+							</xsl:call-template>
+						</xsl:variable>
+						
+						<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L"
+							class="noteLink">
+							<xsl:attribute name="title">
+								<xsl:call-template name="tTooltip">
+									<xsl:with-param name="pNode"
+										select="exslt:node-set($vFunoText)"/>
+								</xsl:call-template>
+							</xsl:attribute>
+							<sup>
+								<xsl:value-of select="$vIndex"/>
+								<xsl:if test="$vIndex=''">
+									<xsl:text>{NoIndex}</xsl:text>
+								</xsl:if>
+							</sup>
+						</a>
+							
+						<!--
+							
+												<xsl:variable name="vLeerzeichenFolgt">
 							<xsl:call-template name="tLeerzeichenDanach">
 								<xsl:with-param name="pNode" select="."/>
 							</xsl:call-template>
 						</xsl:variable>
-						
+							
 						<xsl:choose>
 							<xsl:when test="$vLeerzeichenFolgt='false'">
-								<!-- Wortende folgt in nächstem nachfolgenden Text -->
-								<!--<xsl:text>{unv.}</xsl:text>-->
+								<!-\- Wortende folgt in nächstem nachfolgenden Text -\->
+								<!-\-<xsl:text>{unv.}</xsl:text>-\->
+								
+								
+								
 							</xsl:when>
 							<xsl:otherwise>
-								<!-- Wort vollständig -->
-								<!-- Bezugsknoten -->
+								<!-\- Wort vollständig -\->
+								<!-\- Bezugsknoten -\->
 								<xsl:variable name="vBezug" select="."/>
 								
-								<!-- Text für Tooltip erstellen -->
+								<!-\- Text für Tooltip erstellen -\->
 								<xsl:variable name="vFunoText">
 									<xsl:call-template name="tFunoText_alphabetisch">
 										<xsl:with-param name="pNode" select="$vBezug"/>
@@ -1705,7 +1749,7 @@
 									</sup>
 								</a>
 							</xsl:otherwise>
-						</xsl:choose>
+						</xsl:choose>-->
 					</xsl:otherwise>
 				</xsl:choose>
 				
@@ -2326,7 +2370,7 @@
 								</xsl:if>
 								<xsl:text> ergänzt</xsl:text>
 								<xsl:if test="current()[@rend='default']">
-									<xsl:text>- korr. in Texttinte</xsl:text>
+									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
 								
 							</xsl:when>
@@ -2370,7 +2414,7 @@
 									</xsl:call-template>
 								</i>
 								<xsl:if test="current()[@rend='default']">
-									<xsl:text>- korr. in Texttinte</xsl:text>
+									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
 								
 							</xsl:when>
@@ -2392,7 +2436,7 @@
 									</xsl:call-template>
 								</i>
 								<xsl:if test="current()[@rend='default']">
-									<xsl:text>- korr. in Texttinte</xsl:text>
+									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
 								
 							</xsl:when>
@@ -2452,7 +2496,7 @@
 								<xsl:text> ergänztes </xsl:text>
 								<i><xsl:apply-templates select="$pNode/node()"/></i>
 								<xsl:if test="current()[@rend='default']">
-									<xsl:text>- korr. in Texttinte</xsl:text>
+									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
@@ -2471,7 +2515,7 @@
 								<xsl:text> ergänztes </xsl:text>
 								<i><xsl:apply-templates select="$pNode/node()"/></i>
 								<xsl:if test="current()[@rend='default']">
-									<xsl:text>- korr. in Texttinte</xsl:text>
+									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
 							</xsl:when>
 						</xsl:choose>
@@ -2491,7 +2535,7 @@
 								<xsl:text> ergänztes </xsl:text>
 								<i><xsl:apply-templates select="$pNode/node()"/></i>
 								<xsl:if test="current()[@rend='default']">
-									<xsl:text>- korr. in Texttinte</xsl:text>
+									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
 								
 							</xsl:when>
@@ -2503,10 +2547,10 @@
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 									<xsl:text> mit Einfügungszeichen</xsl:text>
 								</xsl:if>
-								<xsl:text> korr. zu</xsl:text>
+								<xsl:text> korr. zu </xsl:text>
 								<i><xsl:value-of select="$vWortUmKnoten"/></i>
 								<xsl:if test="current()[@rend='default']">
-									<xsl:text>- korr. in Texttinte</xsl:text>
+									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
 								
 							</xsl:when>
@@ -2518,25 +2562,25 @@
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 									<xsl:text> mit Einfügungszeichen</xsl:text>
 								</xsl:if>
-								<xsl:text> korr. zu</xsl:text>
+								<xsl:text> korr. zu </xsl:text>
 								<i><xsl:value-of select="$vWortUmKnoten"/></i>
 								<xsl:if test="current()[@rend='default']">
-									<xsl:text>- korr. in Texttinte</xsl:text>
+									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
 								
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
 								<!-- im Wort -->
 								
-								<xsl:text>korr. von Hand </xsl:text>
+								<xsl:text>von Hand </xsl:text>
 								<xsl:value-of select="$pNode/@hand"/>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 									<xsl:text> mit Einfügungszeichen</xsl:text>
 								</xsl:if>
-								<xsl:text> korr. zu</xsl:text>
+								<xsl:text> korr. zu </xsl:text>
 								<i><xsl:value-of select="$vWortUmKnoten"/></i>
 								<xsl:if test="current()[@rend='default']">
-									<xsl:text>- korr. in Texttinte</xsl:text>
+									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
 								
 							</xsl:when>
