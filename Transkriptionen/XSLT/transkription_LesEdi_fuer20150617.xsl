@@ -612,7 +612,7 @@
 	</xsl:template>
 
 	<xsl:template match="//tei:revisionDesc">
-		<b>
+<!--		<b>
 			<xsl:text>Bearbeitung</xsl:text>
 		</b>
 		<br/>
@@ -624,7 +624,7 @@
 			<xsl:value-of select="@when"/>
 			<xsl:text>)</xsl:text>
 			<br/>
-		</xsl:for-each>
+		</xsl:for-each>-->
 	</xsl:template>
 
 	<!-- zusätzliche Formatierung -->
@@ -1763,7 +1763,7 @@
 			<xsl:text> [</xsl:text>
 			<!--<xsl:value-of select="./tei:abbr/text()"/>-->
 			<xsl:apply-templates select="./tei:abbr/node()"/>
-			<xsl:text>]</xsl:text>
+			<xsl:text>.]</xsl:text>
 		</span>
 	</xsl:template>
 
@@ -2525,6 +2525,8 @@
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
 								<!-- steht alleine/ganzes Wort ergänzt -->
 								
+								<!--<span class="debug"><xsl:text>{tt}</xsl:text></span>-->
+								
 								<xsl:text>folgt von Hand </xsl:text>
 								<xsl:value-of select="$pNode/@hand"/>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
@@ -2539,6 +2541,8 @@
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='false'">
 								<!-- am Wortanfang -->
+								
+								<!--<span class="debug"><xsl:text>{tf}</xsl:text></span>-->
 								
 								<xsl:text>von Hand </xsl:text>
 								<xsl:value-of select="@hand"/>
@@ -2555,6 +2559,8 @@
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
 								<!-- am Wortende -->
 								
+								<!--<span class="debug"><xsl:text>{ft}</xsl:text></span>-->
+								
 								<xsl:text>von Hand </xsl:text>
 								<xsl:value-of select="$pNode/@hand"/>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
@@ -2569,6 +2575,8 @@
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
 								<!-- im Wort -->
+								
+								<!--<span class="debug"><xsl:text>{ff}</xsl:text></span>-->
 								
 								<xsl:text>von Hand </xsl:text>
 								<xsl:value-of select="$pNode/@hand"/>
