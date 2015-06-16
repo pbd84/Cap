@@ -2137,6 +2137,9 @@
 							</xsl:otherwise>
 						</xsl:choose>-->
 						
+						<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+							<xsl:text>mit Einfügungszeichen </xsl:text>
+						</xsl:if>
 						<xsl:text>korr. aus </xsl:text>
 						<i><xsl:value-of select="$vWortUmKnoten_del"/></i>
 						
@@ -2177,6 +2180,9 @@
 						
 						<xsl:text>von Hand </xsl:text>
 						<xsl:value-of select="$pNode/@hand"/>
+						<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+							<xsl:text> mit Einfügungszeichen</xsl:text>
+						</xsl:if>
 						<xsl:text> korrigiert aus </xsl:text>
 						<i><xsl:value-of select="$vWortUmKnoten_del"/></i>
 						<!--
@@ -2239,6 +2245,9 @@
 						
 							<xsl:text>von Hand </xsl:text>
 							<xsl:value-of select="$pNode/@hand"/>
+						<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+							<xsl:text> mit Einfügungszeichen</xsl:text>
+						</xsl:if>
 							<xsl:text> korr. zu </xsl:text>
 							<xsl:value-of select="$vWortUmKnoten_add"/>
 						
