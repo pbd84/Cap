@@ -2400,7 +2400,7 @@
 								<!-- am Wortanfang -->
 								
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
-									<xsl:text> mit Einfügungszeichen</xsl:text>
+									<xsl:text> mit Einfügungszeichen </xsl:text>
 								</xsl:if>
 								<xsl:text>korr. aus </xsl:text>
 								<i>
@@ -2422,7 +2422,7 @@
 								<!-- am Wortende -->
 								
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
-									<xsl:text> mit Einfügungszeichen</xsl:text>
+									<xsl:text> mit Einfügungszeichen </xsl:text>
 								</xsl:if>
 								<xsl:text>korr. aus </xsl:text>
 								<i>
@@ -2444,7 +2444,7 @@
 								<!-- im Wort -->
 								
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
-									<xsl:text> mit Einfügungszeichen</xsl:text>
+									<xsl:text> mit Einfügungszeichen </xsl:text>
 								</xsl:if>
 								<xsl:text>korr. aus </xsl:text>
 								<i>
