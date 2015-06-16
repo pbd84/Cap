@@ -645,12 +645,27 @@
 	<!-- /zusätzliche Formatierung -->
 
 
-	<xsl:template match="tei:div[count(./node())>0]">
-		<p>
-			<i>
-				<xsl:apply-templates select="node()"/>
-			</i>
-		</p>
+	<xsl:template match="tei:front/tei:div[count(./node())>0]">
+
+		
+		<xsl:choose>
+			<xsl:when test="count(tei:p)>1">
+			
+				<xsl:for-each select="tei:p">
+					<i>
+						<xsl:apply-templates select="node()"/>
+					</i>
+					<br/>
+				</xsl:for-each>
+			</xsl:when>
+			<xsl:otherwise>
+				<p>
+					<i>
+						<xsl:apply-templates select="node()"/>
+					</i>
+				</p>
+			</xsl:otherwise>
+		</xsl:choose>
 		
 		<!--<br/>-->
 	</xsl:template>
