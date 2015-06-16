@@ -2183,7 +2183,7 @@
 						<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 							<xsl:text> mit Einfügungszeichen</xsl:text>
 						</xsl:if>
-						<xsl:text> korrigiert aus </xsl:text>
+						<xsl:text> korr. aus </xsl:text>
 						<i><xsl:value-of select="$vWortUmKnoten_del"/></i>
 						<!--
 						
@@ -2861,27 +2861,53 @@
 <!--								=> Fußnotenzeichen an vorangehendes Wort hängen, Wortlaut der Anmerkung:
 								„Es folgt getilgtes [del]“   -->
 								
-								<xsl:text>folgt getilgtes </xsl:text>
+								<xsl:text>folgt </xsl:text>
+								<xsl:if test="@hand">
+									<xsl:text>von Hand </xsl:text>
+									<xsl:value-of select="@hand"/>
+								</xsl:if>
+								<xsl:text> getilgtes </xsl:text>
 								<!--<i><xsl:value-of select="$pNode"/></i>-->
 								<!--<i><xsl:value-of select="$pNode"/></i>-->
 								<i><xsl:apply-templates select="$pNode/node()"/></i>
 							</xsl:when>
 							
-							<xsl:when test="$vLeerzeichenDavor='false' or $vLeerzeichenDanach='false'">
-								<!-- im Wort getilgt -->
-<!--								=> Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
-									„korr. aus [Wort mit <del>]“-->
+<!--							<xsl:when test="$vLeerzeichenDavor='false' or $vLeerzeichenDanach='false'">
+								<!-\- im Wort getilgt -\->
+								<!-\-								=> Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
+									„korr. aus [Wort mit <del>]“-\->
 								
 								<xsl:text>korr. aus </xsl:text>
 								<i>
-								<xsl:call-template name="tGanzesWort">
-									<xsl:with-param name="pNode" select="$pNode"/>
-									<xsl:with-param name="pWortMitte" select="$pNode"/>
-								</xsl:call-template>
+									<xsl:call-template name="tGanzesWort">
+										<xsl:with-param name="pNode" select="$pNode"/>
+										<xsl:with-param name="pWortMitte" select="$pNode"/>
+									</xsl:call-template>
 								</i>
 								
-							</xsl:when>
+							</xsl:when>-->
 							
+							<xsl:otherwise>
+								<!-- im Wort getilgt -->
+								<!--								=> Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
+									„korr. aus [Wort mit <del>]“-->
+								
+								
+								<xsl:text>korr. </xsl:text>
+								<xsl:if test="@hand">
+									<xsl:text>von Hand </xsl:text>
+									<xsl:value-of select="@hand"/>
+								</xsl:if>
+								<xsl:text> aus </xsl:text>
+								<i>
+									<xsl:call-template name="tGanzesWort">
+										<xsl:with-param name="pNode" select="$pNode"/>
+										<xsl:with-param name="pWortMitte" select="$pNode"/>
+									</xsl:call-template>
+								</i>
+								
+							</xsl:otherwise>
+
 						</xsl:choose>
 					</xsl:when>
 				</xsl:choose>
