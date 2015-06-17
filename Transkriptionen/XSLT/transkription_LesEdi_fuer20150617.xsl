@@ -2408,10 +2408,15 @@
 										<xsl:with-param name="pPrecedingTextThis" select="$pNode"/>
 										<xsl:with-param name="pPrecedingTextBeforeNode" select="''"/>
 									</xsl:call-template>
+									
+									<!--<span class="debug"><xsl:text>{</xsl:text></span>-->
+									
 									<xsl:call-template name="tFollowingWortteil">
 										<xsl:with-param name="pFollowingTextThis" select="$pNode"/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
+									
+									<!--<span class="debug"><xsl:text>}</xsl:text></span>-->
 								</i>
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text>- korr. in Texttinte</xsl:text>
@@ -2430,10 +2435,15 @@
 										<xsl:with-param name="pPrecedingTextThis" select="$pNode"/>
 										<xsl:with-param name="pPrecedingTextBeforeNode" select="''"/>
 									</xsl:call-template>
+									
+									<!--<span class="debug"><xsl:text>{</xsl:text></span>-->
+									
 									<xsl:call-template name="tFollowingWortteil">
 										<xsl:with-param name="pFollowingTextThis" select="$pNode"/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
+									
+									<!--<span class="debug"><xsl:text>}</xsl:text></span>-->
 								</i>
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text> - korr. in Texttinte</xsl:text>
