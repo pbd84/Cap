@@ -3395,6 +3395,19 @@
 				<xsl:value-of select="$vSubstringAfterLast"/>
 				<xsl:value-of select="$pPrecedingTextBeforeNode"/>
 			</xsl:when>
+			<xsl:when test="contains($pPrecedingTextThis,'&#xa;')">
+				<xsl:variable name="vSubstringAfterLast">
+					<xsl:call-template name="tSubstringAfterLast">
+						<xsl:with-param name="pString" select="$pPrecedingTextThis"/>
+						<xsl:with-param name="pString2" select="'&#xa;'"/>
+					</xsl:call-template>
+				</xsl:variable>
+				
+				<xsl:value-of select="$vSubstringAfterLast"/>
+				<xsl:value-of select="$pPrecedingTextBeforeNode"/>
+			</xsl:when>
+			
+			
 			<xsl:otherwise>
 				<xsl:call-template name="tPrecedingWortteil">
 					<xsl:with-param name="pPrecedingTextThis" select="$pPrecedingTextThis/preceding::text()[1]"/>
@@ -3430,6 +3443,15 @@
 				<xsl:value-of select="$vSubstringBefore"/>
 				<xsl:value-of select="$pFollowingTextBeforeNode"/>
 			</xsl:when>
+			<xsl:when test="contains($pFollowingTextThis,'&#xa;')">
+				<xsl:variable name="vSubstringBefore">
+					<xsl:value-of select="normalize-space(substring-before($pFollowingTextThis,'&#xa;'))"/>
+				</xsl:variable>
+				
+				<xsl:value-of select="$vSubstringBefore"/>
+				<xsl:value-of select="$pFollowingTextBeforeNode"/>
+			</xsl:when>
+			
 			<xsl:otherwise>
 				<xsl:call-template name="tFollowingWortteil">
 					<xsl:with-param name="pFollowingTextThis" select="$pFollowingTextThis/following::text()[1]"/>
