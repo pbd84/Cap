@@ -695,14 +695,18 @@
 			</div>
 			<!--<br/>-->
 		</xsl:if>
+		
 		<span class="abTEXT" lang="la">
 			<xsl:apply-templates/>
 		</span>
 		<!--<br/>-->
+		
+		<!--<span class="page-break"></span>-->
+		
 	</xsl:template>
 	<xsl:template match="//tei:body/tei:ab[@type='meta-text']">
 		
-		<!--<span class="page-break"></span>-->
+		
 		
 		
 		<br/>
@@ -1609,14 +1613,14 @@
 		</super>
 	</xsl:template>
 	
-	<xsl:template match="//tei:num/tei:add">
-		<!--<xsl:text>{ab_num_add}</xsl:text> <!-\- TESTWEISE -\->-->
-		<!--<sup>-->
-			<!--<xsl:value-of select="."/>-->
+<!--	<xsl:template match="//tei:num/tei:add">
+		<!-\-<xsl:text>{ab_num_add}</xsl:text> <!-\\- TESTWEISE -\\->-\->
+		<!-\-<sup>-\->
+			<!-\-<xsl:value-of select="."/>-\->
 			<xsl:apply-templates select="current()/node()"/>
-		<!--</sup>-->
-		<!--<xsl:text>{/ab_num_add}</xsl:text> <!-\- TESTWEISE -\->-->
-	</xsl:template>
+		<!-\-</sup>-\->
+		<!-\-<xsl:text>{/ab_num_add}</xsl:text> <!-\\- TESTWEISE -\\->-\->
+	</xsl:template>-->
 
 <!--	<xsl:template match="//tei:add[not(parent::*[local-name(.)='subst']) and not(parent::*[local-name(.)='num'])]/text()">
 		<!-\-<xsl:text>{add-text}</xsl:text> <!-\\- TESTWEISE -\\->-\->
@@ -2130,7 +2134,7 @@
 
 
 				<xsl:choose>
-					<xsl:when test="not($pNode/@hand)">
+					<xsl:when test="not($pNode/tei:add/@hand)">
 						<!-- keine Hand zugewiesen -->
 						
 <!--						<xsl:choose>
@@ -2152,6 +2156,10 @@
 							</xsl:otherwise>
 						</xsl:choose>-->
 						
+						<xsl:if test="contains($pNode/tei:add,' ')">
+							<i><xsl:value-of select="$vWortUmKnoten_add"/></i>
+							<xsl:text> </xsl:text>
+						</xsl:if>
 						<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 							<xsl:text>mit Einfügungszeichen </xsl:text>
 						</xsl:if>
@@ -2190,11 +2198,15 @@
 							</xsl:when>
 						</xsl:choose>-->
 					</xsl:when>
-					<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandABC,''))">
+					<xsl:when test="string-length($pNode/tei:add/@hand)!=string-length(translate($pNode/tei:add/@hand,$vHandABC,''))">
 						<!-- "normale" Hand -->
 						
+						<xsl:if test="contains($pNode/tei:add,' ')">
+							<i><xsl:value-of select="$vWortUmKnoten_add"/></i>
+							<xsl:text> </xsl:text>
+						</xsl:if>
 						<xsl:text>von Hand </xsl:text>
-						<xsl:value-of select="$pNode/@hand"/>
+						<xsl:value-of select="$pNode/tei:add/@hand"/>
 						<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 							<xsl:text> mit Einfügungszeichen</xsl:text>
 						</xsl:if>
@@ -2253,13 +2265,15 @@
 							</xsl:when>
 						</xsl:choose>-->
 					</xsl:when>
-					<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandXYZ,''))">
+					<xsl:when test="string-length($pNode/tei:add/@hand)!=string-length(translate($pNode/tei:add/@hand,$vHandXYZ,''))">
 						<!-- "spezielle" Hand -->
 						
-						
-						
-							<xsl:text>von Hand </xsl:text>
-							<xsl:value-of select="$pNode/@hand"/>
+						<xsl:if test="contains($pNode/tei:add,' ')">
+							<i><xsl:value-of select="$vWortUmKnoten_del"/></i>
+							<xsl:text> </xsl:text>
+						</xsl:if>
+						<xsl:text>von Hand </xsl:text>
+						<xsl:value-of select="$pNode/tei:add/@hand"/>
 						<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 							<xsl:text> mit Einfügungszeichen</xsl:text>
 						</xsl:if>
@@ -2337,25 +2351,26 @@
 			<!-- ############################################################## <mod> ############################################################## -->
 			
 			<xsl:when test="local-name($pNode)='mod'">
-				<!--<xsl:text>{mod}</xsl:text> <!-\- TESTWEISE -\->-->
-				<xsl:variable name="vLeerzeichenDavorOderDanach">
-					<xsl:call-template name="tLeerzeichenDavorOderDanach">
+				
+				<xsl:variable name="vLeerzeichenDavor">
+					<xsl:call-template name="tLeerzeichenDavor">
 						<xsl:with-param name="pNode" select="$pNode"/>
 					</xsl:call-template>
 				</xsl:variable>
 				
-				<!-- BAUSTELLE: Scheint nicht zuverlässig zu funktionieren!!! -->
+				<xsl:variable name="vLeerzeichenDanach">
+					<xsl:call-template name="tLeerzeichenDanach">
+						<xsl:with-param name="pNode" select="$pNode"/>
+					</xsl:call-template>
+				</xsl:variable>
+				
 				<xsl:choose>
-					<!--<xsl:when test="(substring(preceding-sibling::text()[1],string-length(preceding-sibling::text()[1]),1)!=' ') and (substring(following-sibling::text()[1],string-length(following-sibling::text()[1]),1)!=' ')">-->
-					<xsl:when test="$vLeerzeichenDavorOderDanach='true'">
+					<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
 						<!-- wenn vor und nach <mod> kein Leerzeichen => <mod> umschließt ganzes Wort -->
-						<!--<xsl:text>Korr.</xsl:text>-->
 						<xsl:text>korr. (?)</xsl:text>
 					</xsl:when>
 					<xsl:otherwise>
 						<!-- <mod> innerhalb eines Wortes -->
-						<!--<i><xsl:value-of select="$pNode"/></i><xsl:text> korr.</xsl:text>-->
-						<!--<i><xsl:value-of select="$pNode"/></i><xsl:text> korr. (?)</xsl:text>-->
 						<i><xsl:apply-templates select="$pNode/node()"/></i><xsl:text> korr. (?)</xsl:text>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -2414,6 +2429,10 @@
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='false'">
 								<!-- am Wortanfang -->
 								
+								<xsl:if test="contains($pNode,' ')">
+									<i><xsl:value-of select="$vWortUmKnoten"/></i>
+									<xsl:text> </xsl:text>
+								</xsl:if>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 									<xsl:text> mit Einfügungszeichen </xsl:text>
 								</xsl:if>
@@ -2441,6 +2460,10 @@
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
 								<!-- am Wortende -->
 								
+								<xsl:if test="contains($pNode,' ')">
+									<i><xsl:value-of select="$vWortUmKnoten"/></i>
+									<xsl:text> </xsl:text>
+								</xsl:if>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 									<xsl:text> mit Einfügungszeichen </xsl:text>
 								</xsl:if>
@@ -2468,6 +2491,10 @@
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
 								<!-- im Wort -->
 								
+								<xsl:if test="contains($pNode,' ')">
+									<i><xsl:value-of select="$vWortUmKnoten"/></i>
+									<xsl:text> </xsl:text>
+								</xsl:if>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 									<xsl:text> mit Einfügungszeichen </xsl:text>
 								</xsl:if>
@@ -2496,7 +2523,8 @@
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
 								<!-- steht alleine/ganzes Wort ergänzt -->
 								
-								<xsl:text>von Hand </xsl:text>
+								<i><xsl:apply-templates select="$pNode/node()"/></i>
+								<xsl:text> von Hand </xsl:text>
 								<xsl:value-of select="$pNode/@hand"/>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 									<xsl:text> mit Einfügungszeichen</xsl:text>
@@ -2505,6 +2533,8 @@
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
+								
+								
 
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='false'">
@@ -2515,8 +2545,7 @@
 								<xsl:text> aus </xsl:text>
 								<i><xsl:value-of select="$vWortUmKnoten"/></i>-->
 								
-								
-								<xsl:text>von Hand </xsl:text>
+<!--								<xsl:text>von Hand </xsl:text>
 								<xsl:value-of select="$pNode/@hand"/>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 									<xsl:text> mit Einfügungszeichen</xsl:text>
@@ -2525,7 +2554,20 @@
 								<i><xsl:apply-templates select="$pNode/node()"/></i>
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text> - korr. in Texttinte</xsl:text>
+								</xsl:if>-->
+								
+								
+								<i><xsl:apply-templates select="$pNode/node()"/></i>
+								<xsl:text> von Hand </xsl:text>
+								<xsl:value-of select="$pNode/@hand"/>
+								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+									<xsl:text> mit Einfügungszeichen</xsl:text>
 								</xsl:if>
+								<xsl:text> ergänzt</xsl:text>
+								<xsl:if test="current()[@rend='default']">
+									<xsl:text> - korr. in Texttinte</xsl:text>
+								</xsl:if>
+								
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
 								<!-- am Wortende -->
@@ -2535,13 +2577,25 @@
 								<xsl:text> aus </xsl:text>
 								<i><xsl:value-of select="$vWortUmKnoten"/></i>-->
 								
-								<xsl:text>von Hand </xsl:text>
+<!--								<xsl:text>von Hand </xsl:text>
 								<xsl:value-of select="$pNode/@hand"/>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 									<xsl:text> mit Einfügungszeichen</xsl:text>
 								</xsl:if>
 								<xsl:text> ergänztes </xsl:text>
 								<i><xsl:apply-templates select="$pNode/node()"/></i>
+								<xsl:if test="current()[@rend='default']">
+									<xsl:text> - korr. in Texttinte</xsl:text>
+								</xsl:if>-->
+								
+								
+								<i><xsl:apply-templates select="$pNode/node()"/></i>
+								<xsl:text> von Hand </xsl:text>
+								<xsl:value-of select="$pNode/@hand"/>
+								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+									<xsl:text> mit Einfügungszeichen</xsl:text>
+								</xsl:if>
+								<xsl:text> ergänzt</xsl:text>
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
@@ -2554,13 +2608,25 @@
 								<xsl:text> aus </xsl:text>
 								<i><xsl:value-of select="$vWortUmKnoten"/></i>-->
 								
-								<xsl:text>von Hand </xsl:text>
+<!--								<xsl:text>von Hand </xsl:text>
 								<xsl:value-of select="$pNode/@hand"/>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 									<xsl:text> mit Einfügungszeichen</xsl:text>
 								</xsl:if>
 								<xsl:text> ergänztes </xsl:text>
 								<i><xsl:apply-templates select="$pNode/node()"/></i>
+								<xsl:if test="current()[@rend='default']">
+									<xsl:text> - korr. in Texttinte</xsl:text>
+								</xsl:if>-->
+								
+								
+								<i><xsl:apply-templates select="$pNode/node()"/></i>
+								<xsl:text> von Hand </xsl:text>
+								<xsl:value-of select="$pNode/@hand"/>
+								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+									<xsl:text> mit Einfügungszeichen</xsl:text>
+								</xsl:if>
+								<xsl:text> ergänzt</xsl:text>
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
@@ -2592,6 +2658,7 @@
 								<!-- am Wortanfang -->
 								
 								<!--<span class="debug"><xsl:text>{tf}</xsl:text></span>-->
+								
 								
 								<xsl:text>von Hand </xsl:text>
 								<xsl:value-of select="@hand"/>
