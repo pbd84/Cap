@@ -487,6 +487,17 @@
                         }
                         
                         
+                        @media all {
+                        .page-break	{ display: none; }
+                        }
+                        
+                        @media print {
+                        .page-break	{ display: block; page-break-before: always; }
+                        div, span, article { float: none !important; }
+                        .qtrans_language_chooser { display: none; }
+                        nav {display: none; !important}
+                        }
+                        
                 </style>
 			</HEAD>
 			<BODY>
@@ -690,6 +701,10 @@
 		<!--<br/>-->
 	</xsl:template>
 	<xsl:template match="//tei:body/tei:ab[@type='meta-text']">
+		
+		<!--<span class="page-break"></span>-->
+		
+		
 		<br/>
 		<xsl:if test="count(@corresp)>0">
 			<div class="corresp">
@@ -3680,10 +3695,10 @@
 				<!-- gar kein node() enthalten (z.B. wenn der zuvor geprüfte Knoten gar keine siblings mehr hat -->
 				<xsl:value-of select="false()"/>
 			</xsl:when>
-			<xsl:when test="contains($vFollText1,' ')='true'">
+			<xsl:when test="contains($vFollText1,' ')='true' or contains($vFollText1,'&#xa;')='true'">
 				<xsl:choose>
-					<xsl:when test="$vFollText1FirstLetter=' '">
-						<!-- Leerzeichen ist erstes nachfolgendes Zeichen -->
+					<xsl:when test="$vFollText1FirstLetter=' ' or $vFollText1FirstLetter='&#xa;'">
+						<!-- Leerzeichen oder Zeilenumbruch (=Leerzeichen) ist erstes nachfolgendes Zeichen -->
 						<xsl:value-of select="true()"/>
 					</xsl:when>
 					<xsl:otherwise>
@@ -3731,10 +3746,10 @@
 				<!-- gar kein node() enthalten (z.B. wenn der zuvor geprüfte Knoten gar keine siblings mehr hat -->
 				<xsl:value-of select="false()"/>
 			</xsl:when>
-			<xsl:when test="contains($vPrecText1,' ')='true'">
+			<xsl:when test="contains($vPrecText1,' ')='true' or contains($vPrecText1,'&#xa;')='true'">
 				<xsl:choose>
-					<xsl:when test="$vPrecText1LastLetter=' '">
-						<!-- Leerzeichen ist erstes vorhergehendes Zeichen -->
+					<xsl:when test="$vPrecText1LastLetter=' ' or $vPrecText1LastLetter='&#xa;'">
+						<!-- Leerzeichen oder Zeilenumbruch (=Leerzeichen) ist erstes vorhergehendes Zeichen -->
 						<xsl:value-of select="true()"/>
 					</xsl:when>
 					<xsl:otherwise>
