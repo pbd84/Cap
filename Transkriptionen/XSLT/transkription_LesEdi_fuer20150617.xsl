@@ -3692,6 +3692,18 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
+			<xsl:when test="contains($vFollText1,'&#xA;')='true'">
+				<xsl:choose>
+					<xsl:when test="$vFollText1FirstLetter=' '">
+						<!-- Leerzeichen ist erstes nachfolgendes Zeichen -->
+						<xsl:value-of select="true()"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<!-- Wortrest folgt -->
+						<xsl:value-of select="false()"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
 			
 			<xsl:otherwise>
 				<!-- text() enthält gar kein Leerzeichen => muss in einem späteren text() folgen -->
@@ -3735,6 +3747,18 @@
 				<xsl:choose>
 					<xsl:when test="$vPrecText1LastLetter=' '">
 						<!-- Leerzeichen ist erstes vorhergehendes Zeichen -->
+						<xsl:value-of select="true()"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<!-- Wortrest folgt -->
+						<xsl:value-of select="false()"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:when test="contains($vPrecText1,'&#xA;')='true'">
+				<xsl:choose>
+					<xsl:when test="$vPrecText1LastLetter=' '">
+						<!-- Leerzeichen ist erstes nachfolgendes Zeichen -->
 						<xsl:value-of select="true()"/>
 					</xsl:when>
 					<xsl:otherwise>
