@@ -525,13 +525,27 @@
 					<xsl:apply-templates select="//tei:text/tei:front/tei:div[count(./node())>0]"/>
 				</span>
 				
+				<!-- Seitenumbruch -->
+				<span class="page-break">
+					<xsl:text> </xsl:text> <!-- <span> muss gefüllt sein, sonst landet der restliche Output des Templates darin (Wieso auch immer...) / Wird nur beim Druck ausgegeben! => Hier vllt sowas wie "BK_..." ausgeben lassen, um Orientierung mit Ausdrucken zu erleichtern?! -->
+				</span>
+				
 				<!-- BODY -->
 				<div class="text">
 					<xsl:apply-templates select="//tei:body"/>
 				</div>
 				
+				
 				<br/>
 				<br/>
+
+
+				<!-- Seitenumbruch -->
+				<span class="page-break">
+					<xsl:text> </xsl:text> <!-- <span> muss gefüllt sein, sonst landet der restliche Output des Templates darin (Wieso auch immer...) / Wird nur beim Druck ausgegeben! => Hier vllt sowas wie "BK_..." ausgeben lassen, um Orientierung mit Ausdrucken zu erleichtern?! -->
+				</span>
+				
+
 				<hr/>
 
 				<!-- Fußnoten -->
@@ -689,6 +703,10 @@
     -->
 
 	<xsl:template match="//tei:body/tei:ab[@type='text']">
+		
+
+		
+		
 		<xsl:if test="count(@corresp)>0">
 			<div class="corresp">
 				<xsl:text>[</xsl:text><xsl:value-of select="./@corresp"/><xsl:text>]</xsl:text>
@@ -701,13 +719,14 @@
 		</span>
 		<!--<br/>-->
 		
-		<!--<span class="page-break"></span>-->
+
 		
 	</xsl:template>
 	<xsl:template match="//tei:body/tei:ab[@type='meta-text']">
 		
-		
-		
+		<span class="page-break">
+			<xsl:text> </xsl:text> <!-- <span> muss gefüllt sein, sonst landet der restliche Output des Templates darin (Wieso auch immer...) / Wird nur beim Druck ausgegeben! => Hier vllt sowas wie "BK_..." ausgeben lassen, um Orientierung mit Ausdrucken zu erleichtern?! -->
+		</span>
 		
 		<br/>
 		<xsl:if test="count(@corresp)>0">
