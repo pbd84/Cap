@@ -2067,24 +2067,96 @@
 			
 			<xsl:when test="local-name($pNode)='subst'">
 				<!--<xsl:text>{subst}</xsl:text> <!-\- TESTWEISE -\->-->
-				
-				<xsl:variable name="vWortUmKnoten">
-					<!--<xsl:text>{tWortUmKnoten}</xsl:text> <!-\- TESTWEISE -\->-->
-					
-<!--					<xsl:call-template name="tWortUmKnoten">
+			<xsl:call-template name="tFunoText_alphabetisch_subst">
+				<xsl:with-param name="pNode" select="$pNode"/>
+			</xsl:call-template>
+			</xsl:when>
+			
+			<!-- ############################################################## <mod> ############################################################## -->
+			
+			<xsl:when test="local-name($pNode)='mod'">
+				<xsl:call-template name="tFunoText_alphabetisch_mod">
+					<xsl:with-param name="pNode" select="$pNode"/>
+				</xsl:call-template>
+			</xsl:when>
+			
+			<!-- ############################################################## <add> ############################################################## -->
+			
+			<xsl:when test="local-name($pNode)='add'">
+				<!--<xsl:text>{add}</xsl:text> <!-\- TESTWEISE -\->-->
+				<xsl:call-template name="tFunoText_alphabetisch_add">
+					<xsl:with-param name="pNode" select="$pNode"/>
+				</xsl:call-template>
+			</xsl:when>
+			
+			<!-- ############################################################## <del> ############################################################## -->
+			
+			<xsl:when test="local-name($pNode)='del'">
+				<!--<xsl:text>{del}</xsl:text> <!-\- TESTWEISE -\->-->
+				<xsl:call-template name="tFunoText_alphabetisch_del">
+					<xsl:with-param name="pNode" select="$pNode"/>
+				</xsl:call-template>
+			</xsl:when>
+			
+			<!-- ############################################################## <note> ############################################################## -->
+			
+			<xsl:when test="local-name($pNode)='note'">
+				<!--<xsl:text>{note}</xsl:text> <!-\- TESTWEISE -\->-->
+				<xsl:call-template name="tFunoText_alphabetisch_note">
+					<xsl:with-param name="pNode" select="$pNode"/>
+				</xsl:call-template>
+			</xsl:when>
+			
+			<!-- ############################################################## <sic> ############################################################## -->
+			
+			<xsl:when test="local-name($pNode)='sic'">
+				<!--<xsl:text>{sic}</xsl:text> <!-\- TESTWEISE -\->-->
+				<xsl:call-template name="tFunoText_alphabetisch_sic">
+					<xsl:with-param name="pNode" select="$pNode"/>
+				</xsl:call-template>
+			</xsl:when>
+			
+			<!-- ############################################################## <space> ############################################################## -->
+			
+			<xsl:when test="local-name($pNode)='space'">
+				<!--<xsl:text>{space}</xsl:text> <!-\- TESTWEISE -\->-->
+				<xsl:call-template name="tFunoText_alphabetisch_space">
+					<xsl:with-param name="pNode" select="$pNode"/>
+				</xsl:call-template>
+			</xsl:when>
+			
+			<!-- ############################################################## <unclear> ############################################################## -->
+			
+			<xsl:when test="local-name($pNode)='unclear'">
+				<!--<xsl:text>{unclear}</xsl:text> <!-\- TESTWEISE -\->-->
+				<xsl:call-template name="tFunoText_alphabetisch_unclear">
+					<xsl:with-param name="pNode" select="$pNode"/>
+				</xsl:call-template>
+			</xsl:when>			
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template name="tFunoText_alphabetisch_subst">
+		
+		<xsl:param name="pNode"/>
+		
+		<xsl:variable name="vWortUmKnoten">
+			<!--<xsl:text>{tWortUmKnoten}</xsl:text> <!-\- TESTWEISE -\->-->
+			
+			<!--					<xsl:call-template name="tWortUmKnoten">
 						<xsl:with-param name="pKnoten" select="$pNode/tei:del"/>
 					</xsl:call-template> 19.03.2015, Introd. tGanzesWort-->
-					
-					<xsl:call-template name="tGanzesWort">
-						<xsl:with-param name="pNode" select="$pNode"/>
-						<xsl:with-param name="pWortMitte" select="$pNode/tei:del"/>
-					</xsl:call-template>
-					
-					
-					
-					<!--<xsl:text>{/tWortUmKnoten}</xsl:text> <!-\- TESTWEISE -\->-->
-					
-		<!--			
+			
+			<xsl:call-template name="tGanzesWort">
+				<xsl:with-param name="pNode" select="$pNode"/>
+				<xsl:with-param name="pWortMitte" select="$pNode/tei:del"/>
+			</xsl:call-template>
+			
+			
+			
+			<!--<xsl:text>{/tWortUmKnoten}</xsl:text> <!-\- TESTWEISE -\->-->
+			
+			<!--			
 					<!-\- BAUSTELLE: So modifizieren, dass vorangehender Text unabhängig von zwischengelagerten <lb> oder anderen Elementen auf Wortanfang geprüft wird -\->
 					<!-\- BAUSTELLE: Genauso auch für Wortende?! -\->
 					<xsl:variable name="vWortanfang">
@@ -2119,44 +2191,44 @@
 					<xsl:variable name="vWortende">
 						
 					</xsl:variable>-->
-				</xsl:variable>
+		</xsl:variable>
+		
+		<xsl:variable name="vWortUmKnoten_add">
+			<xsl:call-template name="tGanzesWort">
+				<xsl:with-param name="pNode" select="$pNode"/>
+				<xsl:with-param name="pWortMitte" select="$pNode/tei:add"/>
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<xsl:variable name="vWortUmKnoten_del">
+			<xsl:call-template name="tGanzesWort">
+				<xsl:with-param name="pNode" select="$pNode"/>
+				<xsl:with-param name="pWortMitte" select="$pNode/tei:del"/>
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<xsl:variable name="vLeerzeichenDavor">
+			<xsl:call-template name="tLeerzeichenDavor">
+				<xsl:with-param name="pNode" select="$pNode"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="vLeerzeichenDanach">
+			<xsl:call-template name="tLeerzeichenDanach">
+				<xsl:with-param name="pNode" select="$pNode"/>
+			</xsl:call-template>
+		</xsl:variable>
+		
+		
+		<!-- Variablen/Mengen für Hand A-W bzw. Hand X-Z -->
+		<xsl:variable name="vHandABC" select="'ABCDEFGHIJKLMNOPQRSTUVW'"/>
+		<xsl:variable name="vHandXYZ" select="'XYZ'"/>
+		
+		
+		<xsl:choose>
+			<xsl:when test="not($pNode/tei:add/@hand)">
+				<!-- keine Hand zugewiesen -->
 				
-				<xsl:variable name="vWortUmKnoten_add">
-					<xsl:call-template name="tGanzesWort">
-						<xsl:with-param name="pNode" select="$pNode"/>
-						<xsl:with-param name="pWortMitte" select="$pNode/tei:add"/>
-					</xsl:call-template>
-				</xsl:variable>
-				
-				<xsl:variable name="vWortUmKnoten_del">
-					<xsl:call-template name="tGanzesWort">
-						<xsl:with-param name="pNode" select="$pNode"/>
-						<xsl:with-param name="pWortMitte" select="$pNode/tei:del"/>
-					</xsl:call-template>
-				</xsl:variable>
-				
-				<xsl:variable name="vLeerzeichenDavor">
-					<xsl:call-template name="tLeerzeichenDavor">
-						<xsl:with-param name="pNode" select="$pNode"/>
-					</xsl:call-template>
-				</xsl:variable>
-				<xsl:variable name="vLeerzeichenDanach">
-					<xsl:call-template name="tLeerzeichenDanach">
-						<xsl:with-param name="pNode" select="$pNode"/>
-					</xsl:call-template>
-				</xsl:variable>
-				
-
-				<!-- Variablen/Mengen für Hand A-W bzw. Hand X-Z -->
-				<xsl:variable name="vHandABC" select="'ABCDEFGHIJKLMNOPQRSTUVW'"/>
-				<xsl:variable name="vHandXYZ" select="'XYZ'"/>
-
-
-				<xsl:choose>
-					<xsl:when test="not($pNode/tei:add/@hand)">
-						<!-- keine Hand zugewiesen -->
-						
-<!--						<xsl:choose>
+				<!--						<xsl:choose>
 							<xsl:when test="count($pNode/tei:del/node())=0">
 								<xsl:call-template name="tPrecedingWortteil">
 									<xsl:with-param name="pPrecedingTextThis" select="$pNode/tei:del"/>
@@ -2174,19 +2246,19 @@
 								<i><xsl:value-of select="$vWortUmKnoten_del"/></i>
 							</xsl:otherwise>
 						</xsl:choose>-->
-						
-						<xsl:if test="contains($pNode/tei:add,' ')">
-							<i><xsl:value-of select="$vWortUmKnoten_add"/></i>
-							<xsl:text> </xsl:text>
-						</xsl:if>
-						<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
-							<xsl:text>mit Einfügungszeichen </xsl:text>
-						</xsl:if>
-						<xsl:text>korr. aus </xsl:text>
-						<i><xsl:value-of select="$vWortUmKnoten_del"/></i>
-						
-						
-<!--						<xsl:choose>
+				
+				<xsl:if test="contains($pNode/tei:add,' ')">
+					<i><xsl:value-of select="$vWortUmKnoten_add"/></i>
+					<xsl:text> </xsl:text>
+				</xsl:if>
+				<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+					<xsl:text>mit Einfügungszeichen </xsl:text>
+				</xsl:if>
+				<xsl:text>korr. aus </xsl:text>
+				<i><xsl:value-of select="$vWortUmKnoten_del"/></i>
+				
+				
+				<!--						<xsl:choose>
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
 								<!-\- steht alleine/ganzes Wort ergänzt -\->
 								
@@ -2216,22 +2288,22 @@
 								
 							</xsl:when>
 						</xsl:choose>-->
-					</xsl:when>
-					<xsl:when test="string-length($pNode/tei:add/@hand)!=string-length(translate($pNode/tei:add/@hand,$vHandABC,''))">
-						<!-- "normale" Hand -->
-						
-						<xsl:if test="contains($pNode/tei:add,' ')">
-							<i><xsl:value-of select="$vWortUmKnoten_add"/></i>
-							<xsl:text> </xsl:text>
-						</xsl:if>
-						<xsl:text>von Hand </xsl:text>
-						<xsl:value-of select="$pNode/tei:add/@hand"/>
-						<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
-							<xsl:text> mit Einfügungszeichen</xsl:text>
-						</xsl:if>
-						<xsl:text> korr. aus </xsl:text>
-						<i><xsl:value-of select="$vWortUmKnoten_del"/></i>
-						<!--
+			</xsl:when>
+			<xsl:when test="string-length($pNode/tei:add/@hand)!=string-length(translate($pNode/tei:add/@hand,$vHandABC,''))">
+				<!-- "normale" Hand -->
+				
+				<xsl:if test="contains($pNode/tei:add,' ')">
+					<i><xsl:value-of select="$vWortUmKnoten_add"/></i>
+					<xsl:text> </xsl:text>
+				</xsl:if>
+				<xsl:text>von Hand </xsl:text>
+				<xsl:value-of select="$pNode/tei:add/@hand"/>
+				<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+					<xsl:text> mit Einfügungszeichen</xsl:text>
+				</xsl:if>
+				<xsl:text> korr. aus </xsl:text>
+				<i><xsl:value-of select="$vWortUmKnoten_del"/></i>
+				<!--
 						
 						<xsl:choose>
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
@@ -2283,23 +2355,23 @@
 								<i><xsl:apply-templates select="$pNode/node()"/></i>
 							</xsl:when>
 						</xsl:choose>-->
-					</xsl:when>
-					<xsl:when test="string-length($pNode/tei:add/@hand)!=string-length(translate($pNode/tei:add/@hand,$vHandXYZ,''))">
-						<!-- "spezielle" Hand -->
-						
-						<xsl:if test="contains($pNode/tei:add,' ')">
-							<i><xsl:value-of select="$vWortUmKnoten_del"/></i>
-							<xsl:text> </xsl:text>
-						</xsl:if>
-						<xsl:text>von Hand </xsl:text>
-						<xsl:value-of select="$pNode/tei:add/@hand"/>
-						<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
-							<xsl:text> mit Einfügungszeichen</xsl:text>
-						</xsl:if>
-							<xsl:text> korr. zu </xsl:text>
-							<xsl:value-of select="$vWortUmKnoten_add"/>
-						
-						<!--
+			</xsl:when>
+			<xsl:when test="string-length($pNode/tei:add/@hand)!=string-length(translate($pNode/tei:add/@hand,$vHandXYZ,''))">
+				<!-- "spezielle" Hand -->
+				
+				<xsl:if test="contains($pNode/tei:add,' ')">
+					<i><xsl:value-of select="$vWortUmKnoten_del"/></i>
+					<xsl:text> </xsl:text>
+				</xsl:if>
+				<xsl:text>von Hand </xsl:text>
+				<xsl:value-of select="$pNode/tei:add/@hand"/>
+				<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+					<xsl:text> mit Einfügungszeichen</xsl:text>
+				</xsl:if>
+				<xsl:text> korr. zu </xsl:text>
+				<xsl:value-of select="$vWortUmKnoten_add"/>
+				
+				<!--
 						<xsl:choose>
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
 								<!-\- steht alleine/ganzes Wort ergänzt -\->
@@ -2338,11 +2410,11 @@
 								
 							</xsl:when>
 						</xsl:choose>-->
-					</xsl:when>
-				</xsl:choose>
-
-<!--
-
+			</xsl:when>
+		</xsl:choose>
+		
+		<!--
+			
 				<xsl:text>korr. aus </xsl:text>
 				<i>
 					<xsl:choose>
@@ -2364,42 +2436,44 @@
 					<xsl:value-of select="$pNode/tei:add/@hand"/>
 					<xsl:text> ergänzt)</xsl:text>
 				</xsl:if>-->
-				
+		
+	</xsl:template>
+	
+	
+	<xsl:template name="tFunoText_alphabetisch_mod">
+		<xsl:param name="pNode"/>
+		
+		<xsl:variable name="vLeerzeichenDavor">
+			<xsl:call-template name="tLeerzeichenDavor">
+				<xsl:with-param name="pNode" select="$pNode"/>
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<xsl:variable name="vLeerzeichenDanach">
+			<xsl:call-template name="tLeerzeichenDanach">
+				<xsl:with-param name="pNode" select="$pNode"/>
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<xsl:choose>
+			<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
+				<!-- wenn vor und nach <mod> kein Leerzeichen => <mod> umschließt ganzes Wort -->
+				<xsl:text>korr. (?)</xsl:text>
 			</xsl:when>
-			
-			<!-- ############################################################## <mod> ############################################################## -->
-			
-			<xsl:when test="local-name($pNode)='mod'">
-				
-				<xsl:variable name="vLeerzeichenDavor">
-					<xsl:call-template name="tLeerzeichenDavor">
-						<xsl:with-param name="pNode" select="$pNode"/>
-					</xsl:call-template>
-				</xsl:variable>
-				
-				<xsl:variable name="vLeerzeichenDanach">
-					<xsl:call-template name="tLeerzeichenDanach">
-						<xsl:with-param name="pNode" select="$pNode"/>
-					</xsl:call-template>
-				</xsl:variable>
-				
-				<xsl:choose>
-					<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
-						<!-- wenn vor und nach <mod> kein Leerzeichen => <mod> umschließt ganzes Wort -->
-						<xsl:text>korr. (?)</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<!-- <mod> innerhalb eines Wortes -->
-						<i><xsl:apply-templates select="$pNode/node()"/></i><xsl:text> korr. (?)</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>
-			
-			<!-- ############################################################## <add> ############################################################## -->
-			
-			<xsl:when test="local-name($pNode)='add'">
-				<!--<xsl:text>{add}</xsl:text> <!-\- TESTWEISE -\->-->
-				<xsl:variable name="vLeerzeichenDavorOderDanach">
+			<xsl:otherwise>
+				<!-- <mod> innerhalb eines Wortes -->
+				<i><xsl:apply-templates select="$pNode/node()"/></i><xsl:text> korr. (?)</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+		
+	</xsl:template>
+	
+	<xsl:template name="tFunoText_alphabetisch_add">
+		<xsl:param name="pNode"/>
+		
+		<!-- erzeugt Fußnotentext für <add> -->
+		
+						<xsl:variable name="vLeerzeichenDavorOderDanach">
 					<xsl:call-template name="tLeerzeichenDavorOderDanach">
 						<xsl:with-param name="pNode" select="$pNode"/>
 					</xsl:call-template>
@@ -2813,18 +2887,15 @@
 				<xsl:if test="current()[@rend='default']">
 					<xsl:text>- korr. in Texttinte</xsl:text>
 				</xsl:if>-->
-
-			</xsl:when>
-			
-			
-			
-			
-			<!-- ############################################################## <del> ############################################################## -->
-			
-			
-			<xsl:when test="local-name($pNode)='del'">
-				<!--<xsl:text>{del}</xsl:text> <!-\- TESTWEISE -\->-->
-				
+		
+		
+	</xsl:template>
+	
+	
+	<xsl:template name="tFunoText_alphabetisch_del">
+		<xsl:param name="pNode"/>
+		
+					
 				
 				<!-- 
 					Typen von <del>:
@@ -3132,123 +3203,125 @@
 						<i><xsl:value-of select="$vWortUmKnoten"/></i>
 					</xsl:otherwise>
 				</xsl:choose>-->
-			</xsl:when>
-			
-			<!-- ############################################################## <note> ############################################################## -->
-			
-			<xsl:when test="local-name($pNode)='note'">
-				<!--<xsl:text>{note}</xsl:text> <!-\- TESTWEISE -\->-->
-				<xsl:if test="@target">
-					<xsl:variable name="vPrecSeg" select="$pNode/preceding-sibling::node()[1][local-name(.)='span'][@xml:id]"/>
-					<xsl:variable name="vBezug">
-						<xsl:value-of select="$vPrecSeg/text()[1]"/>
-						<xsl:value-of select="$vPrecSeg/tei:add"/>
-						<xsl:value-of select="substring-before($vPrecSeg/text()[last()],' ')"/>
-						<xsl:text>...</xsl:text>
-						<xsl:value-of select="substring-after($vPrecSeg/text()[last()],' ')"/>
-						<xsl:text>: </xsl:text>
-					</xsl:variable>
-					<xsl:value-of select="$vBezug"/>
-				</xsl:if>
-				<xsl:apply-templates select="$pNode/node()"/>
-			</xsl:when>
-			<xsl:when test="local-name($pNode)='sic'">
-				<!--<xsl:text>{sic}</xsl:text> <!-\- TESTWEISE -\->-->
-				<xsl:text>sic Hs.</xsl:text>
-			</xsl:when>
-			<xsl:when test="local-name($pNode)='space'">
-				<!--<xsl:text>{space}</xsl:text> <!-\- TESTWEISE -\->-->
-				<xsl:text>Lücke von ca. </xsl:text>
-				<xsl:value-of select="$pNode/@quantity"/>
-				<xsl:text> </xsl:text>
+	</xsl:template>
+	
+	<xsl:template name="tFunoText_alphabetisch_note">
+		<xsl:param name="pNode"/>
+		
+		<xsl:if test="@target">
+			<xsl:variable name="vPrecSeg" select="$pNode/preceding-sibling::node()[1][local-name(.)='span'][@xml:id]"/>
+			<xsl:variable name="vBezug">
+				<xsl:value-of select="$vPrecSeg/text()[1]"/>
+				<xsl:value-of select="$vPrecSeg/tei:add"/>
+				<xsl:value-of select="substring-before($vPrecSeg/text()[last()],' ')"/>
+				<xsl:text>...</xsl:text>
+				<xsl:value-of select="substring-after($vPrecSeg/text()[last()],' ')"/>
+				<xsl:text>: </xsl:text>
+			</xsl:variable>
+			<xsl:value-of select="$vBezug"/>
+		</xsl:if>
+		<xsl:apply-templates select="$pNode/node()"/>
+	</xsl:template>
+	
+	<xsl:template name="tFunoText_alphabetisch_sic">
+		<xsl:param name="pNode"/>
+		
+		<xsl:text>sic Hs.</xsl:text>
+	</xsl:template>
+	
+	<xsl:template name="tFunoText_alphabetisch_space">
+		<xsl:param name="pNode"/>
+		
+		<xsl:text>Lücke von ca. </xsl:text>
+		<xsl:value-of select="$pNode/@quantity"/>
+		<xsl:text> </xsl:text>
+		<xsl:choose>
+			<xsl:when test="$pNode/@unit='chars'">
 				<xsl:choose>
-					<xsl:when test="$pNode/@unit='chars'">
-						<xsl:choose>
-							<xsl:when test="$pNode/@quantity='1'">
-								<!-- Singular -->
-								<xsl:text>Buchstaben</xsl:text>
-							</xsl:when>
-							<xsl:otherwise>
-								<!-- Plural -->
-								<xsl:text>Buchstaben</xsl:text>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:when>
-					<xsl:when test="$pNode/@unit='words'">
-						<xsl:choose>
-							<xsl:when test="$pNode/@quantity='1'">
-								<!-- Singular -->
-								<xsl:text>Wort</xsl:text>
-							</xsl:when>
-							<xsl:otherwise>
-								<!-- Plural -->
-								<xsl:text>Wörtern</xsl:text>
-							</xsl:otherwise>
-						</xsl:choose>
+					<xsl:when test="$pNode/@quantity='1'">
+						<!-- Singular -->
+						<xsl:text>Buchstaben</xsl:text>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:choose>
-							<xsl:when test="$pNode/@quantity='1'">
-								<!-- Singular -->
-								<xsl:text>Einheit</xsl:text>
-							</xsl:when>
-							<xsl:otherwise>
-								<!-- Plural -->
-								<xsl:text>Einheiten</xsl:text>
-							</xsl:otherwise>
-						</xsl:choose>
+						<!-- Plural -->
+						<xsl:text>Buchstaben</xsl:text>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
-			
-			<!-- ############################################################## <unclear> ############################################################## -->
-			
-			<xsl:when test="local-name($pNode)='unclear'">
-				<!--<xsl:text>{unclear}</xsl:text> <!-\- TESTWEISE -\->-->
-				
-				<xsl:text>Lücke von ca. </xsl:text>
-				<xsl:value-of select="$pNode/@quantity"/>
+			<xsl:when test="$pNode/@unit='words'">
 				<xsl:choose>
-					<xsl:when test="$pNode/@unit='chars'">
-						<xsl:choose>
-							<xsl:when test="$pNode/@quantity='1'">
-								<!-- Singular -->
-								<xsl:text>Buchstaben</xsl:text>
-							</xsl:when>
-							<xsl:otherwise>
-								<!-- Plural -->
-								<xsl:text>Buchstaben</xsl:text>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:when>
-					<xsl:when test="$pNode/@unit='words'">
-						<xsl:choose>
-							<xsl:when test="$pNode/@quantity='1'">
-								<!-- Singular -->
-								<xsl:text>Wort</xsl:text>
-							</xsl:when>
-							<xsl:otherwise>
-								<!-- Plural -->
-								<xsl:text>Wörtern</xsl:text>
-							</xsl:otherwise>
-						</xsl:choose>
+					<xsl:when test="$pNode/@quantity='1'">
+						<!-- Singular -->
+						<xsl:text>Wort</xsl:text>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:choose>
-							<xsl:when test="$pNode/@quantity='1'">
-								<!-- Singular -->
-								<xsl:text>Einheit</xsl:text>
-							</xsl:when>
-							<xsl:otherwise>
-								<!-- Plural -->
-								<xsl:text>Einheiten</xsl:text>
-							</xsl:otherwise>
-						</xsl:choose>
+						<!-- Plural -->
+						<xsl:text>Wörtern</xsl:text>
 					</xsl:otherwise>
 				</xsl:choose>
-			</xsl:when>			
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="$pNode/@quantity='1'">
+						<!-- Singular -->
+						<xsl:text>Einheit</xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+						<!-- Plural -->
+						<xsl:text>Einheiten</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+	
+	<xsl:template name="tFunoText_alphabetisch_unclear">
+		<xsl:param name="pNode"/>
+		
+		<xsl:text>Lücke von ca. </xsl:text>
+		<xsl:value-of select="$pNode/@quantity"/>
+		<xsl:choose>
+			<xsl:when test="$pNode/@unit='chars'">
+				<xsl:choose>
+					<xsl:when test="$pNode/@quantity='1'">
+						<!-- Singular -->
+						<xsl:text>Buchstaben</xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+						<!-- Plural -->
+						<xsl:text>Buchstaben</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:when test="$pNode/@unit='words'">
+				<xsl:choose>
+					<xsl:when test="$pNode/@quantity='1'">
+						<!-- Singular -->
+						<xsl:text>Wort</xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+						<!-- Plural -->
+						<xsl:text>Wörtern</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="$pNode/@quantity='1'">
+						<!-- Singular -->
+						<xsl:text>Einheit</xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+						<!-- Plural -->
+						<xsl:text>Einheiten</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+		
+	</xsl:template>
+	
+
 	
 	<xsl:template name="tFunoText_numerisch">
 		<xsl:param name="pNode"/>
@@ -3483,6 +3556,8 @@
 		<xsl:param name="pPrecedingTextThis"/>
 		<xsl:param name="pPrecedingTextBeforeNode"/>
 		
+		<!-- use as first instance of tPrecedingWortteil -->
+		
 		<!-- BAUSTELLE: testes -->
 		<!-- 1) erstes Element wird zum Teil wiederholt! -->
 		<!-- 2) Was passiert, wenn das (erste) Element selbst schon ein Leerzeichen beinhaltet?! => !!!!!!!!!!!!!!!!!!! -->
@@ -3520,7 +3595,7 @@
 				
 				<xsl:call-template name="tPrecedingWortteil">
 					<xsl:with-param name="pPrecedingTextThis" select="$pPrecedingTextThis/preceding::text()[1]"/>
-					<xsl:with-param name="pPrecedingTextBeforeNode">
+<!--					<xsl:with-param name="pPrecedingTextBeforeNode">
 						<xsl:choose>
 							<xsl:when test="count($pPrecedingTextThis/node())>0">
 								<xsl:apply-templates select="$pPrecedingTextThis/node()"/>
@@ -3530,7 +3605,8 @@
 							</xsl:otherwise>
 						</xsl:choose>
 						<xsl:value-of select="$pPrecedingTextBeforeNode"/>
-					</xsl:with-param>
+					</xsl:with-param>-->
+					<xsl:with-param name="pPrecedingTextBeforeNode" select="''"/>
 				</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -3541,6 +3617,8 @@
 	<xsl:template name="tFollowingWortteil_fromThis">
 		<xsl:param name="pFollowingTextThis"/>
 		<xsl:param name="pFollowingTextBeforeNode"/>
+		
+		<!-- use as first instance of tFollowingWortteil -->
 		
 		<xsl:choose>
 			<xsl:when test="contains($pFollowingTextThis,' ')">
@@ -3566,7 +3644,7 @@
 			<xsl:otherwise>
 				<xsl:call-template name="tFollowingWortteil">
 					<xsl:with-param name="pFollowingTextThis" select="$pFollowingTextThis/following::text()[1]"/>
-					<xsl:with-param name="pPrecedingTextBeforeNode">
+<!--					<xsl:with-param name="pPrecedingTextBeforeNode">
 						<xsl:value-of select="$pFollowingTextBeforeNode"/>
 						<xsl:choose>
 							<xsl:when test="count($pFollowingTextThis/node())>0">
@@ -3576,7 +3654,8 @@
 								<xsl:value-of select="$pFollowingTextThis"/>
 							</xsl:otherwise>
 						</xsl:choose>
-					</xsl:with-param>
+					</xsl:with-param>-->
+					<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 				</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
