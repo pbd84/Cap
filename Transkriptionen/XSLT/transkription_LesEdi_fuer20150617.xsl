@@ -2426,6 +2426,8 @@
 				<!-- Variablen/Mengen für Hand A-W bzw. Hand X-Z -->
 				<xsl:variable name="vHandABC" select="'ABCDEFGHIJKLMNOPQRSTUVW'"/>
 				<xsl:variable name="vHandXYZ" select="'XYZ'"/>
+				
+				
 
 				<xsl:choose>
 					<xsl:when test="not($pNode/@hand)">
@@ -2434,6 +2436,8 @@
 						<xsl:choose>
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
 								<!-- steht alleine/ganzes Wort ergänzt -->
+								
+								<span class="debug"><xsl:text>{TEST_tt}</xsl:text></span>
 								
 								<i><xsl:value-of select="$vWortUmKnoten"/></i>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
@@ -2447,6 +2451,8 @@
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='false'">
 								<!-- am Wortanfang -->
+								
+								<span class="debug"><xsl:text>{TEST_tf}</xsl:text></span>
 								
 								<xsl:if test="contains($pNode,' ')">
 									<i><xsl:value-of select="$vWortUmKnoten"/></i>
@@ -2479,6 +2485,8 @@
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
 								<!-- am Wortende -->
 								
+								<span class="debug"><xsl:text>{TEST_ft}</xsl:text></span>
+								
 								<xsl:if test="contains($pNode,' ')">
 									<i><xsl:value-of select="$vWortUmKnoten"/></i>
 									<xsl:text> </xsl:text>
@@ -2488,19 +2496,21 @@
 								</xsl:if>
 								<xsl:text>korr. aus </xsl:text>
 								<i>
+									<!--<span class="debug"><xsl:text>{</xsl:text></span>-->
+									
 									<xsl:call-template name="tPrecedingWortteil">
 										<xsl:with-param name="pPrecedingTextThis" select="$pNode"/>
 										<xsl:with-param name="pPrecedingTextBeforeNode" select="''"/>
 									</xsl:call-template>
 									
-									<!--<span class="debug"><xsl:text>{</xsl:text></span>-->
+									<!--<span class="debug"><xsl:text>}</xsl:text></span>-->
 									
 									<xsl:call-template name="tFollowingWortteil">
 										<xsl:with-param name="pFollowingTextThis" select="$pNode"/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
 									
-									<!--<span class="debug"><xsl:text>}</xsl:text></span>-->
+									
 								</i>
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text> - korr. in Texttinte</xsl:text>
@@ -2509,6 +2519,8 @@
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
 								<!-- im Wort -->
+								
+								<span class="debug"><xsl:text>{TEST_ff}</xsl:text></span>
 								
 								<xsl:if test="contains($pNode,' ')">
 									<i><xsl:value-of select="$vWortUmKnoten"/></i>
@@ -3465,12 +3477,21 @@
 		<xsl:value-of select="$vFollowingWortteil"/>
 	</xsl:template>
 	
-	<xsl:template name="tPrecedingWortteil">
+	
+	
+	<xsl:template name="tPrecedingWortteil_fromThis">
 		<xsl:param name="pPrecedingTextThis"/>
 		<xsl:param name="pPrecedingTextBeforeNode"/>
 		
+		<!-- BAUSTELLE: testes -->
+		<!-- 1) erstes Element wird zum Teil wiederholt! -->
+		<!-- 2) Was passiert, wenn das (erste) Element selbst schon ein Leerzeichen beinhaltet?! => !!!!!!!!!!!!!!!!!!! -->
+		
+		<span class="debug"><xsl:text>{</xsl:text></span>
+		
 		<xsl:choose>
 			<xsl:when test="contains($pPrecedingTextThis,' ')">
+				
 				<xsl:variable name="vSubstringAfterLast">
 					<xsl:call-template name="tSubstringAfterLast">
 						<xsl:with-param name="pString" select="$pPrecedingTextThis"/>
@@ -3482,6 +3503,7 @@
 				<xsl:value-of select="$pPrecedingTextBeforeNode"/>
 			</xsl:when>
 			<xsl:when test="contains($pPrecedingTextThis,'&#xa;')">
+				
 				<xsl:variable name="vSubstringAfterLast">
 					<xsl:call-template name="tSubstringAfterLast">
 						<xsl:with-param name="pString" select="$pPrecedingTextThis"/>
@@ -3495,6 +3517,7 @@
 			
 			
 			<xsl:otherwise>
+				
 				<xsl:call-template name="tPrecedingWortteil">
 					<xsl:with-param name="pPrecedingTextThis" select="$pPrecedingTextThis/preceding::text()[1]"/>
 					<xsl:with-param name="pPrecedingTextBeforeNode">
@@ -3511,6 +3534,112 @@
 				</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
+		
+		<span class="debug"><xsl:text>}</xsl:text></span>
+	</xsl:template>
+	
+	<xsl:template name="tFollowingWortteil_fromThis">
+		<xsl:param name="pFollowingTextThis"/>
+		<xsl:param name="pFollowingTextBeforeNode"/>
+		
+		<xsl:choose>
+			<xsl:when test="contains($pFollowingTextThis,' ')">
+				<xsl:variable name="vSubstringBefore">
+					<!--<xsl:value-of select="substring-before($pFollowingTextThis,' ')"/>-->
+					<!--<xsl:value-of select="substring-before(concat($pFollowingTextThis,' '),' ')"/>-->
+					<!--<xsl:value-of select="substring($pFollowingTextThis,1,1)"/>-->
+					<xsl:value-of select="normalize-space(substring-before($pFollowingTextThis,' '))"/>
+				</xsl:variable>
+				
+				<xsl:value-of select="$vSubstringBefore"/>
+				<xsl:value-of select="$pFollowingTextBeforeNode"/>
+			</xsl:when>
+			<xsl:when test="contains($pFollowingTextThis,'&#xa;')">
+				<xsl:variable name="vSubstringBefore">
+					<xsl:value-of select="normalize-space(substring-before($pFollowingTextThis,'&#xa;'))"/>
+				</xsl:variable>
+				
+				<xsl:value-of select="$vSubstringBefore"/>
+				<xsl:value-of select="$pFollowingTextBeforeNode"/>
+			</xsl:when>
+			
+			<xsl:otherwise>
+				<xsl:call-template name="tFollowingWortteil">
+					<xsl:with-param name="pFollowingTextThis" select="$pFollowingTextThis/following::text()[1]"/>
+					<xsl:with-param name="pPrecedingTextBeforeNode">
+						<xsl:value-of select="$pFollowingTextBeforeNode"/>
+						<xsl:choose>
+							<xsl:when test="count($pFollowingTextThis/node())>0">
+								<xsl:apply-templates select="$pFollowingTextThis/node()"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="$pFollowingTextThis"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:with-param>
+				</xsl:call-template>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	
+	<xsl:template name="tPrecedingWortteil">
+		<xsl:param name="pPrecedingTextThis"/>
+		<xsl:param name="pPrecedingTextBeforeNode"/>
+		
+		<!-- BAUSTELLE: testes -->
+		<!-- 1) erstes Element wird zum Teil wiederholt! -->
+		<!-- 2) Was passiert, wenn das (erste) Element selbst schon ein Leerzeichen beinhaltet?! => !!!!!!!!!!!!!!!!!!! -->
+		
+		<span class="debug"><xsl:text>{</xsl:text></span>
+		
+		<xsl:choose>
+			<xsl:when test="contains($pPrecedingTextThis,' ')">
+				
+				<xsl:variable name="vSubstringAfterLast">
+					<xsl:call-template name="tSubstringAfterLast">
+						<xsl:with-param name="pString" select="$pPrecedingTextThis"/>
+						<xsl:with-param name="pString2" select="' '"/>
+					</xsl:call-template>
+				</xsl:variable>
+				
+				<xsl:value-of select="$vSubstringAfterLast"/>
+				<xsl:value-of select="$pPrecedingTextBeforeNode"/>
+			</xsl:when>
+			<xsl:when test="contains($pPrecedingTextThis,'&#xa;')">
+				
+				<xsl:variable name="vSubstringAfterLast">
+					<xsl:call-template name="tSubstringAfterLast">
+						<xsl:with-param name="pString" select="$pPrecedingTextThis"/>
+						<xsl:with-param name="pString2" select="'&#xa;'"/>
+					</xsl:call-template>
+				</xsl:variable>
+				
+				<xsl:value-of select="$vSubstringAfterLast"/>
+				<xsl:value-of select="$pPrecedingTextBeforeNode"/>
+			</xsl:when>
+			
+			
+			<xsl:otherwise>
+
+				<xsl:call-template name="tPrecedingWortteil">
+					<xsl:with-param name="pPrecedingTextThis" select="$pPrecedingTextThis/preceding::text()[1]"/>
+					<xsl:with-param name="pPrecedingTextBeforeNode">
+						<xsl:choose>
+							<xsl:when test="count($pPrecedingTextThis/node())>0">
+								<xsl:apply-templates select="$pPrecedingTextThis/node()"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="$pPrecedingTextThis"/>
+							</xsl:otherwise>
+						</xsl:choose>
+						<xsl:value-of select="$pPrecedingTextBeforeNode"/>
+					</xsl:with-param>
+				</xsl:call-template>
+			</xsl:otherwise>
+		</xsl:choose>
+		
+		<span class="debug"><xsl:text>}</xsl:text></span>
 	</xsl:template>
 	
 	<xsl:template name="tFollowingWortteil">
