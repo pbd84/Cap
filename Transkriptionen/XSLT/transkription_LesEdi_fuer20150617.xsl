@@ -478,6 +478,10 @@
 						vertical-align: top;
 						font-size: 60%
 					}
+					
+					span.frontDiv {
+					font-weight: bold
+					}
                         
 					ol.alphabetisch {
                         list-style:lower-alpha outside none;
@@ -671,7 +675,46 @@
 
 
 	<xsl:template match="tei:front/tei:div[count(./node())>0]">
+<!--
+- <front>:
+	Die einzelnen <div>s sollten noch Überschriften bekommen (selbe Schriftart, aber fett; danach einfacher Zeilenumbruch):
+		scribe = Schreiber
+		lett = Buchstabenformen
+		abbr = Abkürzungen
+		punct = Interpunktion
+		struct = Gliederungsmerkmale
+		other = Sonstiges
+-->
 
+		<xsl:choose>
+			<xsl:when test="current()/@type='scribe'">
+				<span class="frontDiv"><xsl:text>Schreiber</xsl:text></span>
+				<br/>
+			</xsl:when>
+			<xsl:when test="current()/@type='lett'">
+				<span class="frontDiv"><xsl:text>Buchstabenformen</xsl:text></span>
+				<br/>
+			</xsl:when>
+			<xsl:when test="current()/@type='abbr'">
+				<span class="frontDiv"><xsl:text>Abkürzungen</xsl:text></span>
+				<br/>
+			</xsl:when>
+			<xsl:when test="current()/@type='punct'">
+				<span class="frontDiv"><xsl:text>Interpunktion</xsl:text></span>
+				<br/>
+			</xsl:when>
+			<xsl:when test="current()/@type='struct'">
+				<span class="frontDiv"><xsl:text>Gliederungsmerkmale</xsl:text></span>
+				<br/>
+			</xsl:when>
+			<xsl:when test="current()/@type='other'">
+				<span class="frontDiv"><xsl:text>Sonstiges</xsl:text></span>
+				<br/>
+			</xsl:when>
+			<xsl:otherwise>
+				
+			</xsl:otherwise>
+		</xsl:choose>
 		
 		<xsl:choose>
 			<xsl:when test="count(tei:p)>1">
@@ -719,14 +762,12 @@
 		</span>
 		<!--<br/>-->
 		
-
-		
-	</xsl:template>
-	<xsl:template match="//tei:body/tei:ab[@type='meta-text']">
-		
 		<span class="page-break">
 			<xsl:text> </xsl:text> <!-- <span> muss gefüllt sein, sonst landet der restliche Output des Templates darin (Wieso auch immer...) / Wird nur beim Druck ausgegeben! => Hier vllt sowas wie "BK_..." ausgeben lassen, um Orientierung mit Ausdrucken zu erleichtern?! -->
 		</span>
+		
+	</xsl:template>
+	<xsl:template match="//tei:body/tei:ab[@type='meta-text']">
 		
 		<br/>
 		<xsl:if test="count(@corresp)>0">
@@ -1297,6 +1338,10 @@
 	
 	<xsl:template match="//tei:add[not(parent::*[local-name(.)='subst'] and not(parent::*[local-name(.)='num']))]">
 		<!--<xsl:text>{add-oP}</xsl:text> <!-\- TESTWEISE -\->-->
+		
+		<xsl:if test="./text()='con'">
+			<xsl:variable name="test" select="''"/>
+		</xsl:if>
 
 		<xsl:variable name="vNoteFolgt">
 			<!-- ermittelt, ob eine <note> angehängt ist -->
@@ -1655,6 +1700,11 @@
 			</xsl:call-template>
 		</xsl:variable>
 		
+		<!-- Variablen/Mengen für Hand A-W bzw. Hand X-Z -->
+		<xsl:variable name="vHandABC" select="'ABCDEFGHIJKLMNOPQRSTUVW'"/>
+		<xsl:variable name="vHandXYZ" select="'XYZ'"/>
+		
+		
 		<xsl:choose>
 			<xsl:when test="count(./node())=0">
 				<!-- Sonderfall bei <del>:  leeres Element -->
@@ -1664,14 +1714,142 @@
 					<xsl:with-param name="pPrintWhat" select="'+'"/>
 					<xsl:with-param name="pPrintHowManyTimes" select="current()/@quantity"/>
 				</xsl:call-template>
+				
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="not(@hand)">
+						<!-- ohne Hand -->
+						
+						<!-- Bezugsknoten -->
+						<xsl:variable name="vBezug" select="."/>
+						
+						<!-- Text für Tooltip erstellen -->
+						<xsl:variable name="vFunoText">
+							<xsl:call-template name="tFunoText_alphabetisch">
+								<xsl:with-param name="pNode" select="$vBezug"/>
+							</xsl:call-template>
+						</xsl:variable>
+						
+						<xsl:variable name="vIndex">
+							<xsl:call-template name="indexOf_a">
+								<xsl:with-param name="pSeq" select="$funoAlphabetisch"/>
+								<xsl:with-param name="pNode" select="$vBezug"/>
+							</xsl:call-template>
+						</xsl:variable>
+						
+						<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
+							<xsl:attribute name="title">
+								<xsl:call-template name="tTooltip">
+									<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
+								</xsl:call-template>
+							</xsl:attribute>
+							<sup>
+								<xsl:value-of select="$vIndex"/>
+								<xsl:if test="$vIndex=''">
+									<xsl:text>{NoIndex}</xsl:text>
+								</xsl:if>
+							</sup>
+						</a>
+						
+					</xsl:when>
+					<xsl:when test="string-length(@hand)!=string-length(translate(@hand,$vHandABC,''))">
+						<!-- normale Hand -->
+						
+						<!-- Bezugsknoten -->
+						<xsl:variable name="vBezug" select="."/>
+						
+						<!-- Text für Tooltip erstellen -->
+						<xsl:variable name="vFunoText">
+							<xsl:call-template name="tFunoText_alphabetisch">
+								<xsl:with-param name="pNode" select="$vBezug"/>
+							</xsl:call-template>
+						</xsl:variable>
+						
+						<xsl:variable name="vIndex">
+							<xsl:call-template name="indexOf_a">
+								<xsl:with-param name="pSeq" select="$funoAlphabetisch"/>
+								<xsl:with-param name="pNode" select="$vBezug"/>
+							</xsl:call-template>
+						</xsl:variable>
+						
+						<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
+							<xsl:attribute name="title">
+								<xsl:call-template name="tTooltip">
+									<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
+								</xsl:call-template>
+							</xsl:attribute>
+							<sup>
+								<xsl:value-of select="$vIndex"/>
+								<xsl:if test="$vIndex=''">
+									<xsl:text>{NoIndex}</xsl:text>
+								</xsl:if>
+							</sup>
+						</a>
+						
+					</xsl:when>
+					<xsl:when test="string-length(@hand)!=string-length(translate(@hand,$vHandXYZ,''))">
+						<!-- spezielle Hand -->
+						<xsl:apply-templates select="current()/node()"/>
+						
+						<!-- Bezugsknoten -->
+						<xsl:variable name="vBezug" select="."/>
+						
+						<!-- Text für Tooltip erstellen -->
+						<xsl:variable name="vFunoText">
+							<xsl:call-template name="tFunoText_alphabetisch">
+								<xsl:with-param name="pNode" select="$vBezug"/>
+							</xsl:call-template>
+						</xsl:variable>
+						
+						<xsl:variable name="vIndex">
+							<xsl:call-template name="indexOf_a">
+								<xsl:with-param name="pSeq" select="$funoAlphabetisch"/>
+								<xsl:with-param name="pNode" select="$vBezug"/>
+							</xsl:call-template>
+						</xsl:variable>
+						
+						<a href="#{generate-id($vBezug)}" id="{generate-id($vBezug)}-L" class="noteLink">
+							<xsl:attribute name="title">
+								<xsl:call-template name="tTooltip">
+									<xsl:with-param name="pNode" select="exslt:node-set($vFunoText)"/>
+								</xsl:call-template>
+							</xsl:attribute>
+							<sup>
+								<xsl:value-of select="$vIndex"/>
+								<xsl:if test="$vIndex=''">
+									<xsl:text>{NoIndex}</xsl:text>
+								</xsl:if>
+							</sup>
+						</a>
+						
+					</xsl:when>
+					<xsl:otherwise>
+						<span class="debug"><xsl:text>{FEHLER in del}</xsl:text></span>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+		
+		<!--
+		
+		<xsl:choose>
+			<xsl:when test="count(./node())=0">
+				<!-\- Sonderfall bei <del>:  leeres Element -\->
+				<!-\- Bezugsknoten -\->
+				
+				<xsl:call-template name="tPrintXtimes">
+					<xsl:with-param name="pPrintWhat" select="'+'"/>
+					<xsl:with-param name="pPrintHowManyTimes" select="current()/@quantity"/>
+				</xsl:call-template>
 			</xsl:when>
 			<xsl:when test="count(following-sibling::node())=0">
-				<!-- einziges Element auf dieser Ebene -->
+				<!-\- wenn kein Element oder text() nachfolgt -\->
 				
-				<!-- Bezugsknoten -->
+				<!-\- Bezugsknoten -\->
 				<xsl:variable name="vBezug" select="."/>
 				
-				<!-- Text für Tooltip erstellen -->
+				<!-\- Text für Tooltip erstellen -\->
 				<xsl:variable name="vFunoText">
 					<xsl:call-template name="tFunoText_alphabetisch">
 						<xsl:with-param name="pNode" select="$vBezug"/>
@@ -1699,27 +1877,27 @@
 					</sup>
 				</a>
 			</xsl:when>
-<!--			<xsl:when
+<!-\-			<xsl:when
 				test="(following-sibling::node()[1]=following-sibling::text()[1]) and (substring(following-sibling::node()[1],1,1)!=' ')">
 				
 				
 				
-			</xsl:when>-->
+			</xsl:when>-\->
 			<xsl:otherwise>
-				<!-- wenn kein Textelement nachfolgt -->
+				<!-\- wenn ein node() nachfolgt -\->
 				
 				<xsl:choose>
 					<xsl:when test="$vNoteFolgt='true'">
-						<!-- mit <note> -->
+						<!-\- mit <note> -\->
 					</xsl:when>
 					<xsl:otherwise>
-						<!-- ohne <note> -->
+						<!-\- ohne <note> -\->
 
-						<!-- Wort vollständig -->
-						<!-- Bezugsknoten -->
+						<!-\- Wort vollständig -\->
+						<!-\- Bezugsknoten -\->
 						<xsl:variable name="vBezug" select="."/>
 						
-						<!-- Text für Tooltip erstellen -->
+						<!-\- Text für Tooltip erstellen -\->
 						<xsl:variable name="vFunoText">
 							<xsl:call-template name="tFunoText_alphabetisch">
 								<xsl:with-param name="pNode" select="$vBezug"/>
@@ -1749,7 +1927,7 @@
 							</sup>
 						</a>
 							
-						<!--
+						<!-\-
 							
 												<xsl:variable name="vLeerzeichenFolgt">
 							<xsl:call-template name="tLeerzeichenDanach">
@@ -1759,18 +1937,18 @@
 							
 						<xsl:choose>
 							<xsl:when test="$vLeerzeichenFolgt='false'">
-								<!-\- Wortende folgt in nächstem nachfolgenden Text -\->
-								<!-\-<xsl:text>{unv.}</xsl:text>-\->
+								<!-\\- Wortende folgt in nächstem nachfolgenden Text -\\->
+								<!-\\-<xsl:text>{unv.}</xsl:text>-\\->
 								
 								
 								
 							</xsl:when>
 							<xsl:otherwise>
-								<!-\- Wort vollständig -\->
-								<!-\- Bezugsknoten -\->
+								<!-\\- Wort vollständig -\\->
+								<!-\\- Bezugsknoten -\\->
 								<xsl:variable name="vBezug" select="."/>
 								
-								<!-\- Text für Tooltip erstellen -\->
+								<!-\\- Text für Tooltip erstellen -\\->
 								<xsl:variable name="vFunoText">
 									<xsl:call-template name="tFunoText_alphabetisch">
 										<xsl:with-param name="pNode" select="$vBezug"/>
@@ -1800,13 +1978,13 @@
 									</sup>
 								</a>
 							</xsl:otherwise>
-						</xsl:choose>-->
+						</xsl:choose>-\->
 					</xsl:otherwise>
 				</xsl:choose>
 				
 			</xsl:otherwise>
 		</xsl:choose>
-		
+		-->
 	</xsl:template>
 
 	<xsl:template match="//tei:choice">
@@ -3167,16 +3345,16 @@
 					<xsl:value-of select="normalize-space(substring-before($pFollowingTextThis,' '))"/>
 				</xsl:variable>
 				
-				<xsl:value-of select="$vSubstringBefore"/>
 				<xsl:value-of select="$pFollowingTextBeforeNode"/>
+				<xsl:value-of select="$vSubstringBefore"/>
 			</xsl:when>
 			<xsl:when test="contains($pFollowingTextThis,'&#xa;')">
 				<xsl:variable name="vSubstringBefore">
 					<xsl:value-of select="normalize-space(substring-before($pFollowingTextThis,'&#xa;'))"/>
 				</xsl:variable>
 				
-				<xsl:value-of select="$vSubstringBefore"/>
 				<xsl:value-of select="$pFollowingTextBeforeNode"/>
+				<xsl:value-of select="$vSubstringBefore"/>
 			</xsl:when>
 			
 			<xsl:otherwise>
@@ -3235,13 +3413,24 @@
 				<xsl:value-of select="$vSubstringAfterLast"/>
 				<xsl:value-of select="$pPrecedingTextBeforeNode"/>
 			</xsl:when>
-			
-			
 			<xsl:otherwise>
+				
+				<!-- can't be "produced" in with-param...for unknown reason -->
+				<xsl:variable name="vPrecedingTextBeforeNode">
+					<xsl:choose>
+						<xsl:when test="count($pPrecedingTextThis/node())>0">
+							<xsl:apply-templates select="$pPrecedingTextThis/node()"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$pPrecedingTextThis"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:value-of select="$pPrecedingTextBeforeNode"/>
+				</xsl:variable>
 
 				<xsl:call-template name="tPrecedingWortteil">
 					<xsl:with-param name="pPrecedingTextThis" select="$pPrecedingTextThis/preceding::text()[1]"/>
-					<xsl:with-param name="pPrecedingTextBeforeNode">
+<!--					<xsl:with-param name="pPrecedingTextBeforeNode">
 						<xsl:choose>
 							<xsl:when test="count($pPrecedingTextThis/node())>0">
 								<xsl:apply-templates select="$pPrecedingTextThis/node()"/>
@@ -3251,7 +3440,8 @@
 							</xsl:otherwise>
 						</xsl:choose>
 						<xsl:value-of select="$pPrecedingTextBeforeNode"/>
-					</xsl:with-param>
+					</xsl:with-param>-->
+					<xsl:with-param name="pPrecedingTextBeforeNode" select="$vPrecedingTextBeforeNode"/>
 				</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -3272,23 +3462,59 @@
 					<xsl:value-of select="normalize-space(substring-before($pFollowingTextThis,' '))"/>
 				</xsl:variable>
 				
-				<xsl:value-of select="$vSubstringBefore"/>
 				<xsl:value-of select="$pFollowingTextBeforeNode"/>
+				<xsl:value-of select="$vSubstringBefore"/>
 			</xsl:when>
 			<xsl:when test="contains($pFollowingTextThis,'&#xa;')">
 				<xsl:variable name="vSubstringBefore">
 					<xsl:value-of select="normalize-space(substring-before($pFollowingTextThis,'&#xa;'))"/>
 				</xsl:variable>
 				
-				<xsl:value-of select="$vSubstringBefore"/>
 				<xsl:value-of select="$pFollowingTextBeforeNode"/>
+				<xsl:value-of select="$vSubstringBefore"/>
 			</xsl:when>
 			
+			
+			
 			<xsl:otherwise>
+				
+<!--				<xsl:variable name="test" select="$pFollowingTextThis/self::*"/>
+				<xsl:variable name="test2" select="$pFollowingTextThis/self::node()"/>
+				
+				<xsl:variable name="test3" select="$pFollowingTextThis"/>
+				
+				<xsl:variable name="test4">
+					<xsl:value-of select="$pFollowingTextThis"/>
+				</xsl:variable>
+				<xsl:variable name="test5">
+					<xsl:value-of select="$pFollowingTextThis/node()"/>
+				</xsl:variable>
+				<xsl:variable name="test6">
+					<xsl:value-of select="exslt:node-set($pFollowingTextThis)"/>
+				</xsl:variable>
+				<xsl:variable name="test7">
+					<xsl:value-of select="exslt:node-set($pFollowingTextThis/node())"/>
+				</xsl:variable>-->
+				
+				
+				<!-- can't be "produced" in with-param...for unknown reason -->
+				<xsl:variable name="vFollowingTextBeforeNode">
+					<xsl:value-of select="$pFollowingTextBeforeNode"/>
+					<xsl:choose>
+						<xsl:when test="count($pFollowingTextThis/node())>0">
+							<xsl:apply-templates select="$pFollowingTextThis/node()"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$pFollowingTextThis"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+				</xsl:variable>
+				
 				<xsl:call-template name="tFollowingWortteil">
 					<xsl:with-param name="pFollowingTextThis" select="$pFollowingTextThis/following::text()[1]"/>
-					<xsl:with-param name="pPrecedingTextBeforeNode">
-						<xsl:value-of select="$pFollowingTextBeforeNode"/>
+<!--					<xsl:with-param name="pPrecedingTextBeforeNode">
+<!-\-						<xsl:value-of select="$pFollowingTextBeforeNode"/>
 						<xsl:choose>
 							<xsl:when test="count($pFollowingTextThis/node())>0">
 								<xsl:apply-templates select="$pFollowingTextThis/node()"/>
@@ -3296,8 +3522,10 @@
 							<xsl:otherwise>
 								<xsl:value-of select="$pFollowingTextThis"/>
 							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:with-param>
+						</xsl:choose>-\->
+						<xsl:value-of select="$test8"/>
+					</xsl:with-param>-->
+					<xsl:with-param name="pFollowingTextBeforeNode" select="$vFollowingTextBeforeNode"/>
 				</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
