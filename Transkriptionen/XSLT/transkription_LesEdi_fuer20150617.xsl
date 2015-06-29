@@ -1768,6 +1768,11 @@
 					<xsl:when test="not(@hand)">
 						<!-- ohne Hand -->
 						
+						
+						<xsl:if test="count(current()/preceding-sibling::node())=0">
+							<xsl:text>#</xsl:text>
+						</xsl:if>
+						
 						<!-- Bezugsknoten -->
 						<xsl:variable name="vBezug" select="."/>
 						
@@ -1802,6 +1807,10 @@
 					</xsl:when>
 					<xsl:when test="string-length(@hand)!=string-length(translate(@hand,$vHandABC,''))">
 						<!-- normale Hand -->
+						
+						<xsl:if test="count(current()/preceding-sibling::node())=0">
+							<xsl:text>#</xsl:text>
+						</xsl:if>
 						
 						<!-- Bezugsknoten -->
 						<xsl:variable name="vBezug" select="."/>
@@ -2384,7 +2393,7 @@
 		<xsl:param name="pNode"/>
 		
 		<xsl:variable name="vWortUmKnoten">
-			<xsl:call-template name="tGanzesWort">
+			<xsl:call-template name="tGanzesWort_subst">
 				<xsl:with-param name="pNode" select="$pNode"/>
 				<xsl:with-param name="pWortMitte" select="$pNode/tei:del"/>
 			</xsl:call-template>
@@ -2398,7 +2407,7 @@
 		</xsl:variable>
 		
 		<xsl:variable name="vWortUmKnoten_del">
-			<xsl:call-template name="tGanzesWort">
+			<xsl:call-template name="tGanzesWort_subst">
 				<xsl:with-param name="pNode" select="$pNode"/>
 				<xsl:with-param name="pWortMitte" select="$pNode/tei:del"/>
 			</xsl:call-template>
@@ -2559,7 +2568,7 @@
 								
 								<!--<span class="debug"><xsl:text>{TEST_tf}</xsl:text></span>-->
 								
-								<xsl:if test="contains($pNode,' ')">
+<!--								<xsl:if test="contains($pNode,' ')">
 									<i><xsl:value-of select="$vWortUmKnoten"/></i>
 									<xsl:text> </xsl:text>
 								</xsl:if>
@@ -2573,17 +2582,26 @@
 										<xsl:with-param name="pPrecedingTextBeforeNode" select="''"/>
 									</xsl:call-template>
 									
-									<!--<span class="debug"><xsl:text>{</xsl:text></span>-->
+									<!-\-<span class="debug"><xsl:text>{</xsl:text></span>-\->
 									
 									<xsl:call-template name="tFollowingWortteil_fromThis">
 										<xsl:with-param name="pFollowingTextThis" select="$pNode"/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
 									
-									<!--<span class="debug"><xsl:text>}</xsl:text></span>-->
+									<!-\-<span class="debug"><xsl:text>}</xsl:text></span>-\->
 								</i>
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text>- korr. in Texttinte</xsl:text>
+								</xsl:if>-->
+								
+								<i><xsl:apply-templates select="$pNode/node()"/></i>
+								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+									<xsl:text> mit Einfügungszeichen</xsl:text>
+								</xsl:if>
+								<xsl:text> ergänzt</xsl:text>
+								<xsl:if test="current()[@rend='default']">
+									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
 								
 							</xsl:when>
@@ -2592,7 +2610,7 @@
 								
 								<!--<span class="debug"><xsl:text>{TEST_ft}</xsl:text></span>-->
 								
-								<xsl:if test="contains($pNode,' ')">
+<!--								<xsl:if test="contains($pNode,' ')">
 									<i><xsl:value-of select="$vWortUmKnoten"/></i>
 									<xsl:text> </xsl:text>
 								</xsl:if>
@@ -2601,14 +2619,14 @@
 								</xsl:if>
 								<xsl:text>korr. aus </xsl:text>
 								<i>
-									<!--<span class="debug"><xsl:text>{</xsl:text></span>-->
+									<!-\-<span class="debug"><xsl:text>{</xsl:text></span>-\->
 									
 									<xsl:call-template name="tPrecedingWortteil_fromThis">
 										<xsl:with-param name="pPrecedingTextThis" select="$pNode"/>
 										<xsl:with-param name="pPrecedingTextBeforeNode" select="''"/>
 									</xsl:call-template>
 									
-									<!--<span class="debug"><xsl:text>}</xsl:text></span>-->
+									<!-\-<span class="debug"><xsl:text>}</xsl:text></span>-\->
 									
 									<xsl:call-template name="tFollowingWortteil_fromThis">
 										<xsl:with-param name="pFollowingTextThis" select="$pNode"/>
@@ -2619,6 +2637,15 @@
 								</i>
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text> - korr. in Texttinte</xsl:text>
+								</xsl:if>-->
+								
+								<i><xsl:apply-templates select="$pNode/node()"/></i>
+								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+									<xsl:text> mit Einfügungszeichen</xsl:text>
+								</xsl:if>
+								<xsl:text> ergänzt</xsl:text>
+								<xsl:if test="current()[@rend='default']">
+									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
 								
 							</xsl:when>
@@ -2627,7 +2654,7 @@
 								
 								<!--<span class="debug"><xsl:text>{TEST_ff}</xsl:text></span>-->
 								
-								<xsl:if test="contains($pNode,' ')">
+<!--								<xsl:if test="contains($pNode,' ')">
 									<i><xsl:value-of select="$vWortUmKnoten"/></i>
 									<xsl:text> </xsl:text>
 								</xsl:if>
@@ -2645,6 +2672,15 @@
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
 								</i>
+								<xsl:if test="current()[@rend='default']">
+									<xsl:text> - korr. in Texttinte</xsl:text>
+								</xsl:if>-->
+								
+								<i><xsl:apply-templates select="$pNode/node()"/></i>
+								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
+									<xsl:text> mit Einfügungszeichen</xsl:text>
+								</xsl:if>
+								<xsl:text> ergänzt</xsl:text>
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text> - korr. in Texttinte</xsl:text>
 								</xsl:if>
@@ -2659,7 +2695,7 @@
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
 								<!-- steht alleine/ganzes Wort ergänzt -->
 								
-								<span class="debug"><xsl:text>{add-A-tt}</xsl:text></span>
+								<!--<span class="debug"><xsl:text>{add-A-tt}</xsl:text></span>-->
 								
 								<i><xsl:apply-templates select="$pNode/node()"/></i>
 								<xsl:text> von Hand </xsl:text>
@@ -2679,9 +2715,9 @@
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='false'">
 								<!-- am Wortanfang -->
 								
-								<span class="debug"><xsl:text>{add-A-tf}</xsl:text></span>
+								<!--<span class="debug"><xsl:text>{add-A-tf}</xsl:text></span>-->
 								
-<!--								<i><xsl:apply-templates select="$pNode/node()"/></i>
+								<i><xsl:apply-templates select="$pNode/node()"/></i>
 								<xsl:text> von Hand </xsl:text>
 								<xsl:value-of select="$pNode/@hand"/>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
@@ -2690,12 +2726,12 @@
 								<xsl:text> ergänzt</xsl:text>
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text> - korr. in Texttinte</xsl:text>
-								</xsl:if>-->
+								</xsl:if>
 								
 								
 								
 								
-								<xsl:if test="contains($pNode,' ')">
+<!--								<xsl:if test="contains($pNode,' ')">
 									<i><xsl:value-of select="$vWortUmKnoten"/></i>
 									<xsl:text> </xsl:text>
 								</xsl:if>
@@ -2709,20 +2745,20 @@
 										<xsl:with-param name="pPrecedingTextBeforeNode" select="''"/>
 									</xsl:call-template>
 									
-									<!--<span class="debug"><xsl:text>{</xsl:text></span>-->
+									<!-\-<span class="debug"><xsl:text>{</xsl:text></span>-\->
 									
 									<xsl:call-template name="tFollowingWortteil_fromThis">
 										<xsl:with-param name="pFollowingTextThis" select="$pNode"/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
-								</i>
+								</i>-->
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
 								<!-- am Wortende -->
 								
-								<span class="debug"><xsl:text>{add-A-ft}</xsl:text></span>
+								<!--<span class="debug"><xsl:text>{add-A-ft}</xsl:text></span>-->
 	
-<!--								<i><xsl:apply-templates select="$pNode/node()"/></i>
+								<i><xsl:apply-templates select="$pNode/node()"/></i>
 								<xsl:text> von Hand </xsl:text>
 								<xsl:value-of select="$pNode/@hand"/>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
@@ -2731,10 +2767,10 @@
 								<xsl:text> ergänzt</xsl:text>
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text> - korr. in Texttinte</xsl:text>
-								</xsl:if>-->
+								</xsl:if>
 								
 								
-								<xsl:if test="contains($pNode,' ')">
+<!--								<xsl:if test="contains($pNode,' ')">
 									<i><xsl:value-of select="$vWortUmKnoten"/></i>
 									<xsl:text> </xsl:text>
 								</xsl:if>
@@ -2748,20 +2784,20 @@
 										<xsl:with-param name="pPrecedingTextBeforeNode" select="''"/>
 									</xsl:call-template>
 									
-									<!--<span class="debug"><xsl:text>{</xsl:text></span>-->
+									<!-\-<span class="debug"><xsl:text>{</xsl:text></span>-\->
 									
 									<xsl:call-template name="tFollowingWortteil_fromThis">
 										<xsl:with-param name="pFollowingTextThis" select="$pNode"/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
-								</i>
+								</i>-->
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
 								<!-- im Wort -->
 								
-								<span class="debug"><xsl:text>{add-A-ff}</xsl:text></span>
+								<!--<span class="debug"><xsl:text>{add-A-ff}</xsl:text></span>-->
 								
-<!--								<i><xsl:apply-templates select="$pNode/node()"/></i>
+								<i><xsl:apply-templates select="$pNode/node()"/></i>
 								<xsl:text> von Hand </xsl:text>
 								<xsl:value-of select="$pNode/@hand"/>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
@@ -2770,11 +2806,11 @@
 								<xsl:text> ergänzt</xsl:text>
 								<xsl:if test="current()[@rend='default']">
 									<xsl:text> - korr. in Texttinte</xsl:text>
-								</xsl:if>-->
+								</xsl:if>
 								
 								
 								
-								<xsl:if test="contains($pNode,' ')">
+<!--								<xsl:if test="contains($pNode,' ')">
 									<i><xsl:value-of select="$vWortUmKnoten"/></i>
 									<xsl:text> </xsl:text>
 								</xsl:if>
@@ -2788,13 +2824,13 @@
 										<xsl:with-param name="pPrecedingTextBeforeNode" select="''"/>
 									</xsl:call-template>
 									
-									<!--<span class="debug"><xsl:text>{</xsl:text></span>-->
+									<!-\-<span class="debug"><xsl:text>{</xsl:text></span>-\->
 									
 									<xsl:call-template name="tFollowingWortteil_fromThis">
 										<xsl:with-param name="pFollowingTextThis" select="$pNode"/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
-								</i>
+								</i>-->
 							</xsl:when>
 						</xsl:choose>
 					</xsl:when>
@@ -2959,6 +2995,10 @@
 		<xsl:variable name="vHandABC" select="'ABCDEFGHIJKLMNOPQRSTUVW'"/>
 		<xsl:variable name="vHandXYZ" select="'XYZ'"/>	
 		
+		
+		
+		
+		
 		<xsl:choose>
 			<xsl:when test="count($pNode/node())=0">
 				<!-- leer -->
@@ -2966,40 +3006,144 @@
 			
 			<xsl:when test="count($pNode/node())>0">
 				<!-- nicht leer -->
+				
 				<xsl:choose>
-					<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
-						<!-- ganzes Wort getilgt -->
+					<xsl:when test="not($pNode/@hand)">
+						<!-- #################### keine Hand angegeben #################### -->
 						
 						<xsl:choose>
-							<xsl:when test="not($pNode/@hand)">
-								<!-- keine Hand -->
-								<!-- => Fußnotenzeichen an vorangehendes Wort hängen, Wortlaut der Anmerkung: „Es folgt getilgtes [del]“   -->
-								<xsl:text>Es folgt getilgtes </xsl:text>
-								<xsl:value-of select="$pNode"/>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
+								<!-- ganzes Wort getilgt -->
+								<xsl:text>folgt getilgtes </xsl:text>
+								<i><xsl:value-of select="$pNode"/></i>
 							</xsl:when>
-							<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandABC,''))">
-								<!-- entspricht "normaler" Hand -->
+							<xsl:when test="($vLeerzeichenDavor='false' and $vLeerzeichenDanach='false') or ($vLeerzeichenDavor='true' and $vLeerzeichenDanach='false') or ($vLeerzeichenDavor='false' and $vLeerzeichenDanach='true')">
+								<!-- Teil des Wortes getilgt -->
+								<xsl:text>korr. aus </xsl:text>
+								<i>
+									<xsl:call-template name="tGanzesWort">
+										<xsl:with-param name="pNode" select="$pNode"/>
+										<xsl:with-param name="pWortMitte" select="$pNode"/>
+									</xsl:call-template>
+								</i>
+							</xsl:when>
+							<xsl:otherwise>
+								<!-- ??? -->
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+					
+					<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandABC,''))">
+						<!-- #################### entspricht "normaler" Hand #################### -->
+						
+						<xsl:choose>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
+								<!-- ganzes Wort getilgt -->
 								<xsl:text>folgt von Hand </xsl:text>
 								<xsl:value-of select="$pNode/@hand"/>
 								<xsl:text> getilgtes </xsl:text>
-								<xsl:apply-templates select="$pNode/node()"/>
-								<!-- 
+								<i><xsl:apply-templates select="$pNode/node()"/></i>
+							</xsl:when>
+							<xsl:when test="($vLeerzeichenDavor='false' and $vLeerzeichenDanach='false') or ($vLeerzeichenDavor='true' and $vLeerzeichenDanach='false') or ($vLeerzeichenDavor='false' and $vLeerzeichenDanach='true')">
+								<!-- Teil des Wortes getilgt -->
+								
+								<span class="debug"><xsl:text>{</xsl:text></span>
+								<xsl:value-of select="$vLeerzeichenDavor"/>
+								<xsl:text>|</xsl:text>
+								<xsl:value-of select="$vLeerzeichenDanach"/>
+								<span class="debug"><xsl:text>}</xsl:text></span>
+								
+								
+								<xsl:text>korr. von Hand </xsl:text>
+								<xsl:apply-templates select="$pNode/@hand"/>
+								<xsl:text> aus </xsl:text>
+								<i>
+									<xsl:call-template name="tGanzesWort">
+										<xsl:with-param name="pNode" select="$pNode"/>
+										<xsl:with-param name="pWortMitte" select="$pNode"/>
+									</xsl:call-template>
+								</i>
+							</xsl:when>
+							<xsl:otherwise>
+								<!-- ??? -->
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+					
+					<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandXYZ,''))">
+						<!-- #################### entspricht "spezieller" Hand #################### -->
+						
+						<xsl:choose>
+							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
+								<!-- ganzes Wort getilgt -->
+								<xsl:text>von Hand </xsl:text>
+								<xsl:value-of select="$pNode/@hand"/>
+								<xsl:text> getilgt </xsl:text>
+							</xsl:when>
+							<xsl:when test="($vLeerzeichenDavor='false' and $vLeerzeichenDanach='false') or ($vLeerzeichenDavor='true' and $vLeerzeichenDanach='false') or ($vLeerzeichenDavor='false' and $vLeerzeichenDanach='true')">
+								<!-- Teil des Wortes getilgt -->
+								<xsl:text>korr. von Hand </xsl:text>
+								<xsl:apply-templates select="$pNode/@hand"/>
+								<xsl:text> zu </xsl:text>
+								<i>
+									<xsl:call-template name="tGanzesWort">
+										<xsl:with-param name="pNode" select="$pNode"/>
+										<xsl:with-param name="pWortMitte" select="''"/>
+									</xsl:call-template>
+								</i>
+							</xsl:when>
+							<xsl:otherwise>
+								<!-- ??? -->
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+				</xsl:choose>
+			</xsl:when>
+		</xsl:choose>
+		
+		
+		<!--
+		<xsl:choose>
+			<xsl:when test="count($pNode/node())=0">
+				<!-\- leer -\->
+			</xsl:when>
+			
+			<xsl:when test="count($pNode/node())>0">
+				<!-\- nicht leer -\->
+				<xsl:choose>
+					<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
+						<!-\- ganzes Wort getilgt -\->
+						
+						<xsl:choose>
+							<xsl:when test="not($pNode/@hand)">
+								<!-\- keine Hand -\->
+								<!-\- => Fußnotenzeichen an vorangehendes Wort hängen, Wortlaut der Anmerkung: „Es folgt getilgtes [del]“   -\->
+								<xsl:text>Es folgt getilgtes </xsl:text>
+								<i><xsl:value-of select="$pNode"/></i>
+							</xsl:when>
+							<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandABC,''))">
+								<!-\- entspricht "normaler" Hand -\->
+								<xsl:text>folgt von Hand </xsl:text>
+								<xsl:value-of select="$pNode/@hand"/>
+								<xsl:text> getilgtes </xsl:text>
+								<i><xsl:apply-templates select="$pNode/node()"/></i>
+								<!-\- 
 						o	ganzes Wort getilgt, d.h. Leerzeichen vor und hinter <del/>:
 							Fußnotenzeichen an vorangehendes Wort hängen, Wortlaut der Anmerkung:
 							„folgt von Hand B getilgtes [del]“  
-						-->
+						-\->
 							</xsl:when>
 							<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandXYZ,''))">
-								<!-- entspricht "spezieller" Hand -->
+								<!-\- entspricht "spezieller" Hand -\->
 								
 								<xsl:text>von Hand </xsl:text>
 								<xsl:value-of select="$pNode/@hand"/>
 								<xsl:text> getilgt </xsl:text>
-								<!-- 
+								<!-\- 
 						
 						o	ganzes Wort getilgt, d.h. Leerzeichen vor und hinter <del/>: Inhalt von <del> im Haupttext anzeigen, daran Fußnote mit Text:
 							„von Hand X getilgt“  	
-						-->
+						-\->
 							</xsl:when>			
 							<xsl:otherwise>
 								<xsl:text>FEHLER IN 'del'</xsl:text>
@@ -3008,12 +3152,12 @@
 					</xsl:when>
 					<xsl:when
 						test="$vLeerzeichenDavor='true' or $vLeerzeichenDanach='false'">
-						<!-- im Wort getilgt -->	
+						<!-\- im Wort getilgt -\->	
 						<xsl:choose>
 							<xsl:when test="not($pNode/@hand)">
-								<!-- keine Hand -->
-								<!--								=> Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
-									„korr. aus [Wort mit <del>]“-->
+								<!-\- keine Hand -\->
+								<!-\-								=> Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
+									„korr. aus [Wort mit <del>]“-\->
 								<xsl:text>korr. aus </xsl:text>
 								<i>
 									<xsl:call-template name="tGanzesWort">
@@ -3023,38 +3167,42 @@
 								</i>
 							</xsl:when>
 							<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandABC,''))">
-								<!-- entspricht "normaler" Hand -->
-								<!-- 
+								<!-\- entspricht "normaler" Hand -\->
+								<!-\- 
 						o	Buchstaben innerhalb des Wortes getilgt, d.h. <del/> wird nicht von zwei Leerzeichen davor und danach eingefaßt:
 							Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
 							„korr. von Hand B aus [Wort mit <del>]“
-						-->
+						-\->
 								
 								<xsl:text>korr. von Hand </xsl:text>
 								<xsl:apply-templates select="$pNode/@hand"/>
 								<xsl:text> aus </xsl:text>
-								<xsl:call-template name="tGanzesWort">
-									<xsl:with-param name="pNode" select="$pNode"/>
-									<xsl:with-param name="pWortMitte" select="$pNode"/>
-								</xsl:call-template>
+								<i>
+									<xsl:call-template name="tGanzesWort">
+										<xsl:with-param name="pNode" select="$pNode"/>
+										<xsl:with-param name="pWortMitte" select="$pNode"/>
+									</xsl:call-template>
+								</i>
 								
 								
 							</xsl:when>
 							<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandXYZ,''))">
-								<!-- entspricht "spezieller" Hand -->
+								<!-\- entspricht "spezieller" Hand -\->
 								
 								<xsl:text>korr. von Hand </xsl:text>
 								<xsl:apply-templates select="$pNode/@hand"/>
 								<xsl:text> zu </xsl:text>
-								<xsl:call-template name="tGanzesWort">
-									<xsl:with-param name="pNode" select="$pNode"/>
-									<xsl:with-param name="pWortMitte" select="''"/>
-								</xsl:call-template>
+								<i>
+									<xsl:call-template name="tGanzesWort">
+										<xsl:with-param name="pNode" select="$pNode"/>
+										<xsl:with-param name="pWortMitte" select="''"/>
+									</xsl:call-template>
+								</i>
 								
-								<!-- 
+								<!-\- 
 						o	Buchstaben innerhalb des Wortes getilgt, d.h. <del/> wird nicht von zwei Leerzeichen davor und danach eingefaßt: Wort mit <del> im Haupttext anzeigen und daran eine Fußnoten anhängen mit Text:
 							„korr. von Hand X zu [Wort ohne Inhalt von <del>]“
-						-->	
+						-\->	
 							</xsl:when>			
 							<xsl:otherwise>
 								<xsl:text>FEHLER IN 'del'</xsl:text>
@@ -3064,12 +3212,12 @@
 					</xsl:when>
 					<xsl:when
 						test="$vLeerzeichenDavor='false' or $vLeerzeichenDanach='true'">
-						<!-- im Wort getilgt -->	
+						<!-\- im Wort getilgt -\->	
 						<xsl:choose>
 							<xsl:when test="not($pNode/@hand)">
-								<!-- keine Hand -->
-								<!--								=> Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
-									„korr. aus [Wort mit <del>]“-->
+								<!-\- keine Hand -\->
+								<!-\-								=> Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
+									„korr. aus [Wort mit <del>]“-\->
 								<xsl:text>korr. aus </xsl:text>
 								<i>
 									<xsl:call-template name="tGanzesWort">
@@ -3079,12 +3227,12 @@
 								</i>
 							</xsl:when>
 							<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandABC,''))">
-								<!-- entspricht "normaler" Hand -->
-								<!-- 
+								<!-\- entspricht "normaler" Hand -\->
+								<!-\- 
 						o	Buchstaben innerhalb des Wortes getilgt, d.h. <del/> wird nicht von zwei Leerzeichen davor und danach eingefaßt:
 							Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
 							„korr. von Hand B aus [Wort mit <del>]“
-						-->
+						-\->
 								
 								<xsl:text>korr. von Hand </xsl:text>
 								<xsl:apply-templates select="$pNode/@hand"/>
@@ -3097,7 +3245,7 @@
 								
 							</xsl:when>
 							<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandXYZ,''))">
-								<!-- entspricht "spezieller" Hand -->
+								<!-\- entspricht "spezieller" Hand -\->
 								
 								<xsl:text>korr. von Hand </xsl:text>
 								<xsl:apply-templates select="$pNode/@hand"/>
@@ -3107,10 +3255,10 @@
 									<xsl:with-param name="pWortMitte" select="''"/>
 								</xsl:call-template>
 								
-								<!-- 
+								<!-\- 
 						o	Buchstaben innerhalb des Wortes getilgt, d.h. <del/> wird nicht von zwei Leerzeichen davor und danach eingefaßt: Wort mit <del> im Haupttext anzeigen und daran eine Fußnoten anhängen mit Text:
 							„korr. von Hand X zu [Wort ohne Inhalt von <del>]“
-						-->	
+						-\->	
 							</xsl:when>			
 							<xsl:otherwise>
 								<xsl:text>FEHLER IN 'del'</xsl:text>
@@ -3120,12 +3268,12 @@
 					</xsl:when>
 					<xsl:when
 						test="$vLeerzeichenDavor='false' or $vLeerzeichenDanach='false'">
-						<!-- im Wort getilgt -->								
+						<!-\- im Wort getilgt -\->								
 						<xsl:choose>
 							<xsl:when test="not($pNode/@hand)">
-								<!-- keine Hand -->
-								<!--								=> Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
-									„korr. aus [Wort mit <del>]“-->
+								<!-\- keine Hand -\->
+								<!-\-								=> Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
+									„korr. aus [Wort mit <del>]“-\->
 								<xsl:text>korr. aus </xsl:text>
 								<i>
 									<xsl:call-template name="tGanzesWort">
@@ -3135,12 +3283,12 @@
 								</i>
 							</xsl:when>
 							<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandABC,''))">
-								<!-- entspricht "normaler" Hand -->
-								<!-- 
+								<!-\- entspricht "normaler" Hand -\->
+								<!-\- 
 						o	Buchstaben innerhalb des Wortes getilgt, d.h. <del/> wird nicht von zwei Leerzeichen davor und danach eingefaßt:
 							Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
 							„korr. von Hand B aus [Wort mit <del>]“
-						-->
+						-\->
 								
 								<xsl:text>korr. von Hand </xsl:text>
 								<xsl:apply-templates select="$pNode/@hand"/>
@@ -3153,7 +3301,7 @@
 								
 							</xsl:when>
 							<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandXYZ,''))">
-								<!-- entspricht "spezieller" Hand -->
+								<!-\- entspricht "spezieller" Hand -\->
 								
 								<xsl:text>korr. von Hand </xsl:text>
 								<xsl:apply-templates select="$pNode/@hand"/>
@@ -3163,10 +3311,10 @@
 									<xsl:with-param name="pWortMitte" select="''"/>
 								</xsl:call-template>
 								
-								<!-- 
+								<!-\- 
 						o	Buchstaben innerhalb des Wortes getilgt, d.h. <del/> wird nicht von zwei Leerzeichen davor und danach eingefaßt: Wort mit <del> im Haupttext anzeigen und daran eine Fußnoten anhängen mit Text:
 							„korr. von Hand X zu [Wort ohne Inhalt von <del>]“
-						-->	
+						-\->	
 							</xsl:when>			
 							<xsl:otherwise>
 								<xsl:text>FEHLER IN 'del'</xsl:text>
@@ -3177,7 +3325,7 @@
 					
 				</xsl:choose>
 			</xsl:when>
-		</xsl:choose>
+		</xsl:choose>-->
 	</xsl:template>
 	
 	<xsl:template name="tFunoText_alphabetisch_note">
@@ -3525,7 +3673,44 @@
 		<xsl:value-of select="$vFollowingWortteil"/>
 	</xsl:template>
 	
-	
+	<xsl:template name="tGanzesWort_subst">
+		<xsl:param name="pNode"/>
+		<xsl:param name="pWortMitte"/>
+		
+		<xsl:variable name="vPrecedingWortteil">
+			<xsl:call-template name="tPrecedingWortteil">
+				<xsl:with-param name="pPrecedingTextThis" select="$pNode/preceding::text()[1]"/>
+				<xsl:with-param name="pPrecedingTextBeforeNode" select="''"/>
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<xsl:variable name="vFollowingWortteil">
+			<xsl:call-template name="tFollowingWortteil">
+				<xsl:with-param name="pFollowingTextThis" select="$pNode/following::text()[1]"/>
+				<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<xsl:value-of select="$vPrecedingWortteil"/>
+<!--		<xsl:if test="string-length($pWortMitte)>0">-->
+			<xsl:choose>
+				<xsl:when test="count($pWortMitte/*)>0">
+					<xsl:apply-templates select="$pWortMitte/node()"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="count($pWortMitte/node())=0">
+							<xsl:text>#</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$pWortMitte"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+		<!--</xsl:if>-->
+		<xsl:value-of select="$vFollowingWortteil"/>
+	</xsl:template>
 	
 	<xsl:template name="tPrecedingWortteil_fromThis">
 		<xsl:param name="pPrecedingTextThis"/>
@@ -3569,7 +3754,7 @@
 			<xsl:otherwise>
 				
 				<xsl:call-template name="tPrecedingWortteil">
-					<xsl:with-param name="pPrecedingTextThis" select="$pPrecedingTextThis/preceding::text()[1]"/>
+					<xsl:with-param name="pPrecedingTextThis" select="$pPrecedingTextThis/preceding::text()[local-name(.)!='note'][1]"/>
 <!--					<xsl:with-param name="pPrecedingTextBeforeNode">
 						<xsl:choose>
 							<xsl:when test="count($pPrecedingTextThis/node())>0">
@@ -3618,7 +3803,7 @@
 			
 			<xsl:otherwise>
 				<xsl:call-template name="tFollowingWortteil">
-					<xsl:with-param name="pFollowingTextThis" select="$pFollowingTextThis/following::text()[1]"/>
+					<xsl:with-param name="pFollowingTextThis" select="$pFollowingTextThis/following::text()[local-name(.)!='note'][1]"/>
 <!--					<xsl:with-param name="pPrecedingTextBeforeNode">
 						<xsl:value-of select="$pFollowingTextBeforeNode"/>
 						<xsl:choose>
@@ -3642,8 +3827,8 @@
 		<xsl:param name="pPrecedingTextBeforeNode"/>
 		
 		<!-- BAUSTELLE: testes -->
-		<!-- 1) erstes Element wird zum Teil wiederholt! -->
 		<!-- 2) Was passiert, wenn das (erste) Element selbst schon ein Leerzeichen beinhaltet?! => !!!!!!!!!!!!!!!!!!! -->
+		<!-- 3) <lb>-Problematik -->
 		
 		<!--<span class="debug"><xsl:text>{</xsl:text></span>-->
 		
@@ -3688,7 +3873,7 @@
 				</xsl:variable>
 
 				<xsl:call-template name="tPrecedingWortteil">
-					<xsl:with-param name="pPrecedingTextThis" select="$pPrecedingTextThis/preceding::text()[1]"/>
+					<xsl:with-param name="pPrecedingTextThis" select="$pPrecedingTextThis/preceding::text()[local-name(.)!='note'][1]"/>
 <!--					<xsl:with-param name="pPrecedingTextBeforeNode">
 						<xsl:choose>
 							<xsl:when test="count($pPrecedingTextThis/node())>0">
@@ -3771,7 +3956,7 @@
 				</xsl:variable>
 				
 				<xsl:call-template name="tFollowingWortteil">
-					<xsl:with-param name="pFollowingTextThis" select="$pFollowingTextThis/following::text()[1]"/>
+					<xsl:with-param name="pFollowingTextThis" select="$pFollowingTextThis/following::text()[local-name(.)!='note'][1]"/>
 <!--					<xsl:with-param name="pPrecedingTextBeforeNode">
 <!-\-						<xsl:value-of select="$pFollowingTextBeforeNode"/>
 						<xsl:choose>
@@ -3958,12 +4143,20 @@
 		
 		<!--<xsl:variable name="vTextNachKnotenVorNote" select="$pNode/following-sibling::text()"/>-->
 		
+		
+		<xsl:if test="$pNode/tei:add='n'">
+			
+			<xsl:variable name="test" select="$pNode"/>
+			
+		</xsl:if>
+		
+		
 		<xsl:choose>
-			<xsl:when test="local-name($pNode/following-sibling::node()[1])='note'">
+			<xsl:when test="local-name($pNode/following-sibling::node()[local-name(.)!='lb'][1])='note'">
 				<!-- <note> folgt direkt -->
 				<xsl:value-of select="true()"/>
 			</xsl:when>
-			<xsl:when test="(string-length($pNode/following-sibling::node()[1])=string-length(translate($pNode/following-sibling::node()[1],' ',''))) and (local-name($pNode/following-sibling::*[1])='note')">
+			<xsl:when test="(string-length($pNode/following-sibling::node()[local-name(.)!='lb'][1])=string-length(translate($pNode/following-sibling::node()[local-name(.)!='lb'][1],' ',''))) and (local-name($pNode/following-sibling::*[local-name(.)!='lb'][1])='note')">
 				<!-- BAUSTELLE: explizit!!! text() als erste node() -->
 				<!-- nächstes node() ist Text ohne Leerzeichen, darauf folgt als erstes * direkt <note> -->
 				<xsl:value-of select="true()"/>
