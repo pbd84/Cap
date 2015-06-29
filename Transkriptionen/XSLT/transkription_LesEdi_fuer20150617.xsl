@@ -654,7 +654,7 @@
 			<xsl:value-of select="."/>
 		</span>
 		</p>
-		<br/>
+		<!--<br/>-->
 	</xsl:template>
 	
 	<xsl:template match="//tei:title[not(@type='main')]">
@@ -666,7 +666,7 @@
 	</xsl:template>
 
 	<xsl:template match="//tei:encodingDesc">
-		<br/>
+		<!--<br/>-->
 		
 		<span class="encodingDesc">
 			<!--<xsl:apply-templates select="node()"/>-->
@@ -737,28 +737,30 @@
 		other = Sonstiges
 -->
 
+	<br/>
+
 		<xsl:choose>
-			<xsl:when test="current()/@type='scribe'">
+			<xsl:when test="@type='scribe'">
 				<span class="frontDiv"><xsl:text>Schreiber</xsl:text></span>
 				<br/>
 			</xsl:when>
-			<xsl:when test="current()/@type='lett'">
+			<xsl:when test="@type='lett' or @type='letters'">
 				<span class="frontDiv"><xsl:text>Buchstabenformen</xsl:text></span>
 				<br/>
 			</xsl:when>
-			<xsl:when test="current()/@type='abbr'">
+			<xsl:when test="@type='abbr' or @type='abbreviation'">
 				<span class="frontDiv"><xsl:text>Abkürzungen</xsl:text></span>
 				<br/>
 			</xsl:when>
-			<xsl:when test="current()/@type='punct'">
+			<xsl:when test="@type='punct' or @type='punctuation'">
 				<span class="frontDiv"><xsl:text>Interpunktion</xsl:text></span>
 				<br/>
 			</xsl:when>
-			<xsl:when test="current()/@type='struct'">
+			<xsl:when test="@type='struct' or @type='structure'">
 				<span class="frontDiv"><xsl:text>Gliederungsmerkmale</xsl:text></span>
 				<br/>
 			</xsl:when>
-			<xsl:when test="current()/@type='other'">
+			<xsl:when test="@type='other'">
 				<span class="frontDiv"><xsl:text>Sonstiges</xsl:text></span>
 				<br/>
 			</xsl:when>
