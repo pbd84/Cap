@@ -2477,7 +2477,7 @@
 								
 								<!--<span class="debug"><xsl:text>{TEST_tt}</xsl:text></span>-->
 								
-								<i><xsl:value-of select="$vWortUmKnoten"/></i>
+								<i><xsl:apply-templates select="$pNode/node()"/></i>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 									<xsl:text> mit Einfügungszeichen</xsl:text>
 								</xsl:if>
@@ -4149,7 +4149,7 @@
 		<xsl:variable name="vStringLengthFollText1" select="string-length($vFollText1)"/>-->
 		
 		<xsl:choose>
-			<xsl:when test="count($vFollText1/node())=0 and string-length($vFollText1) &lt;= 1">
+			<xsl:when test="count($vFollText1/node())=0 and string-length($vFollText1) &lt; 1">
 				<!-- gar kein node() enthalten (z.B. wenn der zuvor geprüfte Knoten gar keine siblings mehr hat -->
 				<!--<xsl:value-of select="false()"/>-->
 				<xsl:value-of select="true()"/>
@@ -4215,7 +4215,7 @@
 		<xsl:variable name="vStringLengthPrecText1" select="string-length($vPrecText1)"/>-->
 		
 		<xsl:choose>
-			<xsl:when test="count($vPrecText1/node())=0 and string-length($vPrecText1) &lt;= 1">
+			<xsl:when test="count($vPrecText1/node())=0 and string-length($vPrecText1) &lt; 1">
 				<!-- gar kein node() enthalten (z.B. wenn der zuvor geprüfte Knoten gar keine siblings mehr hat -->
 				<!--<xsl:value-of select="false()"/>-->
 				<xsl:value-of select="true()"/>

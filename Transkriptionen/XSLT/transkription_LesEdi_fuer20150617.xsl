@@ -1385,10 +1385,6 @@
 	
 	<xsl:template match="//tei:add[not(parent::*[local-name(.)='subst'] and not(parent::*[local-name(.)='num']))]">
 		<!--<xsl:text>{add-oP}</xsl:text> <!-\- TESTWEISE -\->-->
-		
-		<xsl:if test="./text()='con'">
-			<xsl:variable name="test" select="''"/>
-		</xsl:if>
 
 		<xsl:variable name="vNoteFolgt">
 			<!-- ermittelt, ob eine <note> angehängt ist -->
@@ -2515,6 +2511,7 @@
 		
 		<!-- erzeugt Fußnotentext für <add> -->
 		
+		
 				<xsl:variable name="vLeerzeichenDavorOderDanach">
 					<xsl:call-template name="tLeerzeichenDavorOderDanach">
 						<xsl:with-param name="pNode" select="$pNode"/>
@@ -2551,9 +2548,9 @@
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
 								<!-- steht alleine/ganzes Wort ergänzt -->
 								
-								<span class="debug"><xsl:text>{add_tt}</xsl:text></span>
+								<!--<span class="debug"><xsl:text>{add_tt}</xsl:text></span>-->
 								
-								<i><xsl:value-of select="$vWortUmKnoten"/></i>
+								<i><xsl:apply-templates select="$pNode/node()"/></i>
 								<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 									<xsl:text> mit Einfügungszeichen</xsl:text>
 								</xsl:if>
@@ -2566,7 +2563,7 @@
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='false'">
 								<!-- am Wortanfang -->
 								
-								<span class="debug"><xsl:text>{add_tf}</xsl:text></span>
+								<!--<span class="debug"><xsl:text>{add_tf}</xsl:text></span>-->
 								
 <!--								<xsl:if test="contains($pNode,' ')">
 									<i><xsl:value-of select="$vWortUmKnoten"/></i>
@@ -2608,7 +2605,7 @@
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
 								<!-- am Wortende -->
 								
-								<span class="debug"><xsl:text>{add_ft}</xsl:text></span>
+								<!--<span class="debug"><xsl:text>{add_ft}</xsl:text></span>-->
 								
 <!--								<xsl:if test="contains($pNode,' ')">
 									<i><xsl:value-of select="$vWortUmKnoten"/></i>
@@ -2652,7 +2649,7 @@
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
 								<!-- im Wort -->
 								
-								<span class="debug"><xsl:text>{add_ff}</xsl:text></span>
+								<!--<span class="debug"><xsl:text>{add_ff}</xsl:text></span>-->
 								
 <!--								<xsl:if test="contains($pNode,' ')">
 									<i><xsl:value-of select="$vWortUmKnoten"/></i>
@@ -4142,14 +4139,7 @@
 		<!-- WICHTIG: Zu Node/Element zugehörige <note> hängt am Ende des Wortes oder Elements => Es gibt dazwischen im text() kein Leerzeichen (=' ')! -->
 		
 		<!--<xsl:variable name="vTextNachKnotenVorNote" select="$pNode/following-sibling::text()"/>-->
-		
-		
-<!--		<xsl:if test="$pNode/tei:add='n'">
-			
-			<xsl:variable name="test" select="$pNode"/>
-			
-		</xsl:if>-->
-		
+
 		
 		<xsl:choose>
 			<xsl:when test="local-name($pNode/following-sibling::node()[local-name(.)!='lb'][1])='note'">
@@ -4225,7 +4215,7 @@
 		<xsl:variable name="vStringLengthFollText1" select="string-length($vFollText1)"/>-->
 		
 		<xsl:choose>
-			<xsl:when test="count($vFollText1/node())=0 and string-length($vFollText1) &lt;= 1">
+			<xsl:when test="count($vFollText1/node())=0 and string-length($vFollText1) &lt; 1">
 				<!-- gar kein node() enthalten (z.B. wenn der zuvor geprüfte Knoten gar keine siblings mehr hat -->
 				<!--<xsl:value-of select="false()"/>-->
 				<xsl:value-of select="true()"/>
@@ -4291,7 +4281,7 @@
 		<xsl:variable name="vStringLengthPrecText1" select="string-length($vPrecText1)"/>-->
 		
 		<xsl:choose>
-			<xsl:when test="count($vPrecText1/node())=0 and string-length($vPrecText1) &lt;= 1">
+			<xsl:when test="count($vPrecText1/node())=0 and string-length($vPrecText1) &lt; 1">
 				<!-- gar kein node() enthalten (z.B. wenn der zuvor geprüfte Knoten gar keine siblings mehr hat -->
 				<!--<xsl:value-of select="false()"/>-->
 				<xsl:value-of select="true()"/>
