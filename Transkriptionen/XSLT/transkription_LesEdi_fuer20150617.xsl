@@ -2536,7 +2536,7 @@
 
 				<xsl:choose>
 					<xsl:when test="not($pNode/@hand)">
-						<!-- keine Hand zugewiesen -->
+						<!-- #################### keine Hand zugewiesen #################### -->
 						
 						<xsl:choose>
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
@@ -2653,7 +2653,7 @@
 						</xsl:choose>
 					</xsl:when>
 					<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandABC,''))">
-						<!-- "normale" Hand -->
+						<!-- #################### "normale" Hand #################### -->
 						
 						<xsl:choose>
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
@@ -2715,7 +2715,7 @@
 										<xsl:with-param name="pFollowingTextThis" select="$pNode"/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
-								
+								</i>
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='true'">
 								<!-- am Wortende -->
@@ -2754,6 +2754,7 @@
 										<xsl:with-param name="pFollowingTextThis" select="$pNode"/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
+								</i>
 							</xsl:when>
 							<xsl:when test="$vLeerzeichenDavor='false' and $vLeerzeichenDanach='false'">
 								<!-- im Wort -->
@@ -2793,11 +2794,12 @@
 										<xsl:with-param name="pFollowingTextThis" select="$pNode"/>
 										<xsl:with-param name="pFollowingTextBeforeNode" select="''"/>
 									</xsl:call-template>
+								</i>
 							</xsl:when>
 						</xsl:choose>
 					</xsl:when>
 					<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandXYZ,''))">
-						<!-- "spezielle" Hand -->
+						<!-- #################### "spezielle" Hand #################### -->
 						
 						<xsl:choose>
 							<xsl:when test="$vLeerzeichenDavor='true' and $vLeerzeichenDanach='true'">
@@ -3003,6 +3005,118 @@
 								<xsl:text>FEHLER IN 'del'</xsl:text>
 							</xsl:otherwise>
 						</xsl:choose>
+					</xsl:when>
+					<xsl:when
+						test="$vLeerzeichenDavor='true' or $vLeerzeichenDanach='false'">
+						<!-- im Wort getilgt -->	
+						<xsl:choose>
+							<xsl:when test="not($pNode/@hand)">
+								<!-- keine Hand -->
+								<!--								=> Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
+									„korr. aus [Wort mit <del>]“-->
+								<xsl:text>korr. aus </xsl:text>
+								<i>
+									<xsl:call-template name="tGanzesWort">
+										<xsl:with-param name="pNode" select="$pNode"/>
+										<xsl:with-param name="pWortMitte" select="$pNode"/>
+									</xsl:call-template>
+								</i>
+							</xsl:when>
+							<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandABC,''))">
+								<!-- entspricht "normaler" Hand -->
+								<!-- 
+						o	Buchstaben innerhalb des Wortes getilgt, d.h. <del/> wird nicht von zwei Leerzeichen davor und danach eingefaßt:
+							Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
+							„korr. von Hand B aus [Wort mit <del>]“
+						-->
+								
+								<xsl:text>korr. von Hand </xsl:text>
+								<xsl:apply-templates select="$pNode/@hand"/>
+								<xsl:text> aus </xsl:text>
+								<xsl:call-template name="tGanzesWort">
+									<xsl:with-param name="pNode" select="$pNode"/>
+									<xsl:with-param name="pWortMitte" select="$pNode"/>
+								</xsl:call-template>
+								
+								
+							</xsl:when>
+							<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandXYZ,''))">
+								<!-- entspricht "spezieller" Hand -->
+								
+								<xsl:text>korr. von Hand </xsl:text>
+								<xsl:apply-templates select="$pNode/@hand"/>
+								<xsl:text> zu </xsl:text>
+								<xsl:call-template name="tGanzesWort">
+									<xsl:with-param name="pNode" select="$pNode"/>
+									<xsl:with-param name="pWortMitte" select="''"/>
+								</xsl:call-template>
+								
+								<!-- 
+						o	Buchstaben innerhalb des Wortes getilgt, d.h. <del/> wird nicht von zwei Leerzeichen davor und danach eingefaßt: Wort mit <del> im Haupttext anzeigen und daran eine Fußnoten anhängen mit Text:
+							„korr. von Hand X zu [Wort ohne Inhalt von <del>]“
+						-->	
+							</xsl:when>			
+							<xsl:otherwise>
+								<xsl:text>FEHLER IN 'del'</xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
+						
+					</xsl:when>
+					<xsl:when
+						test="$vLeerzeichenDavor='false' or $vLeerzeichenDanach='true'">
+						<!-- im Wort getilgt -->	
+						<xsl:choose>
+							<xsl:when test="not($pNode/@hand)">
+								<!-- keine Hand -->
+								<!--								=> Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
+									„korr. aus [Wort mit <del>]“-->
+								<xsl:text>korr. aus </xsl:text>
+								<i>
+									<xsl:call-template name="tGanzesWort">
+										<xsl:with-param name="pNode" select="$pNode"/>
+										<xsl:with-param name="pWortMitte" select="$pNode"/>
+									</xsl:call-template>
+								</i>
+							</xsl:when>
+							<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandABC,''))">
+								<!-- entspricht "normaler" Hand -->
+								<!-- 
+						o	Buchstaben innerhalb des Wortes getilgt, d.h. <del/> wird nicht von zwei Leerzeichen davor und danach eingefaßt:
+							Wort ohne <del> im Text ausgeben und daran ein Fußnotenzeichen anhängen mit Wortlaut:
+							„korr. von Hand B aus [Wort mit <del>]“
+						-->
+								
+								<xsl:text>korr. von Hand </xsl:text>
+								<xsl:apply-templates select="$pNode/@hand"/>
+								<xsl:text> aus </xsl:text>
+								<xsl:call-template name="tGanzesWort">
+									<xsl:with-param name="pNode" select="$pNode"/>
+									<xsl:with-param name="pWortMitte" select="$pNode"/>
+								</xsl:call-template>
+								
+								
+							</xsl:when>
+							<xsl:when test="string-length($pNode/@hand)!=string-length(translate($pNode/@hand,$vHandXYZ,''))">
+								<!-- entspricht "spezieller" Hand -->
+								
+								<xsl:text>korr. von Hand </xsl:text>
+								<xsl:apply-templates select="$pNode/@hand"/>
+								<xsl:text> zu </xsl:text>
+								<xsl:call-template name="tGanzesWort">
+									<xsl:with-param name="pNode" select="$pNode"/>
+									<xsl:with-param name="pWortMitte" select="''"/>
+								</xsl:call-template>
+								
+								<!-- 
+						o	Buchstaben innerhalb des Wortes getilgt, d.h. <del/> wird nicht von zwei Leerzeichen davor und danach eingefaßt: Wort mit <del> im Haupttext anzeigen und daran eine Fußnoten anhängen mit Text:
+							„korr. von Hand X zu [Wort ohne Inhalt von <del>]“
+						-->	
+							</xsl:when>			
+							<xsl:otherwise>
+								<xsl:text>FEHLER IN 'del'</xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
+						
 					</xsl:when>
 					<xsl:when
 						test="$vLeerzeichenDavor='false' or $vLeerzeichenDanach='false'">
