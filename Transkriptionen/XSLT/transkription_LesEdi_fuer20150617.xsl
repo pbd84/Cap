@@ -1765,9 +1765,19 @@
 						<!-- ohne Hand -->
 						
 						
-						<xsl:if test="count(current()/preceding-sibling::node())=0">
-							<xsl:text>#</xsl:text>
-						</xsl:if>
+						<xsl:choose>
+							<xsl:when test="count(current()/preceding-sibling::node())=0">
+								<xsl:text>#</xsl:text>
+							</xsl:when>
+							<xsl:when test="count(current()/preceding-sibling::*)>0">
+								
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test="normalize-space(current()/preceding-sibling::node())=''">
+									<xsl:text>#</xsl:text>
+								</xsl:if>
+							</xsl:otherwise>
+						</xsl:choose>
 						
 						<!-- Bezugsknoten -->
 						<xsl:variable name="vBezug" select="."/>
@@ -1804,9 +1814,20 @@
 					<xsl:when test="string-length(@hand)!=string-length(translate(@hand,$vHandABC,''))">
 						<!-- normale Hand -->
 						
-						<xsl:if test="count(current()/preceding-sibling::node())=0">
-							<xsl:text>#</xsl:text>
-						</xsl:if>
+						
+						<xsl:choose>
+							<xsl:when test="count(current()/preceding-sibling::node())=0">
+								<xsl:text>#</xsl:text>
+							</xsl:when>
+							<xsl:when test="count(current()/preceding-sibling::*)>0">
+								
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test="normalize-space(current()/preceding-sibling::node())=''">
+									<xsl:text>#</xsl:text>
+								</xsl:if>
+							</xsl:otherwise>
+						</xsl:choose>
 						
 						<!-- Bezugsknoten -->
 						<xsl:variable name="vBezug" select="."/>
