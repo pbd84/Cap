@@ -492,7 +492,7 @@
                         
                     span.folio {
                     	font-weight: bold;
-                    	<!--font-style: italic-->
+                    	font-style: normal
                     	}
                     
                     span.milestone {

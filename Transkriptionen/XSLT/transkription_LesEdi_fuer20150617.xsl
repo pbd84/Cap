@@ -493,6 +493,7 @@
                     span.folio {
                     	font-weight: bold;
                     	<!--font-style: italic-->
+						font-style: normal
                     	}
                     
                     span.milestone {
@@ -564,12 +565,12 @@
 				
 				<!-- TITLE -->
 				<div class="meta">
-					<p>
+					<!--<p>-->
 						<xsl:apply-templates select="//tei:teiHeader"/>
-					</p>
+					<!--</p>-->
 				</div>
 
-				<br/>
+				<!--<br/>-->
 				<!-- ??? für Abstand zwischen Header und Body -->
 				<br/>
 				<!-- ??? für Abstand zwischen Header und Body -->
@@ -681,9 +682,9 @@
 	</xsl:template>
 
 	<xsl:template match="//tei:encodingDesc/tei:p">
-		<p>
+		<!--<p>-->
 			<xsl:apply-templates/>
-		</p>
+		<!--</p>-->
 	</xsl:template>
 
 	<xsl:template match="//tei:encodingDesc/tei:p/tei:mentioned">
@@ -709,6 +710,7 @@
 
 	<!-- zusätzliche Formatierung -->
 	<xsl:template match="//tei:fileDesc">
+		
 		<!--<xsl:apply-templates select="./tei:titleStmt"/>-->
 		<!--<xsl:apply-templates select="./tei:titleStmt/tei:title[@type='main']"/>-->
 		<xsl:apply-templates select="./tei:titleStmt/tei:title"/>
@@ -717,6 +719,7 @@
 	</xsl:template>
 
 	<xsl:template match="//tei:respStmt">
+		
 		<br/>
 		<xsl:value-of select="./tei:resp"/>
 		<xsl:text>: </xsl:text>
@@ -737,7 +740,11 @@
 		other = Sonstiges
 -->
 
-	<br/>
+	<!-- Zeilenumbruch nur für nachfoglende Elemente, um den Abstand nach oben zu verkürzen -->
+	<xsl:if test="count(preceding-sibling::tei:div)>0">
+		<br/>	
+	</xsl:if>
+	
 
 		<xsl:choose>
 			<xsl:when test="@type='scribe'">
@@ -748,7 +755,7 @@
 				<span class="frontDiv"><xsl:text>Buchstabenformen</xsl:text></span>
 				<br/>
 			</xsl:when>
-			<xsl:when test="@type='abbr' or @type='abbreviation'">
+			<xsl:when test="@type='abbr' or @type='abbreviation' or @type='abbreviations'">
 				<span class="frontDiv"><xsl:text>Abkürzungen</xsl:text></span>
 				<br/>
 			</xsl:when>
@@ -769,7 +776,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 		
-		<xsl:choose>
+<!--		<xsl:choose>
 			<xsl:when test="count(tei:p)>1">
 			
 				<xsl:for-each select="tei:p">
@@ -780,14 +787,21 @@
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<p>
+				<!-\-<p>-\->
 					<i>
 						<xsl:apply-templates select="node()"/>
 					</i>
-				</p>
+				<!-\-</p>-\->
 			</xsl:otherwise>
-		</xsl:choose>
-		
+		</xsl:choose>-->
+
+		<xsl:for-each select="tei:p">
+			<i>
+				<xsl:apply-templates select="node()"/>
+			</i>
+			<br/>
+		</xsl:for-each>
+
 		<!--<br/>-->
 	</xsl:template>
 
