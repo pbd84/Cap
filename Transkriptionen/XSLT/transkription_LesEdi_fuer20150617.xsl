@@ -2104,10 +2104,10 @@
 		<span title="{./tei:abbr/text()}">
 			<!--<xsl:value-of select="./tei:expan/text()"/>-->
 			<xsl:apply-templates select="./tei:expan/node()"/>
-			<xsl:text> [</xsl:text>
+			<xsl:text> (</xsl:text>
 			<!--<xsl:value-of select="./tei:abbr/text()"/>-->
 			<xsl:apply-templates select="./tei:abbr/node()"/>
-			<xsl:text>.]</xsl:text>
+			<xsl:text>.)</xsl:text>
 		</span>
 	</xsl:template>
 
@@ -2498,6 +2498,9 @@
 				<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 					<xsl:text>mit Einfügungszeichen </xsl:text>
 				</xsl:if>
+				<xsl:if test="$pNode/tei:add/@rend='default'">
+					<xsl:text>in Texttinte </xsl:text>
+				</xsl:if>
 				<xsl:text>korr. aus </xsl:text>
 				<i><xsl:value-of select="$vWortUmKnoten_del"/></i>
 				
@@ -2514,6 +2517,9 @@
 				<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 					<xsl:text> mit Einfügungszeichen</xsl:text>
 				</xsl:if>
+				<xsl:if test="$pNode/tei:add/@rend='default'">
+					<xsl:text> in Texttinte</xsl:text>
+				</xsl:if>
 				<xsl:text> korr. aus </xsl:text>
 				<i><xsl:value-of select="$vWortUmKnoten_del"/></i>
 
@@ -2529,6 +2535,9 @@
 				<xsl:value-of select="$pNode/tei:add/@hand"/>
 				<xsl:if test="$pNode/following-sibling::*[1][local-name(.)='metamark']">
 					<xsl:text> mit Einfügungszeichen</xsl:text>
+				</xsl:if>
+				<xsl:if test="$pNode/tei:add/@rend='default'">
+					<xsl:text> in Texttinte</xsl:text>
 				</xsl:if>
 				<xsl:text> korr. zu </xsl:text>
 				<i><xsl:value-of select="$vWortUmKnoten_add"/></i>
