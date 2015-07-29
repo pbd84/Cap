@@ -1278,7 +1278,7 @@
 				<!-- nachfolgende <note> setzt Fußnotenverweis -->
 				
 				<xsl:if test="string-length(@hand)!=string-length(translate(@hand,$vHandXYZ,''))">
-					
+					<xsl:apply-templates select="tei:del"/>
 				</xsl:if>
 				
 			</xsl:when>
@@ -1364,7 +1364,7 @@
 				
 				
 				<xsl:if test="not(string-length(@hand)!=string-length(translate(@hand,$vHandXYZ,'')))">
-					<xsl:apply-templates select="./tei:del"/>
+					<xsl:apply-templates select="node()"/>
 				</xsl:if>
 				
 				
