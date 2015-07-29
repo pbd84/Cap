@@ -871,7 +871,8 @@
 			</xsl:element>-->
 			<xsl:element name="span">
 				<xsl:attribute name="class">initialABC</xsl:attribute>
-				<xsl:value-of select="."/>
+				<!--<xsl:value-of select="."/>-->
+				<xsl:apply-templates select="node()"/>
 			</xsl:element>
 		</xsl:element>
 	</xsl:template>
@@ -2224,7 +2225,8 @@
 	</xsl:template>
 
 	<xsl:template match="//tei:date">
-		<xsl:value-of select="./text()"/>
+		<!--<xsl:value-of select="./text()"/>-->
+		<xsl:apply-templates select="./node()"/>
 	</xsl:template>
 	
 	<xsl:template match="//tei:metamark">
