@@ -985,14 +985,17 @@
 	</xsl:template>
 
 	<xsl:template match="//tei:cit/tei:quote">
-		<span class="quote">
+<!--		<span class="quote">
 			<xsl:text>&#8222;</xsl:text>
 		</span>
 		<xsl:apply-templates select="./node()"/>
 		<span class="quote">
 			<xsl:text>&#8220;</xsl:text>
-		</span>
+		</span>-->
 
+	    <xsl:call-template name="tTextNormalisierung">
+	        <xsl:with-param name="pText" select="."/>
+	    </xsl:call-template>
 	</xsl:template>
 
 	<xsl:template match="//tei:cit/tei:ref">
